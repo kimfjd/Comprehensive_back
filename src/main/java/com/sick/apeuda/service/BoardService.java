@@ -54,7 +54,7 @@ public class BoardService {
             Board board = boardRepository.findById(boardId).orElseThrow(
                     () -> new RuntimeException("해당 댓글이 존재하지 않습니다.")
             );
-            List<Reply> replies = replyRepository.findRepliesByBoardId(board.getBoardId());
+            List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
             List<ReplyDto> replyDtos = new ArrayList<>();
             for (Reply reply : replies) {
                 replyDtos.add(convertEntityToReplyDto(reply,boardId));
@@ -78,7 +78,7 @@ public class BoardService {
         boardDetailDto.setRegDate(board.getRegDate());
 
         // 댓글 목록 추가
-        List<Reply> replies = replyRepository.findRepliesByBoardId(board.getBoardId());
+        List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
         List<ReplyDto> replyDtos = new ArrayList<>();
         for (Reply reply : replies) {
             replyDtos.add(convertEntityToReplyDto(reply, board.getBoardId()));

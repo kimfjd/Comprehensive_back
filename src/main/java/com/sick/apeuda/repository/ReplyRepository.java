@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
-    @Query("SELECT r FROM Reply r WHERE r.board.boardNo = :boardId")
-    List<Reply> findRepliesByBoardId(@Param("boardId") Long boardId);
+    @Query("SELECT r FROM Reply r WHERE r.board.id = :boardId")
+    List<Reply> findByBoardId(@Param("boardId") Long boardId);
 
 
 }
