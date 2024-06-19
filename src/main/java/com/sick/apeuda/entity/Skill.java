@@ -4,6 +4,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -19,5 +21,8 @@ public class Skill {
     @Column(nullable = false)
     private String skillName;
 
-    // Getters and Setters
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 전략
+    @JoinColumn(name = "board_id")
+    private Board board;
+
 }

@@ -18,19 +18,20 @@ public class Reply {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long replyId;
 
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
+//    @ManyToOne
+//    @JoinColumn(name = "board_id")
+//    private Board board;
 
     @Lob
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime regDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // Getters and Setters
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 전략
+    @JoinColumn(name = "board_id")
+    private Board board;
 }

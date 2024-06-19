@@ -11,7 +11,7 @@ public class ReplyDto {
     private Long replyId;
     private String content;
     private LocalDateTime regDate;
-    private String userName;
-    // 확인해보고 필요할경우 주석 풀기
-    //private Long boardId;
+    private String nickName;
+    private String profile_img;
+    private Long boardId;
 }

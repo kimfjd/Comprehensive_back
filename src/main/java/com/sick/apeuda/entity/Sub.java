@@ -23,10 +23,8 @@ public class Sub {
     @JoinColumn(name = "user_id")
     private User userId;
 
-    @Temporal(TemporalType.DATE)
     private LocalDateTime startDate;
 
-    @Temporal(TemporalType.DATE)
     private LocalDateTime endDate;
 
 }

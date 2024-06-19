@@ -23,7 +23,7 @@ public class User {
     private String identityNumber;
 
     @Lob
-    private String profile;
+    private String profileImgPath;
 
     @ManyToOne
     @JoinColumn(name = "skill_id")

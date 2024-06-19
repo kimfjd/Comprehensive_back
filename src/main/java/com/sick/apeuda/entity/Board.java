@@ -6,17 +6,18 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "Board")
+@Table(name = "board")
 public class Board {
     @Id
-    @Column(name = "board_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long boardIo;
+    private Long boardId;
 
     private String title;
 
@@ -29,16 +30,21 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Temporal(TemporalType.TIMESTAMP)
+//    @OneToMany
+//    @JoinColumn(name = "board_id")
+//    private List<Reply> reply;
+
     private LocalDateTime regDate;
 
-    @ManyToOne
-    @JoinColumn(name = "skill_id")
-    private Skill skill;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Skill> skill;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Reply> reply;
 
 }

@@ -23,7 +23,6 @@ public class Project {
 
     private String job;
 
-    @Temporal(TemporalType.DATE)
     private LocalDateTime projectTime;
 
     private String projectName;

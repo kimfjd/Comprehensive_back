@@ -21,7 +21,6 @@ public class ChatMsg {
     @Lob
     private String message;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime sendDate;
 
     @ManyToOne

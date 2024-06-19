@@ -21,7 +21,6 @@ public class PostMsg {
     @Lob
     private String content;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime receiveTime;
 
     @ManyToOne
