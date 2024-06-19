@@ -44,12 +44,12 @@ public class BoardService {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("해당 게시글이 존재하지 않습니다.")
         );
-        return convertEntityToDto(board);
+        return convertEntityToDetailDto(board);
     }
 
 
     // 댓글 목록 조회
-    public List<ReplyDto> getCommentList(Long boardId) {
+    public List<ReplyDto> getReplyList(Long boardId) {
         try {
             Board board = boardRepository.findById(boardId).orElseThrow(
                     () -> new RuntimeException("해당 댓글이 존재하지 않습니다.")
@@ -65,7 +65,30 @@ public class BoardService {
             return null;
         }
     }
-    // 게시글 엔티티를 DTO로 변환
+
+    // 게시글 엔티티를 BoardDetailDto로 변환
+    private BoardDto convertEntityToDetailDto(Board board) {
+        BoardDto boardDetailDto = new BoardDto();
+        boardDetailDto.setBoardId(board.getBoardId());
+        boardDetailDto.setTitle(board.getTitle());
+        boardDetailDto.setContent(board.getContent());
+        boardDetailDto.setImg(board.getImgPath());
+        boardDetailDto.setNickName(board.getUser().getNickname());
+        boardDetailDto.setProfile_img(board.getUser().getProfileImgPath());
+        boardDetailDto.setRegDate(board.getRegDate());
+
+        // 댓글 목록 추가
+        List<Reply> replies = replyRepository.findRepliesByBoardId(board.getBoardId());
+        List<ReplyDto> replyDtos = new ArrayList<>();
+        for (Reply reply : replies) {
+            replyDtos.add(convertEntityToReplyDto(reply, board.getBoardId()));
+        }
+        boardDetailDto.setReplies(replyDtos);
+
+        return boardDetailDto;
+    }
+
+    // 댓글 엔티티를 DTO로 변환
     private ReplyDto convertEntityToReplyDto(Reply reply, Long boardId) {
         ReplyDto replyDto = new ReplyDto();
         replyDto.setBoardId(boardId);

@@ -1,6 +1,7 @@
 package com.sick.apeuda.controller;
 
 import com.sick.apeuda.dto.BoardDto;
+import com.sick.apeuda.dto.ReplyDto;
 import com.sick.apeuda.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
