@@ -16,6 +16,7 @@ import java.util.List;
 @Table(name = "board")
 public class Board {
     @Id
+    // AUTO로 했으나 auto_increment로 테이블 생성이 되지않아서 IDENTITY로 변경
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long boardId;
 
@@ -44,7 +45,6 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Skill> skill;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Reply> reply;
+
 
 }

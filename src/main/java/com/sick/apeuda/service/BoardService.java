@@ -62,7 +62,7 @@ public class BoardService {
         boardDto.setRegDate(board.getRegDate());
         return boardDto;
     }
-
+    // board와 reply를 다른 서비스에서 관리 해야되는거면 수정해야됨
     /**
      * 게시글 엔티티를 BoardDto로 변환(자유 게시글 상세페이지, 댓글 포함)
      * @param board Board 엔티티 객체
