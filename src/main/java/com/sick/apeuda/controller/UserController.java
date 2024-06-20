@@ -6,11 +6,10 @@ import com.sick.apeuda.entity.User;
 import com.sick.apeuda.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -44,5 +43,12 @@ public class UserController {
         return ResponseEntity.ok(isTrue);
     }
 
+
+    @GetMapping("/list")
+    public ResponseEntity<List<UserDto>> userList(){
+        List<UserDto> list =userService.getUserList();
+        return ResponseEntity.ok(list);
+
+    }
 
 }
