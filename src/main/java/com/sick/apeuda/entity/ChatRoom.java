@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "ChatRoom")
 public class ChatRoom {
     @Id
-    @Column(name = "romm_id")
+    @Column(name = "room_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long roomId;
 
@@ -25,10 +25,10 @@ public class ChatRoom {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private String roomName;
     private Integer currentCount;
     private Integer maxCount;
     private String status;
     private String roomPassword;
-
 
 }

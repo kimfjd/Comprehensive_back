@@ -8,8 +8,7 @@ group = 'com.sick'
 version = '0.0.1-SNAPSHOT'
 
 // sourceCompatibility 로컬 시스템에 설치된 JDK버전을 사용
-// toolchain gradle이 자동으로 해당 버전을 다운받아서 사용
-// 특정 버전 제한하고싶으면 toolchain 코드의 호환성을 유지하려면 sourceCompatibility
+// 특정 버전 제한하고싶으면 toolchain 코드의 호환성을 유지하려면 sourceCompatibilit// toolchain gradle이 자동으로 해당 버전을 다운받아서 사용y
 java {
 	sourceCompatibility = '11'
 }
@@ -46,6 +45,12 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+
+	// 소켓통신 관련 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+//	implementation 'org.webjars:sockjs-client:1.5.1'
+//	implementation 'org.webjars:stomp-websocket:2.3.4'
+//	implementation 'com.google.code.gson:gson:2.9.0'
 
 }
 
