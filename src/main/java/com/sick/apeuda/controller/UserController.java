@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 public class UserController {
     private final UserService userService;
 
+
+    // 회원가입(기본적인 것만, 아이디,비번,이름,주민번호는 필수 입력)
     @PostMapping("/signup")
     public ResponseEntity<Boolean> userSignup (@RequestBody UserDto userDto) {
         User user = new User();
@@ -32,6 +34,13 @@ public class UserController {
         user.setMyInfo(userDto.getMyInfo());
         boolean isTrue = userService.signUp(user);
 
+        return ResponseEntity.ok(isTrue);
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> memberLogin(@RequestBody UserDto userDto) {
+        boolean isTrue = userService.login(userDto.getEmail(), userDto.getPassword());
         return ResponseEntity.ok(isTrue);
     }
 

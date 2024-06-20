@@ -27,6 +27,8 @@ public class User {
     @Lob
     private String profileImgPath;
 
+
+    @Column
     private String skill;
 
     @Lob

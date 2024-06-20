@@ -21,13 +21,13 @@ public class UserRepositoryTest {
     public void testUserSignup() {
         // Given
         User user = new User();
-        user.setEmail("test2@example.com");
-        user.setName("Test User2");
-        user.setPassword("password2");
+        user.setEmail("test4@example.com");
+        user.setName("Test User4");
+        user.setPassword("password3");
         user.setIdentityNumber("1234561");
 
         // When
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Test
