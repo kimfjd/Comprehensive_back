@@ -11,26 +11,24 @@ import javax.persistence.*;
 @Table(name = "User")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     private String email;
 
+    @Column(nullable = false)
     private String name;
-    private String nickname;
     private String password;
 
-    @Column(length = 7)
+    @Column
+    private String nickname;
+
+    @Column(length = 7, nullable = false)
     private String identityNumber;
 
     @Lob
     private String profileImgPath;
 
-    @ManyToOne
-    @JoinColumn(name = "skill_id")
-    private Skill skill;
+    private String skill;
 
     @Lob
     private String myInfo;
-
-    // Getters and Setters
 }
