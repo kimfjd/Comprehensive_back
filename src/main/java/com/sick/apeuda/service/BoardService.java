@@ -43,6 +43,16 @@ public class BoardService {
         return convertEntityToDetailDto(board);
     }
 
+    public boolean delboard(Long id) {
+        try{
+            boardRepository.deleteById(id);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     // *** 이밑으론 DTO변환 메소드들 ***
 
@@ -103,4 +113,6 @@ public class BoardService {
         replyDto.setRegDate(reply.getRegDate());
         return replyDto;
     }
+
+
 }

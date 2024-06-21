@@ -5,10 +5,7 @@ import com.sick.apeuda.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +28,13 @@ public class BoardController {
         log.warn("board id : " + id);
         BoardDto boardDto = boardService.getBoardDetail(id);
         return ResponseEntity.ok(boardDto);
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity<Boolean> delboard(@RequestParam Long id){
+        System.out.println("삭제 하는 게시판 넘버 : " + id);
+        boolean isTrue = boardService.delboard(id);
+        return ResponseEntity.ok(isTrue);
+
     }
 }

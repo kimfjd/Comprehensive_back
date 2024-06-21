@@ -17,10 +17,12 @@ public class UserDto {
     private String profileImgPath;
     private String skill;
     private String myInfo;
+    
 
     public static UserDto of(User user) {
         return UserDto.builder()
                 .email(user.getEmail())
+                .name(user.getName())
                 .password(user.getPassword())
                 .nickname(user.getNickname())
                 .identityNumber(user.getIdentityNumber())
