@@ -1,3 +1,4 @@
+//User.java
 package com.sick.apeuda.entity;
 import lombok.*;
 
