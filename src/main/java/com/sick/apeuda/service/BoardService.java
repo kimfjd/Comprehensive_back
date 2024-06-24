@@ -1,14 +1,11 @@
 package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.BoardDto;
-import com.sick.apeuda.dto.ProjectDto;
 import com.sick.apeuda.dto.ReplyDto;
-import com.sick.apeuda.entity.Board;
-import com.sick.apeuda.entity.Project;
-import com.sick.apeuda.entity.Reply;
+import com.sick.apeuda.entity.*;
 import com.sick.apeuda.repository.BoardRepository;
-import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
+import com.sick.apeuda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +13,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
-    private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
 
     /**
      * 게시판 전체 조회 메소드
@@ -58,18 +57,7 @@ public class BoardService {
         }
     }
 
-    /**
-     * 프로젝트 게시판 전체 조회 메소드
-     * @return projectDtos Project 엔티티타입의 List 반환
-     */
-    public List<ProjectDto> getProjectBoardList() {
-        List<Project> projects = projectRepository.findAll();
-        List<ProjectDto> projectDtos = new ArrayList<>();
-        for(Project project : projects) {
-            projectDtos.add(convertProjectEntityToDto(project));
-        }
-        return projectDtos;
-    }
+
 
 
     // *** 이밑으론 DTO변환 메소드들 ***
@@ -85,7 +73,7 @@ public class BoardService {
         boardDto.setBoardId(board.getBoardId());
         boardDto.setTitle(board.getTitle());
         boardDto.setNickName(board.getUser().getNickname());
-        boardDto.setProfile_img(board.getUser().getProfileImgPath());
+        boardDto.setProfileImg(board.getUser().getProfileImgPath());
         //boardDto.setReplies(board.getReply().ge);
         boardDto.setRegDate(board.getRegDate());
         return boardDto;
@@ -103,7 +91,7 @@ public class BoardService {
         boardDetailDto.setContent(board.getContent());
         boardDetailDto.setImg(board.getImgPath());
         boardDetailDto.setNickName(board.getUser().getNickname());
-        boardDetailDto.setProfile_img(board.getUser().getProfileImgPath());
+        boardDetailDto.setProfileImg(board.getUser().getProfileImgPath());
         boardDetailDto.setRegDate(board.getRegDate());
 
         // 댓글 목록
@@ -132,18 +120,42 @@ public class BoardService {
         return replyDto;
     }
 
-    /**
-     * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 전체 조회)
-     * @param project Project 엔티티 타입
-     * @return projectDto -> 게시판 전체 리스트 반환
-     */
-    private ProjectDto convertProjectEntityToDto(Project project) {
-        ProjectDto projectDto = new ProjectDto();
-        projectDto.setProjectId(project.getProjectId());
-        projectDto.setJob(project.getJob());
-        projectDto.setProjectName(project.getProjectName());
-        projectDto.setProjectPassword(project.getProjectPassword());
-        projectDto.setProjectTime(LocalDateTime.now());
-        return projectDto;
+    // 게시글등록 
+    public boolean saveBoard(BoardDto boardDto) {
+        try {
+            Board board = new Board();
+
+            String userId = getCurrentMemberId();
+            User user = userRepository.findById("testId@gmail.com").orElseThrow(
+                    () -> new RuntimeException("User does not exist")
+            );
+            board.setBoardId(boardDto.getBoardId());
+            board.setTitle(boardDto.getTitle());
+            board.setContent(boardDto.getContent());
+            board.setImgPath(boardDto.getImg());
+            board.setRegDate(LocalDateTime.now());
+            board.setProfileImage(user.getProfileImgPath());
+            board.setUser(user);
+
+            boardRepository.save(board);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
+    // 댓글 생성으로 수정해야됨 + 게시판 번호도 변수로 받아야될듯
+    public List<Reply> saveReplyList(ReplyDto replyDto) {
+        List<Reply> reply = new ArrayList<>();
+        for(int i = 1; i <= 5; i++) {
+            Reply r = new Reply();
+            r.setReplyId(replyDto.getReplyId());
+            r.setContent(replyDto.getContent());
+            r.setRegDate(LocalDateTime.now());
+
+            reply.add(r);
+        }
+        return reply;
+    }
+
 }

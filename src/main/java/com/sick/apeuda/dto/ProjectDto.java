@@ -16,6 +16,9 @@ public class ProjectDto {
     private String projectName;
     private String projectPassword;
     private LocalDateTime projectTime;
-    private String userId;
+    private String email;
+    private String projectContent;
+    private String nickName;
+    private String profileImg;
     private List<Skill> skillName;
 }

@@ -1,6 +1,8 @@
 package com.sick.apeuda.controller;
 
 import com.sick.apeuda.dto.BoardDto;
+import com.sick.apeuda.dto.ProjectDto;
+import com.sick.apeuda.entity.Skill;
 import com.sick.apeuda.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +24,20 @@ public class BoardController {
         List<BoardDto> list = boardService.getBoardList();
         return ResponseEntity.ok(list);
     }
-    // 게시글 상세 조회 (jwt키로 확인 필요)
+    // 자유 게시글 상세 조회
     @GetMapping("/detail/{id}")
     public ResponseEntity<BoardDto> boardDetail(@PathVariable Long id) {
         log.warn("board id : " + id);
         BoardDto boardDto = boardService.getBoardDetail(id);
         return ResponseEntity.ok(boardDto);
     }
-
+    // 자유 게시글 등록
+    @PostMapping("/insert")
+    public ResponseEntity<Boolean> boardInsert(@RequestBody BoardDto boardDto){
+        boolean isTrue = boardService.saveBoard(boardDto);
+        return ResponseEntity.ok(isTrue);
+    }
+    // 자유 게시판 삭제
     @GetMapping("/delete")
     public ResponseEntity<Boolean> delboard(@RequestParam Long id){
         System.out.println("삭제 하는 게시판 넘버 : " + id);
@@ -38,10 +46,4 @@ public class BoardController {
 
     }
 
-    @GetMapping("/project/list")
-    public ResponseEntity<List<BoardDto>> projectBoardList() {
-        log.info("projectBoardList실행");
-        List<BoardDto> list = boardService.getBoardList();
-        return ResponseEntity.ok(list);
-    }
 }

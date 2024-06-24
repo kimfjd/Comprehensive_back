@@ -25,7 +25,7 @@ public class Board {
     @Column(length = 10000) // 예시로 10000자를 지정
     private String content;
     private String imgPath;
-
+    private String profileImage;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -37,9 +37,9 @@ public class Board {
     private LocalDateTime regDate;
 
 
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private Project project;
+//    @ManyToOne
+//    @JoinColumn(name = "project_id")
+//    private Project project;
 
 //    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
 //    private List<Skill> skill;

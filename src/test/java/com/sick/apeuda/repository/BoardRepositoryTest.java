@@ -96,7 +96,7 @@ public class BoardRepositoryTest {
 
         List<Skill> skills = skillRepository.findAll();
         System.out.println(skills +  " 체크");
-        project.setSkills(skills);
+//        project.setSkills(skills);
         projectRepository.save(project);
 
         List<Project> projectList = projectRepository.findAll();
@@ -144,8 +144,6 @@ public class BoardRepositoryTest {
             r.setContent(1 + "번째 댓글");
             r.setRegDate(LocalDateTime.now());
 
-//            System.out.println("여기 : " + board);
-//            System.out.println("여기2 : " + reply);
             reply.add(r);
         }
         return reply;

@@ -28,12 +28,21 @@ public class Project {
 
     private String projectName;
     private String projectPassword;
+    @Lob
+    @Column(length = 10000) // 예시로 10000자를 지정
+    private String projectContent;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    private String nickName;
+    private String imgPath;
+    private String profileImage;
+    @ManyToMany
     @JoinTable(
-            name = "project_skill",
+            name = "project_skills",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private List<Skill> skills;
+//    @OneToMany
+//    private List<SkillDto> skills;
+
 }
