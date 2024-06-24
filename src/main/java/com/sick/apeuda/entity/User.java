@@ -1,13 +1,14 @@
 package com.sick.apeuda.entity;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 @Getter
 @Setter
 @ToString
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "User")
 public class User {
     @Id

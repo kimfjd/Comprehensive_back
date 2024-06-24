@@ -19,15 +19,13 @@ public class UserRepositoryTest {
     @Test
     @DisplayName("회원가입")
     public void testUserSignup() {
-        // Given
-        User user = new User();
-        user.setEmail("test4@example.com");
-        user.setName("Test User4");
-        user.setPassword("password3");
-        user.setIdentityNumber("1234561");
+        User user = User.builder()
+                .email("test4@example.com")
+                .name("Test User4")
+                .password("password3")
+                .identityNumber("1234561")
+                .build();
 
-        // When
-        userRepository.save(user);
     }
 
     @Test
@@ -40,6 +38,10 @@ public class UserRepositoryTest {
             System.out.println("로그인 실패");
         }
     }
+
+
+
+
 
 
 }

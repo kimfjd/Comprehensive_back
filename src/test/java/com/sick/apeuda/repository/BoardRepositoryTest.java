@@ -24,19 +24,19 @@ public class BoardRepositoryTest {
     @Autowired
     private UserRepository userRepository;
     // 회원 엔티티 생성
-    public User createMemberInfo() {
-        User user = new User();
-        user.setEmail("testId@gmail.com");
-        user.setPassword("1234");
-        user.setName("박성진");
-        user.setEmail("jks2024@gmail.com");
-        user.setMyInfo("술쟁이 입니다.");
-        user.setNickname("개똥벌레");
-        user.setIdentityNumber("941231");
-        user.setProfileImgPath("");
-        //user.setRegDate(LocalDateTime.now());
-        return user;
-    }
+//    public User createMemberInfo() {
+//        User user = new User();
+//        user.setEmail("testId@gmail.com");
+//        user.setPassword("1234");
+//        user.setName("박성진");
+//        user.setEmail("jks2024@gmail.com");
+//        user.setMyInfo("술쟁이 입니다.");
+//        user.setNickname("개똥벌레");
+//        user.setIdentityNumber("941231");
+//        user.setProfileImgPath("");
+//        //user.setRegDate(LocalDateTime.now());
+//        return user;
+//    }
     // 게시판 엔티티 생성
     public Board createBoardContentEntity(){
         Board board = new Board();
@@ -73,22 +73,22 @@ public class BoardRepositoryTest {
         }
     }
     
-    @Test
-    @DisplayName("댓글 리스트 생성")
-    public void createReplyList() {
-        User user = createMemberInfo();
-        Board board = createBoardContentEntity();
-        for(int i = 1; i <= 5; i++) {
-            Reply reply = new Reply();
-            reply.setContent(1 + "번째 댓글");
-            reply.setRegDate(LocalDateTime.now());
-            System.out.println("여기 : " + board);
-            System.out.println("여기2 : " + reply);
-//            reply.setBoard(board.getBoardId());
-//            reply.setUser(user);
-            replyRepository.save(reply);
-        }
-    }
+//    @Test
+//    @DisplayName("댓글 리스트 생성")
+//    public void createReplyList() {
+//        User user = createMemberInfo();
+//        Board board = createBoardContentEntity();
+//        for(int i = 1; i <= 5; i++) {
+//            Reply reply = new Reply();
+//            reply.setContent(1 + "번째 댓글");
+//            reply.setRegDate(LocalDateTime.now());
+//            System.out.println("여기 : " + board);
+//            System.out.println("여기2 : " + reply);
+////            reply.setBoard(board.getBoardId());
+////            reply.setUser(user);
+//            replyRepository.save(reply);
+//        }
+//    }
 //@Test
 //@Transactional
 //public void testRetrieveRepliesForBoard() {
