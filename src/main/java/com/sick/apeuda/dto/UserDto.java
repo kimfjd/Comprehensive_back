@@ -1,13 +1,14 @@
+//UserDto.java
 package com.sick.apeuda.dto;
 
 import com.sick.apeuda.entity.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
     private String email;
     private String password;

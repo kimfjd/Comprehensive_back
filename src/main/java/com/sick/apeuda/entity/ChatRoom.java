@@ -1,5 +1,7 @@
+// ChatRoom.java
 package com.sick.apeuda.entity;
 
+import com.sick.apeuda.entity.Project;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +18,7 @@ public class ChatRoom {
     @Column(name = "room_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long roomId;
+//    private String roomId = UUID.randomUUID().toString(); // UUID를 사용한 무작위 방아이디 생성
 
     @ManyToOne
     @JoinColumn(name = "project_id")
@@ -25,7 +28,8 @@ public class ChatRoom {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String roomName;
+    @Column(unique = true)
+    private String roomName; // 방 이름
     private Integer currentCount;
     private Integer maxCount;
     private String status;

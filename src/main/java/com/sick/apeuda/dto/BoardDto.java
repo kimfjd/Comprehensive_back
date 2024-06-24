@@ -13,9 +13,12 @@ public class BoardDto {
     private String title;
     private String content;
     private LocalDateTime regDate;
-    private String projectName;
+    // 프로젝트 이름 제거
+    //private String projectName;
     private String img;
     private String nickName;
     private String profile_img;
     private List<ReplyDto> replies;
+  //김기주 이메일 가져오는 거 수정
+    private String email;
 }

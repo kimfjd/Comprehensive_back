@@ -1,3 +1,4 @@
+//UserController.java
 package com.sick.apeuda.controller;
 
 
@@ -22,16 +23,18 @@ public class UserController {
     // 회원가입(기본적인 것만, 아이디,비번,이름,주민번호는 필수 입력)
     @PostMapping("/signup")
     public ResponseEntity<Boolean> userSignup (@RequestBody UserDto userDto) {
-        User user = new User();
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setName(userDto.getName());
-        user.setIdentityNumber(userDto.getIdentityNumber());
-        user.setNickname(userDto.getNickname());
-        user.setProfileImgPath(userDto.getProfileImgPath());
-        user.setSkill(userDto.getSkill());
-        user.setMyInfo(userDto.getMyInfo());
-        boolean isTrue = userService.signUp(user);
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .name(userDto.getName())
+                .identityNumber(userDto.getIdentityNumber())
+                .nickname(userDto.getNickname())
+                .profileImgPath(userDto.getProfileImgPath())
+                .skill(userDto.getSkill())
+                .myInfo(userDto.getMyInfo())
+                .build();
+
+        boolean isTrue = userService.saveUser(user);
 
         return ResponseEntity.ok(isTrue);
     }
@@ -43,6 +46,37 @@ public class UserController {
         return ResponseEntity.ok(isTrue);
     }
 
+
+    // 회원정보 가져오기
+    @GetMapping("/userinfo")
+    public ResponseEntity<UserDto> userInfo(@RequestParam String email) {
+        UserDto userDto = userService.getUserInfo(email);
+        return ResponseEntity.ok(userDto);
+    }
+
+    // 회원 수정
+    @PutMapping("/usermodify/{email}")
+    public ResponseEntity<Boolean> userModify(@RequestBody UserDto userDto) {
+        User user = User.builder()
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
+                .name(userDto.getName())
+                .identityNumber(userDto.getIdentityNumber())
+                .nickname(userDto.getNickname())
+                .profileImgPath(userDto.getProfileImgPath())
+                .skill(userDto.getSkill())
+                .myInfo(userDto.getMyInfo())
+                .build();
+        boolean isTrue = userService.saveUser(user);
+        return ResponseEntity.ok(isTrue);
+    }
+
+    // 회원 삭제
+    @DeleteMapping("/deluser/{email}")
+    public ResponseEntity<Boolean> userDelete(@PathVariable String email) {
+        boolean isTrue = userService.deleteUser(email);
+        return ResponseEntity.ok(isTrue);
+    }
 
     @GetMapping("/list")
     public ResponseEntity<List<UserDto>> userList(){

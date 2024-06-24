@@ -37,4 +37,11 @@ public class BoardController {
         return ResponseEntity.ok(isTrue);
 
     }
+
+    @GetMapping("/project/list")
+    public ResponseEntity<List<BoardDto>> projectBoardList() {
+        log.info("projectBoardList실행");
+        List<BoardDto> list = boardService.getBoardList();
+        return ResponseEntity.ok(list);
+    }
 }
