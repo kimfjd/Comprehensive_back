@@ -12,4 +12,7 @@ import java.util.List;
 public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b WHERE b.user.email = :userId")
     List<Board> findPostsByUserId(@Param("userId") String userId);
+
+
+
 }

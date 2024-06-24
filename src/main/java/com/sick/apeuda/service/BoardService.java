@@ -1,14 +1,18 @@
 package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.BoardDto;
+import com.sick.apeuda.dto.ProjectDto;
 import com.sick.apeuda.dto.ReplyDto;
 import com.sick.apeuda.entity.Board;
+import com.sick.apeuda.entity.Project;
 import com.sick.apeuda.entity.Reply;
 import com.sick.apeuda.repository.BoardRepository;
+import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,7 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
+    private final ProjectRepository projectRepository;
 
     /**
      * 게시판 전체 조회 메소드
@@ -53,6 +58,19 @@ public class BoardService {
         }
     }
 
+    /**
+     * 프로젝트 게시판 전체 조회 메소드
+     * @return projectDtos Project 엔티티타입의 List 반환
+     */
+    public List<ProjectDto> getProjectBoardList() {
+        List<Project> projects = projectRepository.findAll();
+        List<ProjectDto> projectDtos = new ArrayList<>();
+        for(Project project : projects) {
+            projectDtos.add(convertProjectEntityToDto(project));
+        }
+        return projectDtos;
+    }
+
 
     // *** 이밑으론 DTO변환 메소드들 ***
 
@@ -70,8 +88,6 @@ public class BoardService {
         boardDto.setProfile_img(board.getUser().getProfileImgPath());
         //boardDto.setReplies(board.getReply().ge);
         boardDto.setRegDate(board.getRegDate());
-        //김기주 이메일 가져오는 거 수정
-        boardDto.setEmail(board.getUser().getEmail());
         return boardDto;
     }
     // board와 reply를 다른 서비스에서 관리 해야되는거면 수정해야됨
@@ -90,7 +106,6 @@ public class BoardService {
         boardDetailDto.setProfile_img(board.getUser().getProfileImgPath());
         boardDetailDto.setRegDate(board.getRegDate());
 
-
         // 댓글 목록
         List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
         List<ReplyDto> replyDtos = new ArrayList<>();
@@ -100,7 +115,7 @@ public class BoardService {
         boardDetailDto.setReplies(replyDtos);
         return boardDetailDto;
     }
-    
+
     /**
      * 댓글 엔티티를 DTO로 변환
      * @param reply Reply 엔티티 객체
@@ -117,5 +132,18 @@ public class BoardService {
         return replyDto;
     }
 
-
+    /**
+     * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 전체 조회)
+     * @param project Project 엔티티 타입
+     * @return projectDto -> 게시판 전체 리스트 반환
+     */
+    private ProjectDto convertProjectEntityToDto(Project project) {
+        ProjectDto projectDto = new ProjectDto();
+        projectDto.setProjectId(project.getProjectId());
+        projectDto.setJob(project.getJob());
+        projectDto.setProjectName(project.getProjectName());
+        projectDto.setProjectPassword(project.getProjectPassword());
+        projectDto.setProjectTime(LocalDateTime.now());
+        return projectDto;
+    }
 }

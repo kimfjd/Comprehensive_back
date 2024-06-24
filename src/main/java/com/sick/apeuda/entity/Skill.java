@@ -21,8 +21,7 @@ public class Skill {
     @Column(nullable = false)
     private String skillName;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 지연 전략
-    @JoinColumn(name = "board_id")
-    private Board board;
-
+//    @ManyToOne
+//    @JoinColumn(name = "project_id")
+//    private Project project;
 }

@@ -5,12 +5,13 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "Project")
+@Table(name = "project")
 public class Project {
     @Id
     @Column(name = "project_id")
@@ -28,4 +29,11 @@ public class Project {
     private String projectName;
     private String projectPassword;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "project_skill",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    private List<Skill> skills;
 }

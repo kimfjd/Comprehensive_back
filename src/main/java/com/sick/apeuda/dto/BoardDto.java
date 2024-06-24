@@ -13,7 +13,8 @@ public class BoardDto {
     private String title;
     private String content;
     private LocalDateTime regDate;
-    private String projectName;
+    // 프로젝트 이름 제거
+    //private String projectName;
     private String img;
     private String nickName;
     private String profile_img;
