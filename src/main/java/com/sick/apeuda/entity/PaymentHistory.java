@@ -16,7 +16,7 @@ public class PaymentHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_history_id")
-    private Long id;
+    private Long paymentHistoryId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,4 +33,7 @@ public class PaymentHistory {
 
     @Column(nullable = false)
     private Long amount;
+
+    @Column
+    private LocalDateTime cancellationDate;
 }

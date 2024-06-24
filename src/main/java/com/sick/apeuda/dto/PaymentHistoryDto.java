@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class PaymentHistoryDto {
-    private Long id;
     private String email;
     private LocalDateTime paymentDate;
     private String paymentStatus;
     private String transactionId;
     private Long amount;
+    private LocalDateTime cancellationDate;
 }
