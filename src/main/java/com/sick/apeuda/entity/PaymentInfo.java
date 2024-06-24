@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,18 +16,25 @@ public class PaymentInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_info_id")
-    private Long id;
+    private Long paymentInfoId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
-    private String cardNumber;
+    private String paymentMethodCode;
+
+    @Lob
+    @Column(nullable = false)
+    private String paymentDetails;
 
     @Column(nullable = false)
-    private String cardExpiry;
+    private Boolean isPaymentAvailable;
 
     @Column(nullable = false)
-    private String cardCvc;
+    private Boolean isDeleted;
+
+    @Column
+    private LocalDateTime deletedAt;
 }

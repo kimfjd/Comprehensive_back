@@ -33,5 +33,9 @@ public class UserService {
         }
         return userDtos;
     }
+    public Optional<UserDto> findByEmail(String email) {
+        Optional<User> user = userRepository.findById(email);
+        return user.map(UserDto::of);
+    }
 
 }
