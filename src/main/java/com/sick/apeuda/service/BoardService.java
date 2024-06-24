@@ -70,6 +70,8 @@ public class BoardService {
         boardDto.setProfile_img(board.getUser().getProfileImgPath());
         //boardDto.setReplies(board.getReply().ge);
         boardDto.setRegDate(board.getRegDate());
+        //김기주 이메일 가져오는 거 수정
+        boardDto.setEmail(board.getUser().getEmail());
         return boardDto;
     }
     // board와 reply를 다른 서비스에서 관리 해야되는거면 수정해야됨
@@ -87,6 +89,7 @@ public class BoardService {
         boardDetailDto.setNickName(board.getUser().getNickname());
         boardDetailDto.setProfile_img(board.getUser().getProfileImgPath());
         boardDetailDto.setRegDate(board.getRegDate());
+
 
         // 댓글 목록
         List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
