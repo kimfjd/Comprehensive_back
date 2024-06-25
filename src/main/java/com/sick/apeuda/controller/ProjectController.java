@@ -1,5 +1,6 @@
 package com.sick.apeuda.controller;
 
+import com.sick.apeuda.dto.BoardReqDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
 import com.sick.apeuda.service.ProjectService;
@@ -44,6 +45,11 @@ public class ProjectController {
         return ResponseEntity.ok(isTrue);
     }
 
-
+    // 자유 게시글 수정
+    @PutMapping("/modify/{id}")
+    public ResponseEntity<Boolean> boardModify(@PathVariable Long id, @RequestBody ProjectReqDto projectReqDto) {
+        boolean isTrue = projectService.modifyProject(id, projectReqDto);
+        return ResponseEntity.ok(isTrue);
+    }
 
 }

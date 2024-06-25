@@ -1,9 +1,11 @@
 package com.sick.apeuda.service;
 
 
+import com.sick.apeuda.dto.BoardReqDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
 import com.sick.apeuda.dto.ReplyDto;
+import com.sick.apeuda.entity.Board;
 import com.sick.apeuda.entity.Project;
 import com.sick.apeuda.entity.Reply;
 import com.sick.apeuda.entity.User;
@@ -52,7 +54,8 @@ public class ProjectService {
         projectReqDto.setProjectName(project.getProjectName());
         projectReqDto.setProjectTitle(project.getProjectTitle());
         projectReqDto.setProjectPassword(project.getProjectPassword());
-        projectReqDto.setProjectTime(LocalDateTime.now());
+        projectReqDto.setProjectTime(project.getProjectTime());
+        projectReqDto.setRegDate(LocalDateTime.now());
 
         return projectReqDto;
     }
@@ -76,7 +79,8 @@ public class ProjectService {
             project.setProjectContent(projectReqDto.getProjectContent());
             project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setImgPath(project.getImgPath());
-            project.setProjectTime(LocalDateTime.now());
+            project.setRegDate(LocalDateTime.now());
+            project.setProjectTime(project.getProjectTime());
             project.setSkills(projectReqDto.getSkillName());
             project.setUser(user);
             project.setNickName(user.getNickname());
@@ -98,6 +102,29 @@ public class ProjectService {
                 () -> new RuntimeException("해당 게시글이 존재하지 않습니다.")
         );
         return convertProjectDetailEntityToDto(project);
+    }
+    // 게시글 수정
+    public boolean modifyProject(Long id, ProjectReqDto projectReqDto) {
+        try {
+            Project project = projectRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Board does not exist")
+            );
+            project.setProjectId(projectReqDto.getProjectId());
+            project.setJob(projectReqDto.getJob());
+            project.setProjectName(projectReqDto.getProjectName());
+            project.setProjectTitle(projectReqDto.getProjectTitle());
+            project.setProjectContent(projectReqDto.getProjectContent());
+            project.setProjectPassword(projectReqDto.getProjectPassword());
+            project.setImgPath(project.getImgPath());
+            project.setRegDate(LocalDateTime.now());
+            project.setProjectTime(project.getProjectTime());
+            project.setSkills(projectReqDto.getSkillName());
+            projectRepository.save(project);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**
@@ -127,7 +154,8 @@ public class ProjectService {
         projectResDto.setProjectTitle(project.getProjectTitle());
         //projectDto.setProjectPassword(project.getProjectPassword());
         projectResDto.setProjectContent(project.getProjectContent());
-        projectResDto.setProjectTime(LocalDateTime.now());
+        projectResDto.setProjectTime(project.getProjectTime());
+        projectResDto.setRegDate(LocalDateTime.now());
 
         // 플젝 작성자 정보 설정
         projectResDto.setNickName(project.getUser().getNickname());

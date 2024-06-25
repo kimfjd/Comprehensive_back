@@ -51,6 +51,10 @@ public class BoardService {
         return convertEntityToDetailDto(board);
     }
 
+    /**
+     * @param id 게시판 고유 ID
+     * @return 삭제 성공 여부
+     */
     public boolean delboard(Long id) {
         try{
             boardRepository.deleteById(id);
@@ -60,7 +64,49 @@ public class BoardService {
             return false;
         }
     }
+    // 게시글등록
+    public boolean saveBoard(BoardReqDto boardReqDto) {
+        try {
+            Board board = new Board();
 
+            String userId = getCurrentMemberId();
+            User user = userRepository.findById("testId@gmail.com").orElseThrow(
+                    () -> new RuntimeException("User does not exist")
+            );
+            board.setBoardId(boardReqDto.getBoardId());
+            board.setTitle(boardReqDto.getTitle());
+            board.setContent(boardReqDto.getContent());
+            board.setImgPath(boardReqDto.getImg());
+            board.setRegDate(LocalDateTime.now());
+            board.setProfileImage(user.getProfileImgPath());
+            board.setUser(user);
+
+            boardRepository.save(board);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 게시글 수정
+    public boolean modifyBoard(Long id, BoardReqDto boardReqDto) {
+        try {
+            Board board = boardRepository.findById(id).orElseThrow(
+                    () -> new RuntimeException("Board does not exist")
+            );
+            board.setBoardId(boardReqDto.getBoardId());
+            board.setTitle(boardReqDto.getTitle());
+            board.setContent(boardReqDto.getContent());
+            board.setImgPath(boardReqDto.getImg());
+            board.setRegDate(LocalDateTime.now());
+            boardRepository.save(board);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // *** 이밑으론 DTO변환 메소드들 ***
 
@@ -124,30 +170,8 @@ public class BoardService {
         return replyDto;
     }
 
-    // 게시글등록 
-    public boolean saveBoard(BoardReqDto boardReqDto) {
-        try {
-            Board board = new Board();
 
-            String userId = getCurrentMemberId();
-            User user = userRepository.findById("testId@gmail.com").orElseThrow(
-                    () -> new RuntimeException("User does not exist")
-            );
-            board.setBoardId(boardReqDto.getBoardId());
-            board.setTitle(boardReqDto.getTitle());
-            board.setContent(boardReqDto.getContent());
-            board.setImgPath(boardReqDto.getImg());
-            board.setRegDate(LocalDateTime.now());
-            board.setProfileImage(user.getProfileImgPath());
-            board.setUser(user);
 
-            boardRepository.save(board);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
     // 댓글 생성으로 수정해야됨 + 게시판 번호도 변수로 받아야될듯
     public ReplyDto saveReplyList(Reply reply) {
         ReplyDto replyDto = new ReplyDto();

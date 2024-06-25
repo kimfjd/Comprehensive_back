@@ -30,6 +30,7 @@ public class Project {
     private String projectName;
     private String projectTitle;
     private String projectPassword;
+    private LocalDateTime regDate;
     @Lob
     @Column(length = 10000) // 예시로 10000자를 지정
     private String projectContent;

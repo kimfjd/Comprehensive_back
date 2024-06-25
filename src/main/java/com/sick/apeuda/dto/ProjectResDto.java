@@ -17,6 +17,7 @@ public class ProjectResDto {
     private String projectTitle;
     //private String projectPassword;
     private LocalDateTime projectTime;
+    private LocalDateTime regDate;
     private String email;
     private String projectContent;
     private String nickName;

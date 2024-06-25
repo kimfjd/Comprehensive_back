@@ -16,7 +16,9 @@ public class ProjectReqDto {
     private String projectName;
     private String projectTitle;
     private String projectPassword;
+    // Data(sql)로 바꿔야될듯
     private LocalDateTime projectTime;
+    private LocalDateTime regDate;
     private String email;
     private String projectContent;
     private String nickName;

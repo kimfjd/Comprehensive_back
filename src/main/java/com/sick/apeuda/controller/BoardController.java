@@ -38,12 +38,17 @@ public class BoardController {
         boolean isTrue = boardService.saveBoard(boardReqDto);
         return ResponseEntity.ok(isTrue);
     }
-    // 자유 게시판 삭제
+    // 자유 게시글 삭제
     @GetMapping("/delete")
     public ResponseEntity<Boolean> delBoard(@RequestParam Long id){
         System.out.println("삭제 하는 게시판 넘버 : " + id);
         boolean isTrue = boardService.delboard(id);
         return ResponseEntity.ok(isTrue);
     }
-
+    // 자유 게시글 수정
+    @PutMapping("/modify/{id}")
+    public ResponseEntity<Boolean> boardModify(@PathVariable Long id, @RequestBody BoardReqDto boardReqDto) {
+        boolean isTrue = boardService.modifyBoard(id, boardReqDto);
+        return ResponseEntity.ok(isTrue);
+    }
 }
