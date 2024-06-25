@@ -22,12 +22,12 @@ public class PaymentService {
 
     public boolean savePaymentHistory(PaymentHistoryDto paymentHistoryDto) {
         try {
-            String userId = getCurrentMemberId(); // 이 부분은 각자의 인증 방식에 따라 수정해야 합니다.
-            User user = userRepository.findById("testId@gmail.com")
+            String userId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            User user = userRepository.findById("kimfjd")
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             PaymentHistory paymentHistory = new PaymentHistory();
-            paymentHistory.setUser(user);   
+            paymentHistory.setUser(user);
             paymentHistory.setPaymentDate(paymentHistoryDto.getPaymentDate());
             paymentHistory.setPaymentStatus(paymentHistoryDto.getPaymentStatus());
             paymentHistory.setTransactionId(paymentHistoryDto.getTransactionId());
