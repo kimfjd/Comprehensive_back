@@ -16,6 +16,10 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    // 회원 가입 여부 확인
+    public boolean isUser(String email) {
+        return userRepository.existsByEmail(email);
+    }
 
     // 회원 정보 저장(회원 가입, 회원 수정)
     public boolean saveUser(User user) {

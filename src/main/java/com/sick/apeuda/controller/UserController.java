@@ -19,6 +19,12 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    // 회원 여부 확인
+    @GetMapping("/check")
+    public ResponseEntity<Boolean> isUser(@RequestParam String email) {
+        boolean isEmail = userService.isUser(email);
+        return ResponseEntity.ok(isEmail);
+    }
 
     // 회원가입(기본적인 것만, 아이디,비번,이름,주민번호는 필수 입력)
     @PostMapping("/signup")
