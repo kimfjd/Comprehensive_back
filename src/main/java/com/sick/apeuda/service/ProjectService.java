@@ -56,6 +56,7 @@ public class ProjectService {
         projectReqDto.setProjectPassword(project.getProjectPassword());
         projectReqDto.setProjectTime(project.getProjectTime());
         projectReqDto.setRegDate(LocalDateTime.now());
+        projectReqDto.setEmail(project.getUser().getEmail());
 
         return projectReqDto;
     }
