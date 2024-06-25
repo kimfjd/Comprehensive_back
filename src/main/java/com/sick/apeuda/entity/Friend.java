@@ -26,5 +26,10 @@ public class Friend {
     private User toUser;
 
     private Boolean checkFriend;
-
+    public Friend() {
+        this.checkFriend = false; // 기본적으로 false로 설정
+    }
+    public void setCheckFriend(Boolean checkFriend) {
+        this.checkFriend = checkFriend;
+    }
 }
