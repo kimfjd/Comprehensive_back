@@ -1,6 +1,5 @@
 package com.sick.apeuda.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +7,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 public class PaymentHistoryDto {
-    private String email;
+    private String user;
     private LocalDateTime paymentDate;
     private String paymentStatus;
     private String transactionId;
