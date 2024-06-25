@@ -14,6 +14,7 @@ public class ProjectDto {
     private Long projectId;
     private String job;
     private String projectName;
+    private String projectTitle;
     private String projectPassword;
     private LocalDateTime projectTime;
     private String email;

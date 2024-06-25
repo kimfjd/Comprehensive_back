@@ -1,4 +1,5 @@
 package com.sick.apeuda.entity;
+import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,6 +28,7 @@ public class Project {
     private LocalDateTime projectTime;
 
     private String projectName;
+    private String projectTitle;
     private String projectPassword;
     @Lob
     @Column(length = 10000) // 예시로 10000자를 지정

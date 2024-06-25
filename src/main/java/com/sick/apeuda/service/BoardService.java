@@ -72,12 +72,12 @@ public class BoardService {
         BoardDto boardDto = new BoardDto();
         boardDto.setBoardId(board.getBoardId());
         boardDto.setTitle(board.getTitle());
+        boardDto.setContent(board.getContent());
         boardDto.setNickName(board.getUser().getNickname());
         boardDto.setProfileImg(board.getUser().getProfileImgPath());
         //boardDto.setReplies(board.getReply().ge);
         boardDto.setRegDate(board.getRegDate());
         boardDto.setEmail(board.getUser().getEmail());
-        boardDto.setContent(board.getContent());
         return boardDto;
     }
     // board와 reply를 다른 서비스에서 관리 해야되는거면 수정해야됨

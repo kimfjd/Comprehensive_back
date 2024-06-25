@@ -43,6 +43,7 @@ public class ProjectService {
         projectDto.setProjectId(project.getProjectId());
         projectDto.setJob(project.getJob());
         projectDto.setProjectName(project.getProjectName());
+        projectDto.setProjectTitle(project.getProjectTitle());
         projectDto.setProjectPassword(project.getProjectPassword());
         projectDto.setProjectTime(LocalDateTime.now());
 
@@ -60,6 +61,7 @@ public class ProjectService {
             project.setProjectId(projectDto.getProjectId());
             project.setJob(projectDto.getJob());
             project.setProjectName(projectDto.getProjectName());
+            project.setProjectTitle(projectDto.getProjectTitle());
             project.setProjectContent(projectDto.getProjectContent());
             project.setProjectPassword(projectDto.getProjectPassword());
             project.setImgPath(project.getImgPath());
@@ -85,6 +87,7 @@ public class ProjectService {
         projectDto.setProjectId(project.getProjectId());
         projectDto.setJob(project.getJob());
         projectDto.setProjectName(project.getProjectName());
+        projectDto.setProjectTitle(project.getProjectTitle());
         projectDto.setProjectPassword(project.getProjectPassword());
         projectDto.setProjectTime(LocalDateTime.now());
         return projectDto;
