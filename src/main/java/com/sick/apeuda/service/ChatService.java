@@ -41,8 +41,8 @@ public class ChatService {
         chatMessage.setSender(chatMessageDto.getSender());
         chatMessage.setContent(chatMessageDto.getContent());
         chatMessage.setRoomId(chatMessageDto.getRoomId());
-        chatMessage.setTimestamp(new Timestamp(System.currentTimeMillis()));
-        chatMessage.setType(chatMessageDto.getType()); // 유저 상태
+        chatMessage.setType(chatMessageDto.getType());
+        chatMessage.setTimestamp(new Timestamp(System.currentTimeMillis())); // 현재 시간 설정
         chatMsgRepository.save(chatMessage);
     }
 }

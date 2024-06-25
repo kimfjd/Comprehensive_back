@@ -25,6 +25,13 @@ public class ChatMsg {
     private String content;
     private String roomId;
     private Timestamp timestamp;
+
     @Enumerated(EnumType.STRING)
-    private ChatMsgDto.MessageType type; // 채팅방에서 유저 상태관리하기 위한 채팅 타입 필드추가 입장/ 대화/ 퇴장
+    private ChatMsgDto.MessageType type; // MessageType 열거형 사용
+    @PrePersist
+    protected void onCreate() {
+        if (this.timestamp == null) {
+            this.timestamp = new Timestamp(System.currentTimeMillis());
+        }
+    }
 }
