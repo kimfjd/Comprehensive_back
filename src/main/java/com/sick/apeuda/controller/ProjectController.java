@@ -37,23 +37,13 @@ public class ProjectController {
         return ResponseEntity.ok(isTrue);
     }
     // 플젝 게시판 삭제
-        @GetMapping("/delete")
-        public ResponseEntity<Boolean> delProject(@RequestParam Long id){
-            System.out.println("삭제 하는 게시판 넘버 : " + id);
-            boolean isTrue = projectService.delProject(id);
-            return ResponseEntity.ok(isTrue);
-        }
-
-    @PostMapping("/reply/insert")
-    public ResponseEntity<Boolean> replyInsert(@RequestBody ProjectDto projectDto){
-        boolean isTrue = projectService.saveProjectBoard(projectDto);
-        return ResponseEntity.ok(isTrue);
-    }
-
     @GetMapping("/delete")
-    public ResponseEntity<Boolean> delproject(@RequestParam Long id){
-        boolean isTrue = projectService.delproject(id);
+    public ResponseEntity<Boolean> delProject(@RequestParam Long id){
+        System.out.println("삭제 하는 게시판 넘버 : " + id);
+        boolean isTrue = projectService.delProject(id);
         return ResponseEntity.ok(isTrue);
-
     }
+
+
+
 }

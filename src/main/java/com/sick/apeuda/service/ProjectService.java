@@ -40,16 +40,6 @@ public class ProjectService {
         return projectDtos;
     }
 
-    public boolean delproject(Long id) {
-        try{
-            projectRepository.deleteById(id);
-            return true;
-        } catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     /**
      * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 입력)
      * @param project Project 엔티티 타입
@@ -65,24 +55,13 @@ public class ProjectService {
         projectReqDto.setProjectTime(LocalDateTime.now());
 
         return projectReqDto;
-    private ProjectDto convertProjectEntityToDto(Project project) {
-        ProjectDto projectDto = new ProjectDto();
-        projectDto.setProjectId(project.getProjectId());
-        projectDto.setJob(project.getJob());
-        projectDto.setProjectName(project.getProjectName());
-        projectDto.setProjectTitle(project.getProjectTitle());
-        projectDto.setProjectPassword(project.getProjectPassword());
-        projectDto.setProjectTime(LocalDateTime.now());
-        projectDto.setEmail(project.getUser().getEmail());
-        return projectDto;
     }
-
     /**
      * 플젝 글등록
-     * @param projectResDto
+     * @param projectReqDto
      * @return true 등록 성공 실패 반환
      */
-    public boolean saveProject(ProjectReqDto projectResDto ) {
+    public boolean saveProject(ProjectReqDto projectReqDto) {
         try{
             Project project = new Project();
             String userId = getCurrentMemberId();
@@ -90,15 +69,15 @@ public class ProjectService {
             User user = userRepository.findById("testId@gmail.com").orElseThrow(
                     () -> new RuntimeException("User does not exist")
             );
-            project.setProjectId(projectResDto.getProjectId());
-            project.setJob(projectResDto.getJob());
-            project.setProjectName(projectResDto.getProjectName());
-            project.setProjectTitle(projectResDto.getProjectTitle());
-            project.setProjectContent(projectResDto.getProjectContent());
-            project.setProjectPassword(projectResDto.getProjectPassword());
+            project.setProjectId(projectReqDto.getProjectId());
+            project.setJob(projectReqDto.getJob());
+            project.setProjectName(projectReqDto.getProjectName());
+            project.setProjectTitle(projectReqDto.getProjectTitle());
+            project.setProjectContent(projectReqDto.getProjectContent());
+            project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setImgPath(project.getImgPath());
             project.setProjectTime(LocalDateTime.now());
-            project.setSkills(projectResDto.getSkillName());
+            project.setSkills(projectReqDto.getSkillName());
             project.setUser(user);
             project.setNickName(user.getNickname());
             project.setProfileImage(user.getProfileImgPath());
