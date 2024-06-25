@@ -33,6 +33,16 @@ public class ProjectService {
         return projectDtos;
     }
 
+    public boolean delproject(Long id) {
+        try{
+            projectRepository.deleteById(id);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 입력)
      * @param project Project 엔티티 타입
@@ -46,7 +56,7 @@ public class ProjectService {
         projectDto.setProjectTitle(project.getProjectTitle());
         projectDto.setProjectPassword(project.getProjectPassword());
         projectDto.setProjectTime(LocalDateTime.now());
-
+        projectDto.setEmail(project.getUser().getEmail());
         return projectDto;
     }
 

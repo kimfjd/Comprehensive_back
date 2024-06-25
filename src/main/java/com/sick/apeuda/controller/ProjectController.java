@@ -33,4 +33,11 @@ public class ProjectController {
         boolean isTrue = projectService.saveProjectBoard(projectDto);
         return ResponseEntity.ok(isTrue);
     }
+
+    @GetMapping("/delete")
+    public ResponseEntity<Boolean> delproject(@RequestParam Long id){
+        boolean isTrue = projectService.delproject(id);
+        return ResponseEntity.ok(isTrue);
+
+    }
 }
