@@ -1,5 +1,6 @@
 package com.sick.apeuda.entity;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,7 +32,11 @@ public class Reply {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY) // 지연 전략
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 }

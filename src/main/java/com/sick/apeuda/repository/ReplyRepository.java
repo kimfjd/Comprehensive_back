@@ -14,4 +14,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Query("SELECT r FROM Reply r WHERE r.board.id = :boardId")
     List<Reply> findByBoardId(@Param("boardId") Long boardId);
 
+    @Query("SELECT r FROM Reply r WHERE r.project.id = :projectId")
+    List<Reply> findByProjectId(@Param("projectId") Long projectId);
+
 }

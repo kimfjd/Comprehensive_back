@@ -1,6 +1,8 @@
 package com.sick.apeuda.service;
 
-import com.sick.apeuda.dto.BoardDto;
+
+import com.sick.apeuda.dto.BoardReqDto;
+import com.sick.apeuda.dto.BoardResDto;
 import com.sick.apeuda.dto.ReplyDto;
 import com.sick.apeuda.entity.*;
 import com.sick.apeuda.repository.BoardRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -26,9 +29,9 @@ public class BoardService {
      * 게시판 전체 조회 메소드
      * @return boardDtos Board 엔티티타입의 List 반환
      */
-    public List<BoardDto> getBoardList() {
+    public List<BoardReqDto> getBoardList() {
         List<Board> boards = boardRepository.findAll();
-        List<BoardDto> boardDtos = new ArrayList<>();
+        List<BoardReqDto> boardDtos = new ArrayList<>();
         for(Board board : boards) {
             boardDtos.add(convertEntityToDto(board));
         }
@@ -40,10 +43,11 @@ public class BoardService {
      * @param id 게시판 고유번호
      * @return param으로 받은 id에 해당하는 BoardDto객체 값 반환
      */
-    public BoardDto getBoardDetail(Long id) {
+    public BoardResDto getBoardDetail(Long id) {
         Board board = boardRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("해당 게시글이 존재하지 않습니다.")
         );
+
         return convertEntityToDetailDto(board);
     }
 
@@ -58,8 +62,6 @@ public class BoardService {
     }
 
 
-
-
     // *** 이밑으론 DTO변환 메소드들 ***
 
 
@@ -68,8 +70,8 @@ public class BoardService {
      * @param board Board 엔티티 타입
      * @return boardDto -> 게시판 전체 리스트 반환
      */
-    private BoardDto convertEntityToDto(Board board) {
-        BoardDto boardDto = new BoardDto();
+    private BoardReqDto convertEntityToDto(Board board) {
+        BoardReqDto boardDto = new BoardReqDto();
         boardDto.setBoardId(board.getBoardId());
         boardDto.setTitle(board.getTitle());
         boardDto.setContent(board.getContent());
@@ -80,30 +82,30 @@ public class BoardService {
         boardDto.setEmail(board.getUser().getEmail());
         return boardDto;
     }
-    // board와 reply를 다른 서비스에서 관리 해야되는거면 수정해야됨
+
     /**
      * 게시글 엔티티를 BoardDto로 변환(자유 게시글 상세페이지, 댓글 포함)
      * @param board Board 엔티티 객체
      * @return BoardDto -> 게시판 상세 내용과 해당 게시판의 댓글 리스트 반환
      */
-    private BoardDto convertEntityToDetailDto(Board board) {
-        BoardDto boardDetailDto = new BoardDto();
-        boardDetailDto.setBoardId(board.getBoardId());
-        boardDetailDto.setTitle(board.getTitle());
-        boardDetailDto.setContent(board.getContent());
-        boardDetailDto.setImg(board.getImgPath());
-        boardDetailDto.setNickName(board.getUser().getNickname());
-        boardDetailDto.setProfileImg(board.getUser().getProfileImgPath());
-        boardDetailDto.setRegDate(board.getRegDate());
+    private BoardResDto convertEntityToDetailDto(Board board) {
+        BoardResDto boardResDto = new BoardResDto();
+        // 게시글 기본 정보 설정
+        boardResDto.setBoardId(board.getBoardId());
+        boardResDto.setTitle(board.getTitle());
+        boardResDto.setContent(board.getContent());
+        boardResDto.setImg(board.getImgPath());
+        boardResDto.setRegDate(board.getRegDate());
 
-        // 댓글 목록
+        // 게시글 작성자 정보 설정
+        boardResDto.setNickName(board.getUser().getNickname());
+        boardResDto.setProfileImg(board.getUser().getProfileImgPath());
+
+        // 댓글 리스트 조회 및 설정
         List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
-        List<ReplyDto> replyDtos = new ArrayList<>();
-        for (Reply reply : replies) {
-            replyDtos.add(convertEntityToReplyDto(reply, board.getBoardId()));
-        }
-        boardDetailDto.setReplies(replyDtos);
-        return boardDetailDto;
+        List<ReplyDto> replyDtos = convertEntityListToDtoList(replies);
+        boardResDto.setReplies(replyDtos);
+        return boardResDto;
     }
 
     /**
@@ -123,7 +125,7 @@ public class BoardService {
     }
 
     // 게시글등록 
-    public boolean saveBoard(BoardDto boardDto) {
+    public boolean saveBoard(BoardReqDto boardReqDto) {
         try {
             Board board = new Board();
 
@@ -131,10 +133,10 @@ public class BoardService {
             User user = userRepository.findById("testId@gmail.com").orElseThrow(
                     () -> new RuntimeException("User does not exist")
             );
-            board.setBoardId(boardDto.getBoardId());
-            board.setTitle(boardDto.getTitle());
-            board.setContent(boardDto.getContent());
-            board.setImgPath(boardDto.getImg());
+            board.setBoardId(boardReqDto.getBoardId());
+            board.setTitle(boardReqDto.getTitle());
+            board.setContent(boardReqDto.getContent());
+            board.setImgPath(boardReqDto.getImg());
             board.setRegDate(LocalDateTime.now());
             board.setProfileImage(user.getProfileImgPath());
             board.setUser(user);
@@ -147,17 +149,19 @@ public class BoardService {
         }
     }
     // 댓글 생성으로 수정해야됨 + 게시판 번호도 변수로 받아야될듯
-    public List<Reply> saveReplyList(ReplyDto replyDto) {
-        List<Reply> reply = new ArrayList<>();
-        for(int i = 1; i <= 5; i++) {
-            Reply r = new Reply();
-            r.setReplyId(replyDto.getReplyId());
-            r.setContent(replyDto.getContent());
-            r.setRegDate(LocalDateTime.now());
-
-            reply.add(r);
-        }
-        return reply;
+    public ReplyDto saveReplyList(Reply reply) {
+        ReplyDto replyDto = new ReplyDto();
+        replyDto.setReplyId(reply.getReplyId());
+        replyDto.setContent(reply.getContent());
+        replyDto.setRegDate(reply.getRegDate());
+        replyDto.setNickName(reply.getUser().getNickname());
+        return replyDto;
     }
+    private List<ReplyDto> convertEntityListToDtoList(List<Reply> replies) {
+        return replies.stream()
+                .map(this::saveReplyList)
+                .collect(Collectors.toList());
+    }
+
 
 }

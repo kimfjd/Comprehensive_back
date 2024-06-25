@@ -14,4 +14,6 @@ public class ReplyDto {
     private String nickName;
     private String profile_img;
     private Long boardId;
+    private Long projectId;
+    private String userId;
 }
