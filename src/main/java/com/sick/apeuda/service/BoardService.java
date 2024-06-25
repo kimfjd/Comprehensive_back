@@ -77,6 +77,7 @@ public class BoardService {
         //boardDto.setReplies(board.getReply().ge);
         boardDto.setRegDate(board.getRegDate());
         boardDto.setEmail(board.getUser().getEmail());
+        boardDto.setContent(board.getContent());
         return boardDto;
     }
     // board와 reply를 다른 서비스에서 관리 해야되는거면 수정해야됨
