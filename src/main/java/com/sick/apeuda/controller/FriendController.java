@@ -91,12 +91,11 @@ public class FriendController {
         return friendService.getFriends(user);
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public void deleteFriend(@RequestParam String userEmail, @RequestParam String friendEmail) {
         // 이메일을 사용하여 사용자 객체를 가져온다고 가정
         User user = new User();
         user.setEmail(userEmail);
-
         User friend = new User();
         friend.setEmail(friendEmail);
 
