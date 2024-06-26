@@ -23,18 +23,18 @@ public class PaymentInfo {
     private User user;
 
     @Column(nullable = false)
-    private String paymentMethodCode;
+    private String paymentMethodCode; // 신용카드, 은행송금, 구글페이 등등
 
     @Lob
     @Column(nullable = false)
-    private String paymentDetails;
+    private String paymentDetails;  //
 
     @Column(nullable = false)
-    private Boolean isPaymentAvailable;
+    private Boolean isPaymentAvailable; // 결제의 성공 여부
 
     @Column(nullable = false)
-    private Boolean isDeleted;
+    private Boolean isDeleted; // 사용자가 결제 정보 삭제를 하면 이 컬럼이 false에서 True로 바뀌고 실제로 결제정보를 삭제하지는 않음
 
     @Column
-    private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt; // 삭제 정보 일시
 }

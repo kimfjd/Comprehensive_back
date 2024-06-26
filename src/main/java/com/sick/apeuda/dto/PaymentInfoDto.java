@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 public class PaymentInfoDto {
     private Long paymentInfoId;
     private String email;
