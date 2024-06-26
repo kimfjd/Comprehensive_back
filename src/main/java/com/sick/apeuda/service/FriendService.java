@@ -43,6 +43,48 @@ public class FriendService {
     }
 
     /**
+     * 사용자의 친구 목록을 가져옵니다.
+     * @param user 친구 목록을 가져올 사용자 객체
+     * @return 사용자의 친구 목록의 DTO 리스트
+     */
+    public List<FriendDto> getFriends(User user) {
+        List<Friend> friends = friendRepository.findAllFriends(user);
+        return friends.stream()
+                .map(friend -> {
+                    // 상대방을 찾습니다.
+                    User friendUser = friend.getUser().equals(user) ? friend.getToUser() : friend.getUser();
+                    return convertToFriendDto(friendUser, friend);
+                })
+                .map(friendDto -> {
+                    // 자신의 아이디를 기반으로 비교하여 필터링
+                    if (friendDto.getUser().getEmail().equals(user.getEmail())) {
+                        friendDto.setUser(null);
+                    }
+                    if (friendDto.getToUser().getEmail().equals(user.getEmail())) {
+                        friendDto.setToUser(null);
+                    }
+                    return friendDto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Friend 엔티티를 FriendDto로 변환합니다.
+     * @param friendUser 친구 관계의 상대방 사용자 객체
+     * @param friend Friend 엔티티 객체
+     * @return 변환된 FriendDto 객체
+     */
+    private FriendDto convertToFriendDto(User friendUser, Friend friend) {
+        FriendDto friendDTO = new FriendDto();
+        friendDTO.setFriendId(friend.getFriendId());
+        friendDTO.setUser(friend.getUser()); // 추가
+        friendDTO.setToUser(friend.getToUser()); // 추가
+        friendDTO.setCheckFriend(friend.getCheckFriend());
+        return friendDTO;
+    }
+
+
+    /**
      * 두 사용자가 친구인지 확인합니다.
      * @param user 첫 번째 사용자 객체
      * @param toUser 두 번째 사용자 객체
@@ -119,5 +161,16 @@ public class FriendService {
         friendDTO.setToUser(friend.getToUser());
         friendDTO.setCheckFriend(friend.getCheckFriend());
         return friendDTO;
+    }
+
+    /**
+     * 친구 관계를 삭제합니다.
+     * @param user 친구 관계를 삭제할 사용자 객체
+     * @param friend 친구 관계를 삭제할 친구 객체
+     */
+    @Transactional
+    public void deleteFriend(User user, User friend) {
+        // 친구 관계를 삭제합니다.
+        friendRepository.deleteFriend(user, friend);
     }
 }
