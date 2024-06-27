@@ -35,12 +35,26 @@ public class FriendService {
             throw new IllegalStateException("이미 친구인 상태입니다.");
         }
 
+        Friend existingRequest = friendRepository.findByUserAndToUser(user, toUser);
+        if (existingRequest != null && !existingRequest.getCheckFriend()) {
+            throw new IllegalStateException("이미 친구 요청을 보냈습니다.");
+        }
+
+        // 동일한 사용자에게 요청을 여러 번 보내지 않도록 체크
+        Friend existingRequestToUser = friendRepository.findByUserAndToUser(toUser, user);
+        if (existingRequestToUser != null && !existingRequestToUser.getCheckFriend()) {
+            throw new IllegalStateException("이 사용자에게 이미 친구 요청을 받았습니다.");
+        }
+
         // 새로운 친구 요청을 생성하고 저장합니다.
         Friend friend = new Friend();
         friend.setUser(user);
         friend.setToUser(toUser);
         friendRepository.save(friend);
     }
+
+
+
 
     /**
      * 사용자의 친구 목록을 가져옵니다.
