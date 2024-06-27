@@ -163,28 +163,28 @@ public class ProjectService {
         projectResDto.setProfileImg(project.getUser().getProfileImgPath());
 
         // 댓글 리스트 조회 및 설정
-        List<Reply> replies = replyRepository.findByProjectId(project.getProjectId());
-        List<ReplyDto> replyDtos = convertEntityListToDtoList(replies);
-        projectResDto.setReplies(replyDtos);
+//        List<Reply> replies = replyRepository.findByProjectId(project.getProjectId());
+//        List<ReplyDto> replyDtos = convertEntityListToDtoList(replies);
+//        projectResDto.setReplies(replyDtos);
         return projectResDto;
     }
-    /**
-     * 댓글 엔티티를 DTO로 변환
-     * @param reply Reply 엔티티 객체
-     * @return ReplyDto -> 게시판 번호에 맞는 댓글 리스트
-     */
-    private ReplyDto saveReplyList(Reply reply) {
-        ReplyDto replyDto = new ReplyDto();
-        replyDto.setContent(reply.getContent());
-        replyDto.setProfile_img(reply.getUser().getProfileImgPath());
-        replyDto.setNickName(reply.getUser().getNickname());
-        replyDto.setRegDate(reply.getRegDate());
-        return replyDto;
-    }
-    private List<ReplyDto> convertEntityListToDtoList(List<Reply> replies) {
-        return replies.stream()
-                .map(this::saveReplyList)
-                .collect(Collectors.toList());
-    }
+//    /**
+//     * 댓글 엔티티를 DTO로 변환
+//     * @param reply Reply 엔티티 객체
+//     * @return ReplyDto -> 게시판 번호에 맞는 댓글 리스트
+//     */
+//    private ReplyDto saveReplyList(Reply reply) {
+//        ReplyDto replyDto = new ReplyDto();
+//        replyDto.setContent(reply.getContent());
+//        replyDto.setProfile_img(reply.getUser().getProfileImgPath());
+//        replyDto.setNickName(reply.getUser().getNickname());
+//        replyDto.setRegDate(reply.getRegDate());
+//        return replyDto;
+//    }
+//    private List<ReplyDto> convertEntityListToDtoList(List<Reply> replies) {
+//        return replies.stream()
+//                .map(this::saveReplyList)
+//                .collect(Collectors.toList());
+//    }
 
 }

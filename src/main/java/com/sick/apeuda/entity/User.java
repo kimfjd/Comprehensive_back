@@ -1,8 +1,11 @@
 //User.java
 package com.sick.apeuda.entity;
+import com.sick.apeuda.constant.Authority;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
@@ -35,4 +38,8 @@ public class User {
 
     @Lob
     private String myInfo;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
 }

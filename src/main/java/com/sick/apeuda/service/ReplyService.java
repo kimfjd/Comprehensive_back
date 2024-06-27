@@ -1,6 +1,6 @@
 package com.sick.apeuda.service;
 
-import com.sick.apeuda.dto.BoardReqDto;
+
 import com.sick.apeuda.dto.ReplyDto;
 import com.sick.apeuda.entity.Board;
 import com.sick.apeuda.entity.Project;
@@ -11,9 +11,13 @@ import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import com.sick.apeuda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 @Service
@@ -24,6 +28,12 @@ public class ReplyService {
     private final ProjectRepository projectRepository;
     private final BoardRepository boardRepository;
 
+
+    /**
+     * 댓글 등록
+     * @param replyDto
+     * @return
+     */
     public boolean saveReply(ReplyDto replyDto) {
         try {
             Reply reply = new Reply();
@@ -55,11 +65,13 @@ public class ReplyService {
             return false;
         }
     }
+
     /**
+     * 댓글 삭제
      * @param id 댓글 고유 ID
      * @return 삭제 성공 여부
      */
-    public boolean delReply(Long id) {
+    public boolean deleteReply(Long id) {
         try{
             replyRepository.deleteById(id);
             return true;
@@ -69,7 +81,12 @@ public class ReplyService {
         }
     }
 
-    // 게시글 수정
+    /**
+     * 댓글 수정
+     * @param id 댓글 고유 ID
+     * @param replyDto 수정할 객체
+     * @return replyDto 수정한 객체
+     */
     public boolean modifyReply(Long id, ReplyDto replyDto) {
         try {
             Reply reply = replyRepository.findById(id).orElseThrow(
@@ -99,4 +116,90 @@ public class ReplyService {
             return false;
         }
     }
+
+    // 댓글입력을 한 로직에서 관리하고 싶었는데 실력부족으로 구현 못함 ㅠ
+//    /**
+//     * 자유 게시판 댓글 페이징
+//     * @param boardId 플젝 게시판 아이디
+//     * @param page 조회할 페이지
+//     * @param size 한 페이지에 나오는 댓글 수
+//     * @return ReplyDto List 객체
+//     */
+//    public List<ReplyDto> getReplyList(Long boardId, Long projectId, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        List<ReplyDto> replyDtos = new ArrayList<>();
+//        if(boardId != null){
+//            List<Reply> replies = replyRepository.findAllByBoardId(boardId, pageable).getContent();
+//            for(Reply reply : replies) {
+//                replyDtos.add(saveReplyList(reply));
+//            }
+//        } else if (projectId != null) {
+//            List<Reply> replies = replyRepository.findAllByProjectId(projectId, pageable).getContent();
+//            for(Reply reply : replies) {
+//                replyDtos.add(saveReplyList(reply));
+//            }
+//        }else {
+//            throw new RuntimeException("자유 게시판 아이디와 플젝 게시판 아이디 둘중 하나는 있어야 합니다!");
+//        }
+//        return replyDtos;
+//    }
+
+    /**
+     * 자유 게시판 댓글 페이징
+     * @param boardId 자유 게시판 아이디
+     * @param page 조회할 페이지
+     * @param size 한 페이지에 나오는 댓글 수
+     * @return ReplyDto List 객체
+     */
+    public List<ReplyDto> getBoardReplyList(Long boardId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Reply> replies = replyRepository.findAllByBoardId(boardId, pageable).getContent();
+        List<ReplyDto> replyDtos = new ArrayList<>();
+        for(Reply reply : replies) {
+            replyDtos.add(saveReplyList(reply));
+        }
+        return replyDtos;
+    }
+
+    /**
+     * 플젝 게시판 댓글 페이징
+     * @param projectId 플젝 게시판 아이디
+     * @param page 조회할 페이지
+     * @param size 한 페이지에 나오는 댓글 수
+     * @return ReplyDto List 객체
+     */
+    public List<ReplyDto> getProjectReplyList(Long projectId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Reply> replies = replyRepository.findAllByProjectId(projectId, pageable).getContent();
+        List<ReplyDto> replyDtos = new ArrayList<>();
+        for(Reply reply : replies) {
+            replyDtos.add(saveReplyList(reply));
+        }
+        return replyDtos;
+    }
+
+    /**
+     * 댓글 엔티티를 DTO로 변환
+     * @param reply Reply 엔티티 객체
+     * @return ReplyDto -> 게시판 번호에 맞는 댓글 리스트
+     */
+    public ReplyDto saveReplyList(Reply reply) {
+        ReplyDto replyDto = new ReplyDto();
+        replyDto.setReplyId(reply.getReplyId());
+        replyDto.setContent(reply.getContent());
+        replyDto.setRegDate(reply.getRegDate());
+        replyDto.setNickName(reply.getUser().getNickname());
+        replyDto.setProfile_img(reply.getUser().getProfileImgPath());
+        // 프로젝트 아이디 설정
+        if (reply.getProject() != null) {
+            replyDto.setProjectId(reply.getProject().getProjectId());
+        }
+        // 게시판 아이디 설정
+        if (reply.getBoard() != null) {
+            replyDto.setBoardId(reply.getBoard().getBoardId());
+        }
+
+        return replyDto;
+    }
+
 }

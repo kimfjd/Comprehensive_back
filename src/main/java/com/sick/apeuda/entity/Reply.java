@@ -4,6 +4,7 @@ package com.sick.apeuda.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,10 +34,12 @@ public class Reply {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Nullable
     @JoinColumn(name = "board_id")
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
+    @Nullable
     private Project project;
 }

@@ -51,4 +51,11 @@ public class BoardController {
         boolean isTrue = boardService.modifyBoard(id, boardReqDto);
         return ResponseEntity.ok(isTrue);
     }
+    // 게시글 목록 페이징
+//    @GetMapping("/page")
+//    public ResponseEntity<List<BoardReqDto>> boardPageList(@RequestParam(defaultValue = "0") int page,
+//                                                            @RequestParam(defaultValue = "5") int size) {
+//        List<BoardReqDto> list = boardService.getBoardPageList(page, size);
+//        return ResponseEntity.ok(list);
+//    }
 }

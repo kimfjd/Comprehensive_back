@@ -9,6 +9,8 @@ import com.sick.apeuda.repository.BoardRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import com.sick.apeuda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -108,6 +110,17 @@ public class BoardService {
         }
     }
 
+    // 게시글 페이징 -> 무한 스크롤로 변경 예정
+//    public List<BoardReqDto> getBoardPageList(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        List<Board> boards = boardRepository.findAll(pageable).getContent();
+//        List<BoardReqDto> boardDtos = new ArrayList<>();
+//        for(Board board : boards) {
+//            boardDtos.add(convertEntityToDto(board));
+//        }
+//        return boardDtos;
+//    }
+
     // *** 이밑으론 DTO변환 메소드들 ***
 
 
@@ -148,21 +161,21 @@ public class BoardService {
         boardResDto.setProfileImg(board.getUser().getProfileImgPath());
 
         // 댓글 리스트 조회 및 설정
-        List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
-        List<ReplyDto> replyDtos = convertEntityListToDtoList(replies);
-        boardResDto.setReplies(replyDtos);
+//        List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
+//        List<ReplyDto> replyDtos = convertEntityListToDtoList(replies);
+//        boardResDto.setReplies(replyDtos);
         return boardResDto;
     }
 
     /**
      * 댓글 엔티티를 DTO로 변환
      * @param reply Reply 엔티티 객체
-     * @param boardId 댓글이 들어가있는 게시판 고유 번호
+//     * @param boardId 댓글이 들어가있는 게시판 고유 번호
      * @return ReplyDto -> 게시판 번호에 맞는 댓글 리스트
      */
-    private ReplyDto convertEntityToReplyDto(Reply reply, Long boardId) {
+    private ReplyDto convertEntityToReplyDto(Reply reply) {
         ReplyDto replyDto = new ReplyDto();
-        replyDto.setBoardId(boardId);
+//        replyDto.setBoardId(boardId);, Long boardId
         replyDto.setContent(reply.getContent());
         replyDto.setProfile_img(reply.getUser().getProfileImgPath());
         replyDto.setNickName(reply.getUser().getNickname());
@@ -171,21 +184,30 @@ public class BoardService {
     }
 
 
-
-    // 댓글 생성으로 수정해야됨 + 게시판 번호도 변수로 받아야될듯
-    public ReplyDto saveReplyList(Reply reply) {
-        ReplyDto replyDto = new ReplyDto();
-        replyDto.setReplyId(reply.getReplyId());
-        replyDto.setContent(reply.getContent());
-        replyDto.setRegDate(reply.getRegDate());
-        replyDto.setNickName(reply.getUser().getNickname());
-        return replyDto;
-    }
-    private List<ReplyDto> convertEntityListToDtoList(List<Reply> replies) {
-        return replies.stream()
-                .map(this::saveReplyList)
-                .collect(Collectors.toList());
-    }
-
+//
+//    // 댓글 생성으로 수정해야됨 + 게시판 번호도 변수로 받아야될듯
+//    public ReplyDto saveReplyList(Reply reply) {
+//        ReplyDto replyDto = new ReplyDto();
+//        replyDto.setReplyId(reply.getReplyId());
+//        replyDto.setContent(reply.getContent());
+//        replyDto.setRegDate(reply.getRegDate());
+//        replyDto.setNickName(reply.getUser().getNickname());
+//        return replyDto;
+//    }
+//    private List<ReplyDto> convertEntityListToDtoList(List<Reply> replies) {
+//        return replies.stream()
+//                .map(this::saveReplyList)
+//                .collect(Collectors.toList());
+//    }
+    // 댓글 페이징
+//    public List<ReplyDto> getReplyList(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        List<Reply> replies = replyRepository.findAll(pageable).getContent();
+//        List<ReplyDto> replyDtos = new ArrayList<>();
+//        for(Reply reply : replies) {
+//            replyDtos.add(convertEntityToReplyDto(reply));
+//        }
+//        return replyDtos;
+//    }
 
 }
