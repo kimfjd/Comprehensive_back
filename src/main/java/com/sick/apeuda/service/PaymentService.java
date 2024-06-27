@@ -10,6 +10,7 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
@@ -86,5 +87,6 @@ public class PaymentService {
             return false;
         }
     }
+
 
 }
