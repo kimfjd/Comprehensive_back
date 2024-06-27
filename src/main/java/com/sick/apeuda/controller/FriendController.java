@@ -16,6 +16,14 @@ public class FriendController {
     @Autowired
     private FriendService friendService;
 
+
+    @GetMapping("/list")
+    public List<FriendDto> getFriends(@RequestParam String userEmail) {
+        User user = new User();
+        user.setEmail(userEmail);
+        return friendService.getFriends(user);
+    }
+
     /**
      * 친구 요청을 보냅니다.
      *
