@@ -27,7 +27,7 @@ public class PaymentInfo {
 
     @Lob
     @Column(nullable = false)
-    private String paymentDetails;  //
+    private String paymentDetails;  // 구독에 관한 모든 데이터
 
     @Column(nullable = false)
     private Boolean isPaymentAvailable; // 결제의 성공 여부
