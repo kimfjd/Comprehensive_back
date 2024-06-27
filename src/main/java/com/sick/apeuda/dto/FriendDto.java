@@ -1,6 +1,6 @@
 package com.sick.apeuda.dto;
 
-import com.sick.apeuda.entity.User;
+import com.sick.apeuda.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class FriendDto {
     private Long friendId;
-    private User user;
-    private User toUser;
+    private Member member;
+    private Member toMember;
     private Boolean checkFriend;
 }

@@ -19,8 +19,8 @@ public class PaymentInfo {
     private Long paymentInfoId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     private String paymentMethodCode; // 신용카드, 은행송금, 구글페이 등등

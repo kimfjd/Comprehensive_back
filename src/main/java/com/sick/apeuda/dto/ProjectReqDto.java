@@ -1,7 +1,6 @@
 package com.sick.apeuda.dto;
 
 import com.sick.apeuda.entity.Skill;
-import com.sick.apeuda.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,7 +1,6 @@
 package com.sick.apeuda.repository;
 
 import com.sick.apeuda.entity.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +22,24 @@ public class BoardRepositoryTest {
     @Autowired
     private ReplyRepository replyRepository;
     @Autowired
-    private UserRepository userRepository;
+    private MemberRepository memberRepository;
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
     private SkillRepository skillRepository;
     // 회원 엔티티 생성
-    public User createUserInfo() {
-        User user = new User();
-        user.setEmail("testId@gmail.com");
-        user.setPassword("1234");
-        user.setName("박성진");
-        user.setEmail("jks2024@gmail.com");
-        user.setMyInfo("술쟁이 입니다.");
-        user.setNickname("개똥벌레");
-        user.setIdentityNumber("941231");
-        user.setProfileImgPath("");
-        //user.setRegDate(LocalDateTime.now());
-        return user;
+    public Member createUserInfo() {
+        Member member = new Member();
+        member.setEmail("testId@gmail.com");
+        member.setPassword("1234");
+        member.setName("박성진");
+        member.setEmail("jks2024@gmail.com");
+        member.setMyInfo("술쟁이 입니다.");
+        member.setNickname("개똥벌레");
+        member.setIdentityNumber("941231");
+        member.setProfileImgPath("");
+        //member.setRegDate(LocalDateTime.now());
+        return member;
     }
     // 게시판 엔티티 생성
     public Board createBoardContentEntity(){
@@ -86,13 +85,13 @@ public class BoardRepositoryTest {
     //플젝 게시판 상세 정보 생성
     public Project createProjectBoardContent(){
         Project project = new Project();
-        User user = createUserInfo();
+        Member member = createUserInfo();
 
         project.setProjectName("플젝 이름");
         project.setProjectPassword("1234");
         project.setJob("매니저");
         project.setProjectTime(LocalDateTime.now());
-        //project.setUser(user);
+        //project.setMember(member);
 
         List<Skill> skills = skillRepository.findAll();
         System.out.println(skills +  " 체크");
@@ -136,7 +135,7 @@ public class BoardRepositoryTest {
     }
     // 댓글 생성
     public List<Reply> createReplyList() {
-        User user = createUserInfo();
+        Member member = createUserInfo();
         Board board = createBoardContentEntity();
         List<Reply> reply = new ArrayList<>();
         for(int i = 1; i <= 5; i++) {
@@ -148,8 +147,6 @@ public class BoardRepositoryTest {
         }
         return reply;
     }
-
-
 
 
 

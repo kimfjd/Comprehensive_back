@@ -10,7 +10,6 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 
@@ -20,16 +19,16 @@ public class PaymentService {
     private final PaymentHistoryRepository paymentHistoryRepository;
     private final PaymentInfoRepository paymentInfoRepository;
     private final SubscriptionRepository subscriptionRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     public boolean savePaymentHistory(PaymentHistoryDto paymentHistoryDto) {
         try {
-            String userId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            User user = userRepository.findById("kimfjd")
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById("kimfjd")
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
 
             PaymentHistory paymentHistory = new PaymentHistory();
-            paymentHistory.setUser(user);
+            paymentHistory.setMember(member);
             paymentHistory.setPaymentDate(paymentHistoryDto.getPaymentDate());
             paymentHistory.setPaymentStatus(paymentHistoryDto.getPaymentStatus());
             paymentHistory.setTransactionId(paymentHistoryDto.getTransactionId());
@@ -46,11 +45,11 @@ public class PaymentService {
 
     public boolean savePaymentinfo(PaymentInfoDto paymentInfoDto) {
         try {
-            String userId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            User user = userRepository.findById("kimfjd")
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById("kimfjd")
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
             PaymentInfo paymentInfo = new PaymentInfo();
-            paymentInfo.setUser(user);
+            paymentInfo.setMember(member);
             paymentInfo.setPaymentMethodCode(paymentInfoDto.getPaymentMethodCode());
             paymentInfo.setPaymentDetails(paymentInfoDto.getPaymentDetails());
             paymentInfo.setIsPaymentAvailable(paymentInfoDto.getIsPaymentAvailable());
@@ -66,12 +65,12 @@ public class PaymentService {
 
     public boolean saveSubscriptions(SubscriptionDto subscriptionDto){
         try {
-            String userId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            User user = userRepository.findById("kimfjd")
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById("kimfjd")
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
 
             Subscription subscription = new Subscription();
-            subscription.setUser(user);
+            subscription.setMember(member);
             subscription.setCustomerUid(subscriptionDto.getCustomerUid());
             subscription.setTransactionId(subscriptionDto.getTransactionId());
             subscription.setPaymentDate(subscriptionDto.getPaymentDate());

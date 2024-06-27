@@ -5,11 +5,11 @@ import com.sick.apeuda.dto.ReplyDto;
 import com.sick.apeuda.entity.Board;
 import com.sick.apeuda.entity.Project;
 import com.sick.apeuda.entity.Reply;
-import com.sick.apeuda.entity.User;
+import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.repository.BoardRepository;
+import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
-import com.sick.apeuda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 @RequiredArgsConstructor
 public class ReplyService {
     private final ReplyRepository replyRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final BoardRepository boardRepository;
 
@@ -38,8 +38,8 @@ public class ReplyService {
         try {
             Reply reply = new Reply();
             String memberId = getCurrentMemberId();
-            User user = userRepository.findById("testId@gmail.com").orElseThrow(
-                    () -> new RuntimeException("User does not exist")
+            Member member = memberRepository.findById("testId@gmail.com").orElseThrow(
+                    () -> new RuntimeException("Member does not exist")
             );
             reply.setReplyId(replyDto.getReplyId());
             reply.setContent(replyDto.getContent());
@@ -57,7 +57,7 @@ public class ReplyService {
             } else {
                 throw new RuntimeException("Either boardId or projectId must be provided");
             }
-            reply.setUser(user);
+            reply.setMember(member);
             replyRepository.save(reply);
             return true;
         }catch (Exception e) {
@@ -188,8 +188,8 @@ public class ReplyService {
         replyDto.setReplyId(reply.getReplyId());
         replyDto.setContent(reply.getContent());
         replyDto.setRegDate(reply.getRegDate());
-        replyDto.setNickName(reply.getUser().getNickname());
-        replyDto.setProfile_img(reply.getUser().getProfileImgPath());
+        replyDto.setNickName(reply.getMember().getNickname());
+        replyDto.setProfile_img(reply.getMember().getProfileImgPath());
         // 프로젝트 아이디 설정
         if (reply.getProject() != null) {
             replyDto.setProjectId(reply.getProject().getProjectId());

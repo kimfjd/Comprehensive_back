@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 public class SubscriptionDto {
     private Long subscriptionId;
-    private String userEmail;
+    private String memberEmail;
     private String customerUid; // 포트원에서 발급한 고객 UID
     private String transactionId;
     private LocalDateTime paymentDate;

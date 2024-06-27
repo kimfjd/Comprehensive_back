@@ -20,8 +20,8 @@ public class PaymentHistory {
     private Long paymentHistoryId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(nullable = false)
     private LocalDateTime paymentDate;

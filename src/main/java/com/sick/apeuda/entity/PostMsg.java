@@ -25,11 +25,11 @@ public class PostMsg {
 
     @ManyToOne
     @JoinColumn(name = "send_id")
-    private User sendUser;
+    private Member sendMember;
 
     @ManyToOne
     @JoinColumn(name = "receive_id")
-    private User receiveUser;
+    private Member receiveMember;
 
     private Boolean readStatus;
 

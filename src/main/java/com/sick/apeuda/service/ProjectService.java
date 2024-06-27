@@ -1,24 +1,19 @@
 package com.sick.apeuda.service;
 
 
-import com.sick.apeuda.dto.BoardReqDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
-import com.sick.apeuda.dto.ReplyDto;
-import com.sick.apeuda.entity.Board;
+import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Project;
-import com.sick.apeuda.entity.Reply;
-import com.sick.apeuda.entity.User;
+import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
-import com.sick.apeuda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -26,7 +21,7 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 @RequiredArgsConstructor
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final ReplyRepository replyRepository;
 
     /**
@@ -56,7 +51,7 @@ public class ProjectService {
         projectReqDto.setProjectPassword(project.getProjectPassword());
         projectReqDto.setProjectTime(project.getProjectTime());
         projectReqDto.setRegDate(LocalDateTime.now());
-        projectReqDto.setEmail(project.getUser().getEmail());
+        projectReqDto.setEmail(project.getMember().getEmail());
 
         return projectReqDto;
     }
@@ -68,10 +63,10 @@ public class ProjectService {
     public boolean saveProject(ProjectReqDto projectReqDto) {
         try{
             Project project = new Project();
-            String userId = getCurrentMemberId();
-            // 토큰 발급 받기전까지 Id 직접입력 토큰 발급시 userId 넣으면됨
-            User user = userRepository.findById("testId@gmail.com").orElseThrow(
-                    () -> new RuntimeException("User does not exist")
+            String memberId = getCurrentMemberId();
+            // 토큰 발급 받기전까지 Id 직접입력 토큰 발급시 memberId 넣으면됨
+            Member member = memberRepository.findById("testId@gmail.com").orElseThrow(
+                    () -> new RuntimeException("Member does not exist")
             );
             project.setProjectId(projectReqDto.getProjectId());
             project.setJob(projectReqDto.getJob());
@@ -83,9 +78,9 @@ public class ProjectService {
             project.setRegDate(LocalDateTime.now());
             project.setProjectTime(project.getProjectTime());
             project.setSkills(projectReqDto.getSkillName());
-            project.setUser(user);
-            project.setNickName(user.getNickname());
-            project.setProfileImage(user.getProfileImgPath());
+            project.setMember(member);
+            project.setNickName(member.getNickname());
+            project.setProfileImage(member.getProfileImgPath());
             projectRepository.save(project);
             return true;
         }catch (Exception e) {
@@ -159,8 +154,8 @@ public class ProjectService {
         projectResDto.setRegDate(LocalDateTime.now());
 
         // 플젝 작성자 정보 설정
-        projectResDto.setNickName(project.getUser().getNickname());
-        projectResDto.setProfileImg(project.getUser().getProfileImgPath());
+        projectResDto.setNickName(project.getMember().getNickname());
+        projectResDto.setProfileImg(project.getMember().getProfileImgPath());
 
         // 댓글 리스트 조회 및 설정
 //        List<Reply> replies = replyRepository.findByProjectId(project.getProjectId());
@@ -176,8 +171,8 @@ public class ProjectService {
 //    private ReplyDto saveReplyList(Reply reply) {
 //        ReplyDto replyDto = new ReplyDto();
 //        replyDto.setContent(reply.getContent());
-//        replyDto.setProfile_img(reply.getUser().getProfileImgPath());
-//        replyDto.setNickName(reply.getUser().getNickname());
+//        replyDto.setProfile_img(reply.getMember().getProfileImgPath());
+//        replyDto.setNickName(reply.getMember().getNickname());
 //        replyDto.setRegDate(reply.getRegDate());
 //        return replyDto;
 //    }

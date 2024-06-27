@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    @Query("SELECT b FROM Board b WHERE b.user.email = :userId")
-    List<Board> findPostsByUserId(@Param("userId") String userId);
+    @Query("SELECT b FROM Board b WHERE b.member.email = :memberId")
+    List<Board> findPostsByMemberId(@Param("memberId") String memberId);
 
 
 

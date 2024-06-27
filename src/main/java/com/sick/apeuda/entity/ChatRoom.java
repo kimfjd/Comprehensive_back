@@ -1,7 +1,6 @@
 // ChatRoom.java
 package com.sick.apeuda.entity;
 
-import com.sick.apeuda.entity.Project;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,8 +24,8 @@ public class ChatRoom {
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(unique = true)
     private String roomName; // 방 이름

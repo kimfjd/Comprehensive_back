@@ -1,7 +1,7 @@
 package com.sick.apeuda.repository;
 
 
-import com.sick.apeuda.entity.User;
+import com.sick.apeuda.entity.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +12,14 @@ import java.util.Optional;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-test.properties")
-public class UserRepositoryTest {
+public class MemberRepositoryTest {
     @Autowired
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
     @Test
     @DisplayName("회원가입")
     public void testUserSignup() {
-        User user = User.builder()
+        Member member = Member.builder()
                 .email("test4@example.com")
                 .name("Test User4")
                 .password("password3")
@@ -31,7 +31,7 @@ public class UserRepositoryTest {
     @Test
     @DisplayName("로그인")
     public void testLogin() {
-        Optional<User> login = userRepository.findByEmailAndPassword("test1@example.com", "password2");
+        Optional<Member> login = memberRepository.findByEmailAndPassword("test1@example.com", "password2");
         if(login.isPresent()) {
             System.out.println("로그인 성공");
         } else {

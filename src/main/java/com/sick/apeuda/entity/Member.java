@@ -1,10 +1,9 @@
-//User.java
+//Member.java
 package com.sick.apeuda.entity;
 import com.sick.apeuda.constant.Authority;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -13,10 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "User")
-public class User {
+@Table(name = "member")
+public class Member {
     @Id
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     private String email;
 
     @Column(nullable = false)
@@ -42,4 +41,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    //private String customId;
 }

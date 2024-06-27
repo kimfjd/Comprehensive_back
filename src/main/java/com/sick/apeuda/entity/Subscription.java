@@ -19,8 +19,8 @@ public class Subscription {
     private Long subscriptionId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     @Column(name = "customer_uid", nullable = false)
     private String customerUid; // 포트원에서 발급한 고객 UID (고유 결제 식별자)

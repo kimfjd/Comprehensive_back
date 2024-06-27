@@ -1,5 +1,4 @@
 package com.sick.apeuda.entity;
-import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,8 +19,8 @@ public class Project {
     private Long projectId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String job;
 

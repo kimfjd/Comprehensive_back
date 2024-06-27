@@ -18,12 +18,12 @@ public class Friend {
     private Long friendId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "to_user_id")
-    private User toUser;
+    @JoinColumn(name = "to_member_id")
+    private Member toMember;
 
     private Boolean checkFriend;
     public Friend() {

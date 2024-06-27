@@ -7,16 +7,13 @@ import com.sick.apeuda.dto.ReplyDto;
 import com.sick.apeuda.entity.*;
 import com.sick.apeuda.repository.BoardRepository;
 import com.sick.apeuda.repository.ReplyRepository;
-import com.sick.apeuda.repository.UserRepository;
+import com.sick.apeuda.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -25,7 +22,7 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     /**
      * 게시판 전체 조회 메소드
@@ -71,17 +68,17 @@ public class BoardService {
         try {
             Board board = new Board();
 
-            String userId = getCurrentMemberId();
-            User user = userRepository.findById("testId@gmail.com").orElseThrow(
-                    () -> new RuntimeException("User does not exist")
+            String memberId = getCurrentMemberId();
+            Member member = memberRepository.findById("testId@gmail.com").orElseThrow(
+                    () -> new RuntimeException("Member does not exist")
             );
             board.setBoardId(boardReqDto.getBoardId());
             board.setTitle(boardReqDto.getTitle());
             board.setContent(boardReqDto.getContent());
             board.setImgPath(boardReqDto.getImg());
             board.setRegDate(LocalDateTime.now());
-            board.setProfileImage(user.getProfileImgPath());
-            board.setUser(user);
+            board.setProfileImage(member.getProfileImgPath());
+            board.setMember(member);
 
             boardRepository.save(board);
             return true;
@@ -134,11 +131,11 @@ public class BoardService {
         boardDto.setBoardId(board.getBoardId());
         boardDto.setTitle(board.getTitle());
         boardDto.setContent(board.getContent());
-        boardDto.setNickName(board.getUser().getNickname());
-        boardDto.setProfileImg(board.getUser().getProfileImgPath());
+        boardDto.setNickName(board.getMember().getNickname());
+        boardDto.setProfileImg(board.getMember().getProfileImgPath());
         //boardDto.setReplies(board.getReply().ge);
         boardDto.setRegDate(board.getRegDate());
-        boardDto.setEmail(board.getUser().getEmail());
+        boardDto.setEmail(board.getMember().getEmail());
         return boardDto;
     }
 
@@ -157,8 +154,8 @@ public class BoardService {
         boardResDto.setRegDate(board.getRegDate());
 
         // 게시글 작성자 정보 설정
-        boardResDto.setNickName(board.getUser().getNickname());
-        boardResDto.setProfileImg(board.getUser().getProfileImgPath());
+        boardResDto.setNickName(board.getMember().getNickname());
+        boardResDto.setProfileImg(board.getMember().getProfileImgPath());
 
         // 댓글 리스트 조회 및 설정
 //        List<Reply> replies = replyRepository.findByBoardId(board.getBoardId());
@@ -177,8 +174,8 @@ public class BoardService {
         ReplyDto replyDto = new ReplyDto();
 //        replyDto.setBoardId(boardId);, Long boardId
         replyDto.setContent(reply.getContent());
-        replyDto.setProfile_img(reply.getUser().getProfileImgPath());
-        replyDto.setNickName(reply.getUser().getNickname());
+        replyDto.setProfile_img(reply.getMember().getProfileImgPath());
+        replyDto.setNickName(reply.getMember().getNickname());
         replyDto.setRegDate(reply.getRegDate());
         return replyDto;
     }
@@ -191,7 +188,7 @@ public class BoardService {
 //        replyDto.setReplyId(reply.getReplyId());
 //        replyDto.setContent(reply.getContent());
 //        replyDto.setRegDate(reply.getRegDate());
-//        replyDto.setNickName(reply.getUser().getNickname());
+//        replyDto.setNickName(reply.getMember().getNickname());
 //        return replyDto;
 //    }
 //    private List<ReplyDto> convertEntityListToDtoList(List<Reply> replies) {

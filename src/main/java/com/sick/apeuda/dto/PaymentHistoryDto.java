@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PaymentHistoryDto {
-    private String user;
+    private String member;
     private LocalDateTime paymentDate;
     private String paymentStatus;
     private String transactionId;
