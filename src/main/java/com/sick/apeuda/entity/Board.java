@@ -1,5 +1,6 @@
 package com.sick.apeuda.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -32,7 +33,7 @@ public class Board {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "board_id")
     private List<Reply> reply;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime regDate;
 
 

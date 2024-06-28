@@ -4,6 +4,7 @@ import com.sick.apeuda.entity.Skill;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class ProjectResDto {
     private String projectContent;
     private String nickName;
     private String profileImg;
+    private int recruitNum;
+    private String recruitMember;
     private List<Skill> skillName;
     private List<ReplyDto> replies;
 }

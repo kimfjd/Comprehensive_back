@@ -4,6 +4,7 @@ import com.sick.apeuda.entity.Skill;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,11 +16,13 @@ public class ProjectReqDto {
     private String projectName;
     private String projectTitle;
     private String projectPassword;
-    // Data(sql)로 바꿔야될듯
+    private String projectContent;
+    private String imgPath;
     private LocalDateTime projectTime;
     private LocalDateTime regDate;
+    private int recruitNum;
+
     private String email;
-    private String projectContent;
     private String nickName;
     private String profileImg;
     private List<Skill> skillName;

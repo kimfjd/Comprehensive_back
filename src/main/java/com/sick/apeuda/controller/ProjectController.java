@@ -21,7 +21,7 @@ public class ProjectController {
     @GetMapping("/list")
     public ResponseEntity<List<ProjectReqDto>> projectBoardList() {
         log.info("projectBoardList실행");
-        List<ProjectReqDto> list = projectService.getProjectBoardList();
+        List<ProjectReqDto> list = projectService.getProjectList();
         return ResponseEntity.ok(list);
     }
     // 플젝 게시글 상세 조회
