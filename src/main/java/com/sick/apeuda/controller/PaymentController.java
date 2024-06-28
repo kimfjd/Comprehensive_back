@@ -5,8 +5,10 @@ import com.sick.apeuda.dto.PaymentInfoDto;
 import com.sick.apeuda.dto.SubscriptionDto;
 import com.sick.apeuda.service.PaymentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
     private final PaymentService paymentService;
+
+
 
     @PostMapping("/save")
     public ResponseEntity<Boolean> savePaymentHistory(@RequestBody PaymentHistoryDto paymentHistoryDto) {
