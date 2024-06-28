@@ -1,5 +1,6 @@
 package com.sick.apeuda.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,6 +22,7 @@ public class PostMsg {
     @Lob
     private String content;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime receiveTime;
 
     @ManyToOne
@@ -32,5 +34,11 @@ public class PostMsg {
     private Member receiveMember;
 
     private Boolean readStatus;
+
+    public void messageSave(Member sendMember, Member receiveMember, String content) {
+        this.sendMember = sendMember;
+        this.receiveMember = receiveMember;
+        this.content = content;
+    }
 
 }
