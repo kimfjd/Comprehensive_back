@@ -39,7 +39,7 @@ public class PostMsgService {
     }
     @Transactional(readOnly = true)
     public List<PostMsg> receivedMessage(Member receiveMember, Member sendMember) {
-        List<PostMsg> postMsgs = msgRepository.findAllByReceiveMemberAndSendMember(receiveMember, sendMember);
+        List<PostMsg> postMsgs = msgRepository.findAllByReceiveMemberAndSendMemberOrderByReceiveTimeDesc(receiveMember, sendMember);
         return postMsgs;
     }
 }
