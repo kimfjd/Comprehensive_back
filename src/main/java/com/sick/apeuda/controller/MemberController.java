@@ -3,6 +3,9 @@ package com.sick.apeuda.controller;
 
 
 import com.sick.apeuda.dto.MemberDto;
+import com.sick.apeuda.dto.MemberReqDto;
+import com.sick.apeuda.dto.MemberResDto;
+import com.sick.apeuda.dto.TokenDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,31 +29,6 @@ public class MemberController {
         return ResponseEntity.ok(isEmail);
     }
 
-    // 회원가입(기본적인 것만, 아이디,비번,이름,주민번호는 필수 입력)
-    @PostMapping("/signup")
-    public ResponseEntity<Boolean> memberSignup (@RequestBody MemberDto memberDto) {
-        Member member = Member.builder()
-                .email(memberDto.getEmail())
-                .password(memberDto.getPassword())
-                .name(memberDto.getName())
-                .identityNumber(memberDto.getIdentityNumber())
-                .nickname(memberDto.getNickname())
-                .profileImgPath(memberDto.getProfileImgPath())
-                .skill(memberDto.getSkill())
-                .myInfo(memberDto.getMyInfo())
-                .build();
-
-        boolean isTrue = memberService.saveMember(member);
-
-        return ResponseEntity.ok(isTrue);
-    }
-
-    // 로그인
-    @PostMapping("/login")
-    public ResponseEntity<Boolean> memberLogin(@RequestBody MemberDto memberDto) {
-        boolean isTrue = memberService.login(memberDto.getEmail(), memberDto.getPassword());
-        return ResponseEntity.ok(isTrue);
-    }
 
 
     // 회원정보 가져오기

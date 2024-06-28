@@ -27,11 +27,7 @@ public class MemberService {
         return rst != null;
     }
 
-    // 로그인
-    public boolean login(String email, String password) {
-        Optional<Member> member = memberRepository.findByEmailAndPassword(email, password);
-        return member.isPresent();
-    }
+
 
     // 회원 정보 조회(로그인 한 사용자)
     public MemberDto getMemberInfo(String email) {
