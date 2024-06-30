@@ -18,8 +18,10 @@ public class ChatMsgController {
     }
 
     @MessageMapping("/chat.sendMessage")
-    public void sendMessage(ChatMsgDto chatMessageDto) {
-        chatService.sendMessage(chatMessageDto);
-        messagingTemplate.convertAndSend("/topic/room/" + chatMessageDto.getRoomId(), chatMessageDto);
+    public void sendMessage(ChatMsgDto chatMsgDto) {
+        chatService.sendMessage(chatMsgDto);
+        messagingTemplate.convertAndSend("/topic/room/" + chatMsgDto.getRoomId(), chatMsgDto);
+        messagingTemplate.convertAndSendToUser(chatMsgDto.getReceiver(), "/queue/reply", chatMsgDto);
+
     }
 }
