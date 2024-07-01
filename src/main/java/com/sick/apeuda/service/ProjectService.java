@@ -51,12 +51,12 @@ public class ProjectService {
         projectReqDto.setProjectContent(project.getProjectContent());
         projectReqDto.setProjectPassword(project.getProjectPassword());
         projectReqDto.setProjectTime(project.getProjectTime());
-        projectReqDto.setRegDate(LocalDateTime.now());
+        projectReqDto.setRegDate(project.getRegDate());
         projectReqDto.setEmail(project.getMember().getEmail());
         projectReqDto.setNickName(project.getMember().getNickname());
         projectReqDto.setProfileImg(project.getMember().getProfileImgPath());
         projectReqDto.setSkillName(project.getSkills());
-
+        System.out.println("등록시간 " + projectReqDto.getProjectTime());
         return projectReqDto;
     }
     /**
@@ -73,20 +73,22 @@ public class ProjectService {
                     () -> new RuntimeException("Member does not exist")
             );
             project.setProjectId(projectReqDto.getProjectId());
-            project.setJob(projectReqDto.getJob());
+            //project.setJob(projectReqDto.getJob());
             project.setProjectName(projectReqDto.getProjectName());
             project.setProjectTitle(projectReqDto.getProjectTitle());
             project.setProjectContent(projectReqDto.getProjectContent());
             project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setImgPath(projectReqDto.getImgPath());
             project.setProjectTime(projectReqDto.getProjectTime());
-            project.setRecruitNum(projectReqDto.getRecruitNum());
+            //project.setRecruitNum(projectReqDto.getRecruitNum());
             project.setRegDate(LocalDateTime.now());
             project.setSkills(projectReqDto.getSkillName());
+            project.setRecruitNum(projectReqDto.getRecruitNum());
             project.setMember(member);
             project.setNickName(member.getNickname());
             project.setProfileImage(member.getProfileImgPath());
             projectRepository.save(project);
+            System.out.println("저장 성공 " + project.getProjectName());
             return true;
         }catch (Exception e) {
             e.printStackTrace();

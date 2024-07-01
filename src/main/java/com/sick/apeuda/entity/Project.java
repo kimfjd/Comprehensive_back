@@ -36,7 +36,7 @@ public class Project {
     private String projectPassword;
     private String imgPath;
     // 최대 모집인원
-    private int recruitNum;
+    private String recruitNum;
     // 참가 멤버 닉네임
     private String recruitMember;
     private String recruitMemberProfileImg;
@@ -45,7 +45,7 @@ public class Project {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime projectTime;
     // 등록일자
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime regDate;
 
     // 작성자 정보

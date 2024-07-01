@@ -22,7 +22,7 @@ public class ProjectResDto {
     private String projectContent;
     private String nickName;
     private String profileImg;
-    private int recruitNum;
+    private String recruitNum;
     private String recruitMember;
     private List<Skill> skillName;
     private List<ReplyDto> replies;

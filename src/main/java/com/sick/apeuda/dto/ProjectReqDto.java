@@ -20,7 +20,7 @@ public class ProjectReqDto {
     private String imgPath;
     private LocalDateTime projectTime;
     private LocalDateTime regDate;
-    private int recruitNum;
+    private String recruitNum;
 
     private String email;
     private String nickName;
