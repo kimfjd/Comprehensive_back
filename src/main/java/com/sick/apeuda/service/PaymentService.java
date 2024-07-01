@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -63,29 +65,47 @@ public class PaymentService {
         }
     }
 
-    public boolean saveSubscriptions(SubscriptionDto subscriptionDto){
+    public boolean saveSubscriptions(SubscriptionDto subscriptionDto) {
         try {
             String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
             Member member = memberRepository.findById("kimfjd")
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
-            Subscription subscription = new Subscription();
-            subscription.setMember(member);
-            subscription.setCustomerUid(subscriptionDto.getCustomerUid());
-            subscription.setTransactionId(subscriptionDto.getTransactionId());
-            subscription.setPaymentDate(subscriptionDto.getPaymentDate());
-            subscription.setCreatedAt(subscriptionDto.getCreatedAt());
-            subscription.setValidUntil(subscriptionDto.getValidUntil());
-            subscription.setStatus(subscriptionDto.getStatus());
-            subscription.setBillingKeyCreatedAt(subscriptionDto.getBillingKeyCreatedAt());
+            // member_id로 기존 구독 정보 조회
+            Subscription subscription = subscriptionRepository.findByMemberId("kimfjd");
+            System.out.println("subscription 값은 : "+subscription);
+            if (subscription == null) {
+                // 새로운 구독 정보 생성
+                subscription = new Subscription();
+                subscription.setMember(member);
+                subscription.setCustomerUid(subscriptionDto.getCustomerUid());
+                subscription.setTransactionId(subscriptionDto.getTransactionId());
+                subscription.setPaymentDate(subscriptionDto.getPaymentDate());
+                subscription.setCreatedAt(subscriptionDto.getCreatedAt());
+                subscription.setValidUntil(subscriptionDto.getValidUntil());
+                subscription.setStatus(subscriptionDto.getStatus());
+                subscription.setBillingKeyCreatedAt(subscriptionDto.getBillingKeyCreatedAt());
+                System.out.println("subscription insert : "+subscription);
+                subscriptionRepository.save(subscription);
 
-            subscriptionRepository.save(subscription);
+            } else {
+                // 기존 구독 정보 업데이트
+                subscription.setCustomerUid(subscriptionDto.getCustomerUid());
+                subscription.setTransactionId(subscriptionDto.getTransactionId());
+                subscription.setPaymentDate(subscriptionDto.getPaymentDate());
+                subscription.setCreatedAt(subscriptionDto.getCreatedAt());
+                subscription.setValidUntil(subscriptionDto.getValidUntil());
+                subscription.setStatus(subscriptionDto.getStatus());
+                subscription.setBillingKeyCreatedAt(subscriptionDto.getBillingKeyCreatedAt());
+                System.out.println("subscription update : "+subscription);
+                subscriptionRepository.save(subscription);
+            }
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+
+
     }
-
-
 }

@@ -31,7 +31,7 @@ public class PaymentController {
         return ResponseEntity.ok(isTrue);
     }
 
-    @PostMapping("subscriptions")
+    @PostMapping("/subscriptions")
     public ResponseEntity<Boolean> saveSubscriptions(@RequestBody SubscriptionDto subscriptionDto){
         boolean isTrue=paymentService.saveSubscriptions(subscriptionDto);
         return ResponseEntity.ok(isTrue);
