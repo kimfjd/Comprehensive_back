@@ -3,8 +3,11 @@ package com.sick.apeuda.service;
 import com.sick.apeuda.dto.FriendDto;
 import com.sick.apeuda.entity.Friend;
 import com.sick.apeuda.entity.Member;
+import com.sick.apeuda.entity.PostMsg;
 import com.sick.apeuda.repository.FriendRepository;
+import com.sick.apeuda.repository.PostMsgRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,6 +19,8 @@ public class FriendService {
 
     @Autowired
     private FriendRepository friendRepository;
+    @Autowired
+    private PostMsgRepository postMsgRepository;
 
     /**
      * 친구 요청을 보냅니다.
@@ -182,9 +187,16 @@ public class FriendService {
      * @param member 친구 관계를 삭제할 사용자 객체
      * @param friend 친구 관계를 삭제할 친구 객체
      */
+    @Modifying
     @Transactional
     public void deleteFriend(Member member, Member friend) {
         // 친구 관계를 삭제합니다.
         friendRepository.deleteFriend(member, friend);
+        deleteMessagesBetweenMembers(member, friend);
+    }
+    private void deleteMessagesBetweenMembers(Member member1, Member member2) {
+        // member1이 보낸 메시지와 member2가 받은 메시지, 또는 member2가 보낸 메시지와 member1이 받은 메시지를 모두 삭제
+        List<PostMsg> messagesToDelete = postMsgRepository.findAllBySendMemberAndReceiveMemberOrSendMemberAndReceiveMemberOrderByReceiveTimeDesc(member1, member2, member2, member1);
+        postMsgRepository.deleteAll(messagesToDelete);
     }
 }

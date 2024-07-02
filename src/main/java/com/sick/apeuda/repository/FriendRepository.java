@@ -27,7 +27,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
 
     // checkFriend가 true인 모든 친구 관계를 가져오는 메서드
-    @Query("SELECT f FROM Friend f WHERE (f.member = :member OR f.toMember = :member) AND f.checkFriend = true")
+    @Query("SELECT f FROM Friend f WHERE (f.member = :member OR f.toMember = :member) AND f.checkFriend = true ORDER BY f.friendId DESC")
     List<Friend> findAllFriends(@Param("member") Member member);
 
     // 특정 사용자(member)와 친구(friend) 사이의 친구 관계를 삭제합니다.

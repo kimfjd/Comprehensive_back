@@ -3,6 +3,7 @@ package com.sick.apeuda.service;
 import com.sick.apeuda.dto.PostMsgDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.PostMsg;
+
 import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.PostMsgRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,6 +21,7 @@ import java.util.List;
 public class PostMsgService {
     private  final PostMsgRepository msgRepository;
     private  final MemberRepository memberRepository;
+
 
     @Transactional
     public PostMsg msgWrite(PostMsgDto postMsgDto) {
@@ -42,4 +45,16 @@ public class PostMsgService {
         List<PostMsg> postMsgs = msgRepository.findAllByReceiveMemberAndSendMemberOrderByReceiveTimeDesc(receiveMember, sendMember);
         return postMsgs;
     }
+
+    public boolean delMsg(Long id) {
+        try{
+            msgRepository.deleteById(id);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 }

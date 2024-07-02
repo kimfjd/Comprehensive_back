@@ -9,4 +9,5 @@ import java.util.List;
 public interface PostMsgRepository extends JpaRepository<PostMsg,Long> {
     List<PostMsg> findAllBySendMember(Member member);
     List<PostMsg> findAllByReceiveMemberAndSendMemberOrderByReceiveTimeDesc(Member receiveMember, Member sendMember);
+    List<PostMsg> findAllBySendMemberAndReceiveMemberOrSendMemberAndReceiveMemberOrderByReceiveTimeDesc(Member sendMember1, Member receiveMember1, Member sendMember2, Member receiveMember2);
 }

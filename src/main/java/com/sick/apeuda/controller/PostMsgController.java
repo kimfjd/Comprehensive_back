@@ -37,4 +37,10 @@ public class PostMsgController {
 
         return postMsgService.receivedMessage(member, fromMember);
     }
+
+    @GetMapping("/delete")
+    public ResponseEntity<Boolean> delMsg(@RequestParam Long id){
+        boolean isTrue = postMsgService.delMsg(id);
+        return ResponseEntity.ok(isTrue);
+    }
 }

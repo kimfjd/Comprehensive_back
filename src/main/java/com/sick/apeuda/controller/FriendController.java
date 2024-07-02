@@ -4,6 +4,7 @@ package com.sick.apeuda.controller;
 import com.sick.apeuda.dto.FriendDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.FriendService;
+import com.sick.apeuda.service.PostMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public class FriendController {
 
     @Autowired
     private FriendService friendService;
-
+    private PostMsgService postMsgService;
 
     /**
      * 친구 요청을 보냅니다.
