@@ -43,4 +43,15 @@ public class PostMsgController {
         boolean isTrue = postMsgService.delMsg(id);
         return ResponseEntity.ok(isTrue);
     }
+
+    @PostMapping("/updateReadStatus")
+    public ResponseEntity<Void> updateReadStatus(@RequestBody Map<String, Object> requestData) {
+        Long postMsgId = Long.parseLong(requestData.get("postMsgId").toString());
+        boolean readStatus = Boolean.parseBoolean(requestData.get("readStatus").toString());
+
+        // postMsgId와 readStatus를 사용하여 로직을 처리합니다.
+        postMsgService.updateReadStatus(postMsgId, readStatus);
+
+        return ResponseEntity.ok().build();
+    }
 }

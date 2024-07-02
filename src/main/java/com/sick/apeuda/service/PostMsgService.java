@@ -55,6 +55,12 @@ public class PostMsgService {
             return false;
         }
     }
+    public void updateReadStatus(Long postMsgId, boolean readStatus) {
+        PostMsg postMsg = msgRepository.findById(postMsgId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid postMsgId"));
 
+        postMsg.setReadStatus(readStatus);
+        msgRepository.save(postMsg);
+    }
 
 }
