@@ -11,6 +11,10 @@ public interface DatingAppRepository extends JpaRepository<Member, String> {
 
 
     // 본인과 친구상태인 유저, 이미친구신청한 유저를 제외한 전체 유저 출력
+    // JPQL 쿼리 해석
+    // m.email <> :email
+    // m.id NOT IN (SELECT f.toMember.id FROM Friend f WHERE f.member.email = :email)
+    // m.id NOT IN (SELECT f.toMember.id FROM Friend f WHERE f.member.email = :email)
     @Query("SELECT m FROM Member m WHERE m.email <> :email AND m.id NOT IN " +
             "(SELECT f.toMember.id FROM Friend f WHERE f.member.email = :email) " +
             "AND m.id NOT IN " +

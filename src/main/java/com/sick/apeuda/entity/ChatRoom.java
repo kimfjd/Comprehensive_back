@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,9 +16,7 @@ import javax.persistence.*;
 public class ChatRoom {
     @Id
     @Column(name = "room_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long roomId;
-//    private String roomId = UUID.randomUUID().toString(); // UUID를 사용한 무작위 방아이디 생성
+    private String roomId = UUID.randomUUID().toString(); // UUID를 사용한 무작위 방아이디 생성
 
     @ManyToOne
     @JoinColumn(name = "project_id")
