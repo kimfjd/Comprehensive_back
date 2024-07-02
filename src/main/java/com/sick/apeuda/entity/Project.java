@@ -63,8 +63,10 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "project_id")
     private List<Reply> reply;
-    
-//    @OneToMany
-//    private List<SkillDto> skills;
+
+    @OneToOne
+    @JoinColumn(name = "room_id")
+    private ChatRoom chatRoom;
+
 
 }

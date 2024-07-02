@@ -22,7 +22,7 @@ public class ChatRoom {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
 

@@ -2,15 +2,20 @@
 package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.ChatMsgDto;
+import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.entity.ChatMsg;
 import com.sick.apeuda.entity.ChatRoom;
+import com.sick.apeuda.entity.Member;
+import com.sick.apeuda.entity.Project;
 import com.sick.apeuda.repository.ChatMsgRepository;
 import com.sick.apeuda.repository.ChatRoomRepository;
+import com.sick.apeuda.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 import java.util.UUID;
 
 @Service
@@ -25,7 +30,10 @@ public class ChatService {
 
     public ChatRoom createRoom(String roomName) {
         ChatRoom chatRoom = new ChatRoom();
+        ProjectReqDto project = new ProjectReqDto();
+
         chatRoom.setRoomName(roomName);
+
         return chatRoomRepository.save(chatRoom);
     }
 

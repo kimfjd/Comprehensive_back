@@ -3,6 +3,7 @@ package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
+import com.sick.apeuda.entity.ChatRoom;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Project;
 import com.sick.apeuda.repository.MemberRepository;
@@ -56,7 +57,6 @@ public class ProjectService {
         projectReqDto.setNickName(project.getMember().getNickname());
         projectReqDto.setProfileImg(project.getMember().getProfileImgPath());
         projectReqDto.setSkillName(project.getSkills());
-        System.out.println("등록시간 " + projectReqDto.getProjectTime());
         return projectReqDto;
     }
     /**
@@ -67,11 +67,13 @@ public class ProjectService {
     public boolean saveProject(ProjectReqDto projectReqDto) {
         try{
             Project project = new Project();
+
             String memberId = getCurrentMemberId();
             // 토큰 발급 받기전까지 Id 직접입력 토큰 발급시 memberId 넣으면됨
             Member member = memberRepository.findById("dlaeocjf94@naver.com").orElseThrow(
                     () -> new RuntimeException("Member does not exist")
             );
+            System.out.println("projectReqDto.getChatRoom() : " + projectReqDto.getChatRoom());
             project.setProjectId(projectReqDto.getProjectId());
             //project.setJob(projectReqDto.getJob());
             project.setProjectName(projectReqDto.getProjectName());
@@ -87,8 +89,8 @@ public class ProjectService {
             project.setMember(member);
             project.setNickName(member.getNickname());
             project.setProfileImage(member.getProfileImgPath());
+            project.setChatRoom(projectReqDto.getChatRoom());
             projectRepository.save(project);
-            System.out.println("저장 성공 " + project.getProjectName());
             return true;
         }catch (Exception e) {
             e.printStackTrace();
@@ -163,6 +165,7 @@ public class ProjectService {
         projectResDto.setProjectContent(project.getProjectContent());
         projectResDto.setProjectTime(project.getProjectTime());
         projectResDto.setRegDate(LocalDateTime.now());
+        projectResDto.setSkillName(project.getSkills());
 
         // 플젝 작성자 정보 설정
         projectResDto.setNickName(project.getMember().getNickname());

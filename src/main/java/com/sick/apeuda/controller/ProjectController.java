@@ -34,6 +34,8 @@ public class ProjectController {
     // 플젝 게시글 등록
     @PostMapping("/insert")
     public ResponseEntity<Boolean> projectBoardInsert(@RequestBody ProjectReqDto projectReqDto){
+        System.out.println("projectBoardInsert: " + projectReqDto);
+        System.out.println("ChatRoom ID: " + projectReqDto.getChatRoom().getRoomId());
         boolean isTrue = projectService.saveProject(projectReqDto);
         return ResponseEntity.ok(isTrue);
     }

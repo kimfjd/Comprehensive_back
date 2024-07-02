@@ -1,5 +1,6 @@
 package com.sick.apeuda.dto;
 
+import com.sick.apeuda.entity.ChatRoom;
 import com.sick.apeuda.entity.Skill;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +22,9 @@ public class ProjectReqDto {
     private LocalDateTime projectTime;
     private LocalDateTime regDate;
     private String recruitNum;
-
     private String email;
     private String nickName;
     private String profileImg;
     private List<Skill> skillName;
+    private ChatRoom chatRoom;
 }
