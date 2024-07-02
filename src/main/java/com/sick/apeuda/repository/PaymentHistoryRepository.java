@@ -1,8 +1,14 @@
 package com.sick.apeuda.repository;
 
+
+import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.PaymentHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PaymentHistoryRepository extends JpaRepository<PaymentHistory, Long> {
+import java.util.List;
+import java.util.Optional;
 
+
+public interface PaymentHistoryRepository extends JpaRepository<PaymentHistory, Long> {
+    List<PaymentHistory> findByMember(Member member);
 }

@@ -1,8 +1,6 @@
 package com.sick.apeuda.service;
 
-import com.sick.apeuda.dto.PaymentHistoryDto;
-import com.sick.apeuda.dto.PaymentInfoDto;
-import com.sick.apeuda.dto.SubscriptionDto;
+import com.sick.apeuda.dto.*;
 import com.sick.apeuda.entity.*;
 import com.sick.apeuda.repository.*;
 
@@ -12,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -34,6 +34,7 @@ public class PaymentService {
             paymentHistory.setPaymentDate(paymentHistoryDto.getPaymentDate());
             paymentHistory.setPaymentStatus(paymentHistoryDto.getPaymentStatus());
             paymentHistory.setTransactionId(paymentHistoryDto.getTransactionId());
+            paymentHistory.setName(paymentHistoryDto.getName());
             paymentHistory.setAmount(paymentHistoryDto.getAmount());
             paymentHistory.setCancellationDate(paymentHistoryDto.getCancellationDate());
 
@@ -91,7 +92,6 @@ public class PaymentService {
             } else {
                 // 기존 구독 정보 업데이트
                 subscription.setCustomerUid(subscriptionDto.getCustomerUid());
-                subscription.setTransactionId(subscriptionDto.getTransactionId());
                 subscription.setPaymentDate(subscriptionDto.getPaymentDate());
                 subscription.setCreatedAt(subscriptionDto.getCreatedAt());
                 subscription.setValidUntil(subscriptionDto.getValidUntil());
@@ -105,7 +105,38 @@ public class PaymentService {
             e.printStackTrace();
             return false;
         }
+    }
+    public List<PaymentHistoryDto> getHistory(String memberEmail) {
+        Member member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
+        List<PaymentHistory> paymentHistories = paymentHistoryRepository.findByMember(member);
+        if (paymentHistories.isEmpty()) {
+            throw new RuntimeException("결제 내역이 존재하지 않습니다");
+        }
+        return paymentHistories.stream().map(this::convertEntityToDto).collect(Collectors.toList());
+    }
 
-
+    private PaymentHistoryDto convertEntityToDto(PaymentHistory paymentHistory) {
+        PaymentHistoryDto paymentHistoryDto = new PaymentHistoryDto();
+        paymentHistoryDto.setMember(paymentHistory.getMember().getEmail());
+        paymentHistoryDto.setPaymentHistoryId(paymentHistory.getPaymentHistoryId());
+        paymentHistoryDto.setPaymentDate(paymentHistory.getPaymentDate());
+        paymentHistoryDto.setName(paymentHistory.getName());
+        paymentHistoryDto.setAmount(paymentHistory.getAmount());
+        return paymentHistoryDto;
+    }
+    public List<SubscriptionDto> getdeadline(String memberEmail) {
+        Member member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
+        List<Subscription> subscriptions= subscriptionRepository.findByMember(member);
+        if(subscriptions.isEmpty()){
+            throw new RuntimeException("구독 정보가 존재하지 않습니다. 구독하여 아프다를 이용해보세요");
+        }
+        return subscriptions.stream().map(this::convertEntityToDto1).collect(Collectors.toList());
+    }
+    private SubscriptionDto convertEntityToDto1(Subscription subscription){
+        SubscriptionDto subscriptionDto = new SubscriptionDto();
+        subscriptionDto.setValidUntil(subscription.getValidUntil());
+        return subscriptionDto;
     }
 }

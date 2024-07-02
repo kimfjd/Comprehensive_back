@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,6 +24,7 @@ public class PaymentController {
     @PostMapping("/save")
     public ResponseEntity<Boolean> savePaymentHistory(@RequestBody PaymentHistoryDto paymentHistoryDto) {
         boolean isTrue = paymentService.savePaymentHistory(paymentHistoryDto);
+        System.out.println();
         return ResponseEntity.ok(isTrue);
     }
 
@@ -36,4 +39,15 @@ public class PaymentController {
         boolean isTrue=paymentService.saveSubscriptions(subscriptionDto);
         return ResponseEntity.ok(isTrue);
     }
+    @GetMapping("/detail/{member}")
+    public ResponseEntity<List<PaymentHistoryDto>> historydetail(@PathVariable String member) {
+        List<PaymentHistoryDto> paymentHistoryDtos = paymentService.getHistory(member);
+        return ResponseEntity.ok(paymentHistoryDtos);
+    }
+    @GetMapping("/deadline/{member}")
+    public ResponseEntity<List<SubscriptionDto>> deadline(@PathVariable String member){
+        List<SubscriptionDto> subscriptionDtos=paymentService.getdeadline(member);
+        return ResponseEntity.ok(subscriptionDtos);
+    }
+
 }

@@ -23,6 +23,9 @@ public class PaymentHistory {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @Column
+    private String name;
+
     @Column(nullable = false)
     private LocalDateTime paymentDate;
 
