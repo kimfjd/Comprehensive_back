@@ -1,11 +1,13 @@
+//ChatMsgController.java
 package com.sick.apeuda.controller;
 
 import com.sick.apeuda.dto.ChatMsgDto;
 import com.sick.apeuda.service.ChatService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
+@Slf4j
 @Controller
 public class ChatMsgController {
 
@@ -19,9 +21,13 @@ public class ChatMsgController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(ChatMsgDto chatMsgDto) {
-        chatService.sendMessage(chatMsgDto);
-        messagingTemplate.convertAndSend("/topic/room/" + chatMsgDto.getRoomId(), chatMsgDto);
-        messagingTemplate.convertAndSendToUser(chatMsgDto.getReceiver(), "/queue/reply", chatMsgDto);
+        try {
+            chatService.sendMessage(chatMsgDto);
+            messagingTemplate.convertAndSend("/topic/room/" + chatMsgDto.getRoomId(), chatMsgDto);
+            messagingTemplate.convertAndSendToUser(chatMsgDto.getReceiver(), "/queue/reply", chatMsgDto);
+        } catch (Exception e) {
+            log.error("Error handling message: " + e.getMessage(), e);
+        }
 
     }
 }
