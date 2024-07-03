@@ -41,9 +41,9 @@ public class EmailController {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
         try {
-            helper.setFrom("movieverse2023@naver.com");
+            helper.setFrom("apueda@naver.com");
             helper.setTo(email);
-            helper.setSubject("MovieVerse에 오신 것을 환영 합니다!");
+            helper.setSubject("아프다에 오신 것을 환영 합니다!");
             helper.setText(htmlContent, true);
         } catch (MessagingException e) {
             e.printStackTrace();
