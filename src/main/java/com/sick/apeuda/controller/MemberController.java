@@ -10,6 +10,7 @@ import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -38,6 +39,14 @@ public class MemberController {
         return ResponseEntity.ok(memberDto);
     }
 
+    // 회원정보 가져오기 토큰 사용해서 이메일로 조회(localStroage에 이메일 저장할 필요x) Axios회원정보 불러오실때 이걸로 하시면 됩니다
+    // 아직 프론트랑은 안 이어봐서 위에꺼는 살려놨어요
+    @GetMapping("/memberinfo2")
+    public ResponseEntity<MemberDto> memberInfo2 (){
+        MemberDto memberDto = memberService.getMemberInfo(SecurityContextHolder.getContext().getAuthentication().getName());
+        return ResponseEntity.ok(memberDto);
+    }
+
     // 회원 수정
     @PutMapping("/membermodify/{email}")
     public ResponseEntity<Boolean> memberModify(@RequestBody MemberDto memberDto) {
@@ -56,9 +65,9 @@ public class MemberController {
     }
 
     // 회원 삭제
-    @DeleteMapping("/delmember/{email}")
-    public ResponseEntity<Boolean> memberDelete(@PathVariable String email) {
-        boolean isTrue = memberService.deleteMember(email);
+    @GetMapping("/delmember")
+    public ResponseEntity<Boolean> memberDelete() {
+        boolean isTrue = memberService.deleteMember(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(isTrue);
     }
 
