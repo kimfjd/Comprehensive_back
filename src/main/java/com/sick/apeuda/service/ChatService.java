@@ -13,6 +13,8 @@ import com.sick.apeuda.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
@@ -50,7 +52,7 @@ public class ChatService {
         chatMessage.setContent(chatMessageDto.getContent());
         chatMessage.setRoomId(chatMessageDto.getRoomId());
         chatMessage.setType(chatMessageDto.getType());
-        chatMessage.setTimestamp(new Timestamp(System.currentTimeMillis())); // 현재 시간 설정
+        chatMessage.setLocalDateTime(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)); // 현재 시간 설정
         chatMsgRepository.save(chatMessage);
     }
 }

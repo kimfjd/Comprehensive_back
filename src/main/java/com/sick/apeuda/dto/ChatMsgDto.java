@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -24,6 +25,6 @@ public class ChatMsgDto {
     private String receiver; // 수신자 (일대일 채팅을 위한 필드)
     private String content;
     private String roomId;
-    private Timestamp timestamp;
+    private String LocalDateTime;
 }
 

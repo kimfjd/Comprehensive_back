@@ -54,7 +54,7 @@ public class ChatController {
             dto.setSender(msg.getSender());
             dto.setContent(msg.getContent());
             dto.setRoomId(msg.getRoomId());
-            dto.setTimestamp(msg.getTimestamp());
+            dto.setLocalDateTime(msg.getLocalDateTime());
             dto.setType(msg.getType()); // assuming all messages are TALK type
             return dto;
         }).collect(Collectors.toList());

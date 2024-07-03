@@ -1,6 +1,7 @@
 // ChatMsg.java
 package com.sick.apeuda.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sick.apeuda.dto.ChatMsgDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -24,14 +26,16 @@ public class ChatMsg {
     private String sender;
     private String content;
     private String roomId;
-    private Timestamp timestamp;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private String localDateTime ;
 
     @Enumerated(EnumType.STRING)
     private ChatMsgDto.MessageType type; // MessageType 열거형 사용
-    @PrePersist
+    @PrePersist // 날짜가 비어있는경우 현재 시간 자동 입력
     protected void onCreate() {
-        if (this.timestamp == null) {
-            this.timestamp = new Timestamp(System.currentTimeMillis());
+        if (this.localDateTime == null) {
+            this.localDateTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
         }
     }
 }
