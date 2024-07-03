@@ -51,10 +51,7 @@ public class MemberController {
     @PutMapping("/membermodify/{email}")
     public ResponseEntity<Boolean> memberModify(@RequestBody MemberDto memberDto) {
         Member member = Member.builder()
-                .email(memberDto.getEmail())
                 .password(memberDto.getPassword())
-                .name(memberDto.getName())
-                .identityNumber(memberDto.getIdentityNumber())
                 .nickname(memberDto.getNickname())
                 .profileImgPath(memberDto.getProfileImgPath())
                 .skill(memberDto.getSkill())
