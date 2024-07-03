@@ -23,12 +23,12 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
 
-    // 회원 여부 확인
-    @GetMapping("/check")
-    public ResponseEntity<Boolean> isMember(@RequestParam String email) {
-        boolean isEmail = memberService.isMember(email);
-        return ResponseEntity.ok(isEmail);
-    }
+    // 회원 여부 확인(일단 막아 놓음)
+//    @GetMapping("/check")
+//    public ResponseEntity<Boolean> isMember(@RequestParam String email) {
+//        boolean isEmail = memberService.isMember(email);
+//        return ResponseEntity.ok(isEmail);
+//    }
 
 
 

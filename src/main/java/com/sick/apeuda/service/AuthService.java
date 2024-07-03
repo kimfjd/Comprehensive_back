@@ -27,6 +27,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
+
+    // 회원 가입 여부 확인
+    public boolean isMember(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
     public MemberResDto signup(MemberReqDto requestDto) {
         if (memberRepository.existsByEmail(requestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
@@ -36,7 +42,6 @@ public class AuthService {
     }
     public TokenDto login(MemberReqDto requestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = requestDto.toAuthentication();
-
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

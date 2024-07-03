@@ -17,10 +17,10 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    // 회원 가입 여부 확인
-    public boolean isMember(String email) {
-        return memberRepository.existsByEmail(email);
-    }
+    // 회원 가입 여부 확인(일단 막아 놓음 삭제 예정)
+//    public boolean isMember(String email) {
+//        return memberRepository.existsByEmail(email);
+//    }
 
     // 회원 정보 저장(회원 가입, 회원 수정)
     public boolean saveMember(Member member) {
