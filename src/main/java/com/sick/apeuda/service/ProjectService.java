@@ -70,7 +70,8 @@ public class ProjectService {
 
             String memberId = getCurrentMemberId();
             // 토큰 발급 받기전까지 Id 직접입력 토큰 발급시 memberId 넣으면됨
-            Member member = memberRepository.findById("dlaeocjf94@naver.com").orElseThrow(
+            System.out.println("토큰으로 받은 멤버아이디 체크 : " +memberId );
+            Member member = memberRepository.findById(memberId).orElseThrow(
                     () -> new RuntimeException("Member does not exist")
             );
             System.out.println("projectReqDto.getChatRoom() : " + projectReqDto.getChatRoom());

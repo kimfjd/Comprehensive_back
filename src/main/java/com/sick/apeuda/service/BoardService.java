@@ -69,7 +69,8 @@ public class BoardService {
             Board board = new Board();
 
             String memberId = getCurrentMemberId();
-            Member member = memberRepository.findById("testId@gmail.com").orElseThrow(
+            System.out.println("토큰으로 받은 멤버아이디 체크 : " +memberId );
+            Member member = memberRepository.findById(memberId).orElseThrow(
                     () -> new RuntimeException("Member does not exist")
             );
             board.setBoardId(boardReqDto.getBoardId());

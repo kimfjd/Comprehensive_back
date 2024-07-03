@@ -30,7 +30,7 @@ public class ChatRoom {
     private String roomName; // 방 이름
     private Integer currentCount;
     private Integer maxCount;
-    private String status;
+    private Boolean status;
     private String roomPassword;
 
 }

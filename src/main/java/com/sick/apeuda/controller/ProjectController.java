@@ -20,7 +20,6 @@ public class ProjectController {
     // 플젝 게시판 전체 조회
     @GetMapping("/list")
     public ResponseEntity<List<ProjectReqDto>> projectBoardList() {
-        log.info("projectBoardList실행");
         List<ProjectReqDto> list = projectService.getProjectList();
         return ResponseEntity.ok(list);
     }

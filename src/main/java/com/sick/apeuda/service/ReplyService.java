@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 @Service
@@ -38,7 +40,8 @@ public class ReplyService {
         try {
             Reply reply = new Reply();
             String memberId = getCurrentMemberId();
-            Member member = memberRepository.findById("testId@gmail.com").orElseThrow(
+            System.out.println("토큰으로 받은 멤버아이디 체크 : " +memberId );
+            Member member = memberRepository.findById(memberId).orElseThrow(
                     () -> new RuntimeException("Member does not exist")
             );
             reply.setReplyId(replyDto.getReplyId());
@@ -168,16 +171,44 @@ public class ReplyService {
      * @param size 한 페이지에 나오는 댓글 수
      * @return ReplyDto List 객체
      */
-    public List<ReplyDto> getProjectReplyList(Long projectId, int page, int size) {
+    public Map<String, Object> getProjectReplyList(Long projectId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
+
         List<Reply> replies = replyRepository.findAllByProjectId(projectId, pageable).getContent();
         List<ReplyDto> replyDtos = new ArrayList<>();
         for(Reply reply : replies) {
             replyDtos.add(saveReplyList(reply));
         }
-        return replyDtos;
-    }
+        int cnt =replyRepository.findAllByProjectId(projectId, pageable).getTotalPages();
+        Map<String, Object> result = new HashMap<>();
+        result.put("replies", replyDtos);
+        result.put("totalPages", cnt);
+        System.out.println("댓글 길이 : "+replyDtos.size());
+        return result;
 
+    }
+    // 페이지 수 조회
+    public int getRepliesCount(Long projectId,Pageable pageable) {
+        return replyRepository.findAllByProjectId(projectId, pageable).getTotalPages();
+    }
+    // 댓글 목록과 총 페이지 수를 함께 반환하는 메서드
+//    public Map<String, Object> getProjectReplyListAndCount(Long projectId, int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//
+//        // Page<Reply> 객체를 사용하여 댓글 목록과 페이징 정보를 함께 가져옴
+//        Page<Reply> replyPage = replyRepository.findAllByProjectId(projectId, pageable);
+//
+//        List<ReplyDto> replyDtos = new ArrayList<>();
+//        for (Reply reply : replyPage.getContent()) {
+//            replyDtos.add(saveReplyList(reply));
+//        }
+//
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("replies", replyDtos);
+//        result.put("totalPages", replyPage.getTotalPages());
+//
+//        return result;
+//    }
     /**
      * 댓글 엔티티를 DTO로 변환
      * @param reply Reply 엔티티 객체

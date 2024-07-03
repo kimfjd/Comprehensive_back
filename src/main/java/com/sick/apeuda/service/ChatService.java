@@ -24,17 +24,23 @@ import java.util.UUID;
 public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMsgRepository chatMsgRepository;
+    private final MemberRepository memberRepository;
 
-    public ChatService(ChatRoomRepository chatRoomRepository, ChatMsgRepository chatMsgRepository) {
+    public ChatService(ChatRoomRepository chatRoomRepository, ChatMsgRepository chatMsgRepository, MemberRepository memberRepository) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMsgRepository = chatMsgRepository;
+        this.memberRepository =memberRepository;
     }
 
     public ChatRoom createRoom(String roomName) {
         ChatRoom chatRoom = new ChatRoom();
-        ProjectReqDto project = new ProjectReqDto();
-
+        String memberId = getCurrentMemberId();
+        Member member = memberRepository.findById("dlaeocjf123@naver.com").orElseThrow(
+                () -> new RuntimeException("Member does not exist")
+        );
         chatRoom.setRoomName(roomName);
+        chatRoom.setStatus(true);
+        chatRoom.setMember(member);
 
         return chatRoomRepository.save(chatRoom);
     }
