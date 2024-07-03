@@ -30,28 +30,4 @@ public class WebConfig {
         };
     }
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(Timestamp.class, new com.fasterxml.jackson.databind.JsonDeserializer<>() {
-            @Override
-            public Timestamp deserialize(com.fasterxml.jackson.core.JsonParser p, com.fasterxml.jackson.databind.DeserializationContext ctxt) throws java.io.IOException {
-                String str = p.getText().trim();
-                try {
-                    return Timestamp.valueOf(LocalDateTime.parse(str, DateTimeFormatter.ISO_DATE_TIME));
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        module.addSerializer(Timestamp.class, new com.fasterxml.jackson.databind.JsonSerializer<>() {
-            @Override
-            public void serialize(Timestamp value, com.fasterxml.jackson.core.JsonGenerator gen, com.fasterxml.jackson.databind.SerializerProvider serializers) throws java.io.IOException {
-                gen.writeString(value.toLocalDateTime().format(DateTimeFormatter.ISO_DATE_TIME));
-            }
-        });
-        objectMapper.registerModule(module);
-        return objectMapper;
-    }
 }

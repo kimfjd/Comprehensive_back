@@ -137,6 +137,7 @@ public class PaymentService {
     private SubscriptionDto convertEntityToDto1(Subscription subscription){
         SubscriptionDto subscriptionDto = new SubscriptionDto();
         subscriptionDto.setValidUntil(subscription.getValidUntil());
+        subscriptionDto.setStatus(subscription.getStatus());
         return subscriptionDto;
     }
 }
