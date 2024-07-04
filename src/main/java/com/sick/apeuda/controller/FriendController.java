@@ -2,10 +2,13 @@ package com.sick.apeuda.controller;
 
 
 import com.sick.apeuda.dto.FriendDto;
+import com.sick.apeuda.dto.MemberDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.FriendService;
 import com.sick.apeuda.service.PostMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -92,6 +95,18 @@ public class FriendController {
         member.setEmail(memberEmail);
         return friendService.getFriends(member);
     }
+//토큰 방식
+
+    @GetMapping("/list2")
+    public ResponseEntity<List<FriendDto>> getFriends() {
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = new Member();
+        member.setEmail(memberEmail);
+        List<FriendDto> friends = friendService.getFriends(member);
+        return ResponseEntity.ok(friends);
+    }
+
+
 
     @GetMapping("/delete")
     public void deleteFriend(@RequestParam String memberEmail, @RequestParam String friendEmail) {
