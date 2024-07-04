@@ -1,6 +1,9 @@
 package com.sick.apeuda.jwt;
 
+import com.sick.apeuda.dto.AccessTokenDto;
 import com.sick.apeuda.dto.TokenDto;
+import com.sick.apeuda.entity.Token;
+import com.sick.apeuda.repository.TokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -65,20 +69,49 @@ public class TokenProvider {
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
+
+
         // 토큰 정보를 담은 TokenDto 객체 반환
         return TokenDto.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
                 .tokenExpiresIn(tokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .refreshTokenExpiresIn(refreshTokenExpiresIn.getTime())
                 .build();
-        // refresh 적용 안했을때
-//        return TokenDto.builder()
-//                .grantType(BEARER_TYPE)
-//                .accessToken(accessToken)
-//                .tokenExpiresIn(tokenExpiresIn.getTime())
-//                .build();
     }
+
+    // refreshToken을 이용해 새 AccessToken 발행
+    public AccessTokenDto generateAccessTokenDto(Authentication authentication) {
+        // 권한 정보 문자열 생성
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new java.util.Date()).getTime(); // 현재 시간
+        // 토큰 만료시간 설정
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME); // 엑세스 토큰 만료 시간
+
+        log.info("TokenProvider getName {}", authentication.getName());
+        log.info("TokenProvider getPrincipal {}", authentication.getDetails());
+        log.info("TokenProvider getAuthorities {}", authentication.getAuthorities());
+
+        // 토큰 생성
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim(AUTHORITIES_KEY, authorities)
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+
+        return AccessTokenDto.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .build();
+
+    }
+
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화(디코딩 : 사람이 읽을수있는 형태로 되돌리는것)
         Claims claims = parseClaims(accessToken);

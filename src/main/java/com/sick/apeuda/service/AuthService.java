@@ -1,9 +1,13 @@
 package com.sick.apeuda.service;
 
+import com.sick.apeuda.dto.AccessTokenDto;
 import com.sick.apeuda.dto.MemberReqDto;
 import com.sick.apeuda.dto.MemberResDto;
 import com.sick.apeuda.dto.TokenDto;
+import com.sick.apeuda.entity.Token;
 import com.sick.apeuda.entity.Member;
+
+import com.sick.apeuda.repository.TokenRepository;
 import com.sick.apeuda.jwt.TokenProvider;
 import com.sick.apeuda.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,6 +31,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private  final TokenRepository tokenRepository;
 
 
     // 회원 가입 여부 확인
@@ -47,6 +53,39 @@ public class AuthService {
 
         // 토큰으로 아이디 불러오기
         log.error("사용자 값 : {}" ,SecurityContextHolder.getContext().getAuthentication().getName());
-        return  tokenProvider.generateTokenDto(authentication);
+        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+
+        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getDetails());
+
+        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getCredentials());
+
+        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+
+        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.warn("Token Entity 저장할 email : {}", email);
+        Token token = Token.builder()
+                .email(email)
+                .refreshToken(tokenDto.getRefreshToken())
+                .build();
+        tokenRepository.save(token);
+        return  tokenDto;
+    }
+
+
+    // RefresgToken 이용하여 AccessToken 재발급
+    public AccessTokenDto reissuedToken(String refreshToken) {
+        Optional<Token> optionalToken = tokenRepository.findByRefreshToken(refreshToken);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if(optionalToken.isPresent()) {
+            if(email.equals(optionalToken.get().getEmail())){
+                AccessTokenDto reissuedAccessToken = tokenProvider.generateAccessTokenDto(tokenProvider.getAuthentication(refreshToken));
+                log.info("재발행 accessToken 값 {}", reissuedAccessToken);
+                return reissuedAccessToken;
+            }
+        }
+        return null;
     }
 }

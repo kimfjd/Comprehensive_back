@@ -1,17 +1,20 @@
 package com.sick.apeuda.controller;
 
+import com.sick.apeuda.dto.AccessTokenDto;
 import com.sick.apeuda.dto.MemberReqDto;
 import com.sick.apeuda.dto.MemberResDto;
 import com.sick.apeuda.dto.TokenDto;
 import com.sick.apeuda.service.AuthService;
 import com.sick.apeuda.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final AuthService authService;
     private final MemberService memberService;
@@ -30,6 +33,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody MemberReqDto requestDto) {
         return ResponseEntity.ok(authService.login(requestDto));
+    }
+
+    @PostMapping("/reissued")
+    public ResponseEntity<AccessTokenDto> newToken(@RequestBody String refreshToken) {
+        return ResponseEntity.ok(authService.reissuedToken(refreshToken));
     }
 
 
