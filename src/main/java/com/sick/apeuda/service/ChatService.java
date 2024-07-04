@@ -35,7 +35,7 @@ public class ChatService {
     public ChatRoom createRoom(String roomName) {
         ChatRoom chatRoom = new ChatRoom();
         String memberId = getCurrentMemberId();
-        Member member = memberRepository.findById("dlaeocjf123@naver.com").orElseThrow(
+        Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new RuntimeException("Member does not exist")
         );
         chatRoom.setRoomName(roomName);

@@ -175,7 +175,7 @@ public class BoardService {
         ReplyDto replyDto = new ReplyDto();
 //        replyDto.setBoardId(boardId);, Long boardId
         replyDto.setContent(reply.getContent());
-        replyDto.setProfile_img(reply.getMember().getProfileImgPath());
+        replyDto.setProfileImg(reply.getMember().getProfileImgPath());
         replyDto.setNickName(reply.getMember().getNickname());
         replyDto.setRegDate(reply.getRegDate());
         return replyDto;

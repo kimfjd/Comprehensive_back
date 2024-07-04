@@ -178,6 +178,7 @@ public class ReplyService {
         List<ReplyDto> replyDtos = new ArrayList<>();
         for(Reply reply : replies) {
             replyDtos.add(saveReplyList(reply));
+
         }
         int cnt =replyRepository.findAllByProjectId(projectId, pageable).getTotalPages();
         Map<String, Object> result = new HashMap<>();
@@ -220,7 +221,7 @@ public class ReplyService {
         replyDto.setContent(reply.getContent());
         replyDto.setRegDate(reply.getRegDate());
         replyDto.setNickName(reply.getMember().getNickname());
-        replyDto.setProfile_img(reply.getMember().getProfileImgPath());
+        replyDto.setProfileImg(reply.getMember().getProfileImgPath());
         // 프로젝트 아이디 설정
         if (reply.getProject() != null) {
             replyDto.setProjectId(reply.getProject().getProjectId());

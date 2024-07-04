@@ -12,7 +12,7 @@ public class ReplyDto {
     private String content;
     private LocalDateTime regDate;
     private String nickName;
-    private String profile_img;
+    private String profileImg;
     private Long boardId;
     private Long projectId;
     private String memberId;
