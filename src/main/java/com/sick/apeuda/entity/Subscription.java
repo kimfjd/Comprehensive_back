@@ -37,6 +37,9 @@ public class Subscription {
     @Column(name = "valid_until", nullable = false)
     private LocalDateTime validUntil; // 구독 만료일
 
+    @Column(name= "merchant_uid", nullable = false)
+    private String merchantuid; // 상품 번호
+
     @Column(name = "status", nullable = false)
     private String status; // 구독 상태 ("구독", "해지", "만료" 등)
 

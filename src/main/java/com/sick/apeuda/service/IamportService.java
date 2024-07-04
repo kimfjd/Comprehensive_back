@@ -26,6 +26,7 @@ public class IamportService {
         this.objectMapper = new ObjectMapper();
     }
 
+
     public String getToken() throws Exception {
         String requestBody = String.format("{\"imp_key\":\"%s\",\"imp_secret\":\"%s\"}", apiKey, apiSecret);
         HttpRequest request = HttpRequest.newBuilder()
@@ -46,6 +47,18 @@ public class IamportService {
                 .header("Content-Type", "application/json")
                 .header("Authorization", "Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.ofString(scheduleData.toString()))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return objectMapper.readTree(response.body());
+    }
+    public JsonNode unschedulePayment(String token, String customerUid) throws Exception {
+        String requestBody = String.format("{\"customer_uid\":\"%s\"}", customerUid);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://api.iamport.kr/subscribe/payments/unschedule"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

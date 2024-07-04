@@ -34,4 +34,14 @@ public class IamportController {
             return ResponseEntity.status(500).body(null);
         }
     }
+    @PostMapping("/unschedulePayment")
+    public ResponseEntity<JsonNode> unschedulePayment(@RequestBody JsonNode customerUid) {
+        try {
+            String token = iamportService.getToken();
+            JsonNode response = iamportService.unschedulePayment(token, customerUid.get("customer_uid").asText());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 }

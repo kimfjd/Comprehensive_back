@@ -8,10 +8,15 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -84,6 +89,7 @@ public class PaymentService {
                 subscription.setPaymentDate(subscriptionDto.getPaymentDate());
                 subscription.setCreatedAt(subscriptionDto.getCreatedAt());
                 subscription.setValidUntil(subscriptionDto.getValidUntil());
+                subscription.setMerchantuid(subscriptionDto.getMerchantuid());
                 subscription.setStatus(subscriptionDto.getStatus());
                 subscription.setBillingKeyCreatedAt(subscriptionDto.getBillingKeyCreatedAt());
                 System.out.println("subscription insert : "+subscription);
@@ -95,6 +101,7 @@ public class PaymentService {
                 subscription.setPaymentDate(subscriptionDto.getPaymentDate());
                 subscription.setCreatedAt(subscriptionDto.getCreatedAt());
                 subscription.setValidUntil(subscriptionDto.getValidUntil());
+                subscription.setMerchantuid(subscriptionDto.getMerchantuid());
                 subscription.setStatus(subscriptionDto.getStatus());
                 subscription.setBillingKeyCreatedAt(subscriptionDto.getBillingKeyCreatedAt());
                 System.out.println("subscription update : "+subscription);
@@ -106,15 +113,46 @@ public class PaymentService {
             return false;
         }
     }
-    public List<PaymentHistoryDto> getHistory(String memberEmail) {
+    public boolean unsaveSubscriptions(SubscriptionDto subscriptionDto) {
+        try {
+            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById("kimfjd")
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+
+            // member_id로 기존 구독 정보 조회
+            Subscription subscription = subscriptionRepository.findByMemberId("kimfjd");
+            System.out.println("subscription 값은 : " + subscription);
+            subscription.setStatus(subscriptionDto.getStatus());
+            System.out.println("subscription update : " + subscription);
+            subscriptionRepository.save(subscription);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Map<String, Object> getHistory(String memberEmail, Pageable pageable) {
         Member member = memberRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
-        List<PaymentHistory> paymentHistories = paymentHistoryRepository.findByMember(member);
-        if (paymentHistories.isEmpty()) {
+
+        Page<PaymentHistory> paymentHistoryPage = paymentHistoryRepository.findByMemberOrderByPaymentDateDesc(member, pageable);
+        if (paymentHistoryPage.isEmpty()) {
             throw new RuntimeException("결제 내역이 존재하지 않습니다");
         }
-        return paymentHistories.stream().map(this::convertEntityToDto).collect(Collectors.toList());
+
+        List<PaymentHistoryDto> paymentHistoryDtos = paymentHistoryPage.getContent()
+                .stream()
+                .map(this::convertEntityToDto)
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("paymentHistory", paymentHistoryDtos);
+        result.put("totalPages", paymentHistoryPage.getTotalPages());
+        result.put("totalItems", paymentHistoryPage.getTotalElements()); // totalItems 추가
+        return result;
     }
+
 
     private PaymentHistoryDto convertEntityToDto(PaymentHistory paymentHistory) {
         PaymentHistoryDto paymentHistoryDto = new PaymentHistoryDto();
@@ -138,6 +176,7 @@ public class PaymentService {
         SubscriptionDto subscriptionDto = new SubscriptionDto();
         subscriptionDto.setValidUntil(subscription.getValidUntil());
         subscriptionDto.setStatus(subscription.getStatus());
+        subscriptionDto.setMerchantuid(subscription.getMerchantuid());
         return subscriptionDto;
     }
 }

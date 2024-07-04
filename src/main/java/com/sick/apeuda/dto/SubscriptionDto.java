@@ -16,6 +16,7 @@ public class SubscriptionDto {
     private LocalDateTime paymentDate;
     private LocalDateTime createdAt;
     private LocalDateTime validUntil;
+    private String merchantuid;
     private LocalDateTime billingKeyCreatedAt; // 빌링키 생성 시간
     private String status;
 }
