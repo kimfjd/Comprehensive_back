@@ -35,8 +35,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(requestDto));
     }
 
-    @PostMapping("/reissued")
-    public ResponseEntity<AccessTokenDto> newToken(@RequestBody String refreshToken) {
+    @GetMapping("/reissued")
+    public ResponseEntity<AccessTokenDto> newToken(@RequestParam String refreshToken) {
+        System.out.println(refreshToken);
         return ResponseEntity.ok(authService.reissuedToken(refreshToken));
     }
 
