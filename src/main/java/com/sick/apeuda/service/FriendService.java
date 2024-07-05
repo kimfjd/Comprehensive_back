@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -157,6 +158,7 @@ public class FriendService {
 
             // friendRepository를 사용하여 변경된 상태를 데이터베이스에 저장합니다.
             friendRepository.save(friend);
+
             ReadMessage readMessage = new ReadMessage();
             readMessage.setMember1(member);
             readMessage.setMember2(toMember);
@@ -219,7 +221,7 @@ public class FriendService {
         postMsgRepository.deleteAll(messagesToDelete);
     }
     private void deleteReadMessage(Member member1, Member member2) {
-        List<ReadMessage> readMessagesToDelete = readMessageRepository.findAllByMembers(member1, member2);
-        readMessageRepository.deleteAll(readMessagesToDelete);
+        List<ReadMessage> readMessagesToDelete1 = readMessageRepository.findAllByMembers(member1, member2);
+        readMessageRepository.deleteAll(readMessagesToDelete1);
     }
 }

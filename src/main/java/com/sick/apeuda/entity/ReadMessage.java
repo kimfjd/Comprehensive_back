@@ -25,5 +25,5 @@ public class ReadMessage {
     @JoinColumn(name = "member2_id")
     private Member member2;
 
-    private boolean ReadCheck;
+    private boolean readCheck;
 }
