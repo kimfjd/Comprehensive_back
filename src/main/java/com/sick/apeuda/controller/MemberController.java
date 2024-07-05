@@ -48,17 +48,21 @@ public class MemberController {
     }
 
     // 회원 수정
-    @PutMapping("/membermodify/{email}")
-    public ResponseEntity<Boolean> memberModify(@RequestBody MemberDto memberDto) {
-        Member member = Member.builder()
-                .password(memberDto.getPassword())
-                .nickname(memberDto.getNickname())
-                .profileImgPath(memberDto.getProfileImgPath())
-                .skill(memberDto.getSkill())
-                .myInfo(memberDto.getMyInfo())
-                .build();
-        boolean isTrue = memberService.saveMember(member);
-        return ResponseEntity.ok(isTrue);
+//    @PutMapping("/membermodify/{email}")
+//    public ResponseEntity<Boolean> memberModify(@RequestBody MemberDto memberDto) {
+//        Member member = Member.builder()
+//                .password(memberDto.getPassword())
+//                .nickname(memberDto.getNickname())
+//                .profileImgPath(memberDto.getProfileImgPath())
+//                .skill(memberDto.getSkill())
+//                .myInfo(memberDto.getMyInfo())
+//                .build();
+//        boolean isTrue = memberService.saveMember(member);
+//        return ResponseEntity.ok(isTrue);
+//    }
+    @PostMapping("/membermodify/{email}")
+    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto requestDto) {
+        return ResponseEntity.ok(memberService.memUpdate(requestDto));
     }
 
     // 회원 삭제

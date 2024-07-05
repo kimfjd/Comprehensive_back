@@ -1,9 +1,12 @@
 package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.MemberDto;
+import com.sick.apeuda.dto.MemberReqDto;
+import com.sick.apeuda.dto.MemberResDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -17,17 +20,14 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    // 회원 가입 여부 확인(일단 막아 놓음 삭제 예정)
-//    public boolean isMember(String email) {
-//        return memberRepository.existsByEmail(email);
-//    }
+    private final PasswordEncoder passwordEncoder;
 
-    // 회원 정보 저장(회원 가입, 회원 수정)
-    public boolean saveMember(Member member) {
-        Member rst = memberRepository.save(member);
-        return rst != null;
+
+    // 회원 수정
+    public MemberResDto memUpdate(MemberReqDto requestDto) {
+        Member member = requestDto.memUpdate(passwordEncoder);
+        return MemberResDto.of(memberRepository.save(member));
     }
-
 
 
     // 회원 정보 조회(로그인 한 사용자)

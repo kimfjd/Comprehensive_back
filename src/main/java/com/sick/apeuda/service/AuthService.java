@@ -53,15 +53,6 @@ public class AuthService {
 
         // 토큰으로 아이디 불러오기
         log.error("사용자 값 : {}" ,SecurityContextHolder.getContext().getAuthentication().getName());
-        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-
-        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getDetails());
-
-        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getCredentials());
-
-        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
-        log.error("토큰값 : {}", SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

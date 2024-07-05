@@ -36,6 +36,18 @@ public class MemberReqDto {
                 .authority(Authority.ROLE_USER)
                 .build();
     }
+    public Member memUpdate(PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .password(passwordEncoder.encode(password))
+                .nickname(nickname)
+                .profileImgPath(profileImgPath)
+                .skill(skill)
+                .myInfo(myInfo)
+                .authority(Authority.ROLE_USER)
+                .build();
+    }
+
+
 
     public UsernamePasswordAuthenticationToken toAuthentication() {
         return new UsernamePasswordAuthenticationToken(email, password);
