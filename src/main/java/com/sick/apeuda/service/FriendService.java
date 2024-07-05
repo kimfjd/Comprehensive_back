@@ -4,8 +4,10 @@ import com.sick.apeuda.dto.FriendDto;
 import com.sick.apeuda.entity.Friend;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.PostMsg;
+import com.sick.apeuda.entity.ReadMessage;
 import com.sick.apeuda.repository.FriendRepository;
 import com.sick.apeuda.repository.PostMsgRepository;
+import com.sick.apeuda.repository.ReadMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,8 @@ public class FriendService {
     private FriendRepository friendRepository;
     @Autowired
     private PostMsgRepository postMsgRepository;
+    @Autowired
+    private ReadMessageRepository readMessageRepository;
 
     /**
      * 친구 요청을 보냅니다.
@@ -153,6 +157,18 @@ public class FriendService {
 
             // friendRepository를 사용하여 변경된 상태를 데이터베이스에 저장합니다.
             friendRepository.save(friend);
+            ReadMessage readMessage = new ReadMessage();
+            readMessage.setMember1(member);
+            readMessage.setMember2(toMember);
+            readMessage.setReadCheck(false);
+            readMessageRepository.save(readMessage);
+
+            ReadMessage readMessage2 = new ReadMessage();
+            readMessage2.setMember1(toMember);
+            readMessage2.setMember2(member);
+            readMessage2.setReadCheck(false);
+            readMessageRepository.save(readMessage2);
+
         }
         return getFriends(member);
     }
@@ -195,10 +211,15 @@ public class FriendService {
         // 친구 관계를 삭제합니다.
         friendRepository.deleteFriend(member, friend);
         deleteMessagesBetweenMembers(member, friend);
+        deleteReadMessage(member,friend);
     }
     private void deleteMessagesBetweenMembers(Member member1, Member member2) {
         // member1이 보낸 메시지와 member2가 받은 메시지, 또는 member2가 보낸 메시지와 member1이 받은 메시지를 모두 삭제
         List<PostMsg> messagesToDelete = postMsgRepository.findAllBySendMemberAndReceiveMemberOrSendMemberAndReceiveMemberOrderByReceiveTimeDesc(member1, member2, member2, member1);
         postMsgRepository.deleteAll(messagesToDelete);
+    }
+    private void deleteReadMessage(Member member1, Member member2) {
+        List<ReadMessage> readMessagesToDelete = readMessageRepository.findAllByMembers(member1, member2);
+        readMessageRepository.deleteAll(readMessagesToDelete);
     }
 }
