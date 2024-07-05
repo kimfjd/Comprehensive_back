@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ public class PaymentService {
 
     public boolean savePaymentHistory(PaymentHistoryDto paymentHistoryDto) {
         try {
-            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById("kimfjd")
+            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             PaymentHistory paymentHistory = new PaymentHistory();
@@ -53,8 +54,8 @@ public class PaymentService {
 
     public boolean savePaymentinfo(PaymentInfoDto paymentInfoDto) {
         try {
-            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById("kimfjd")
+            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
             PaymentInfo paymentInfo = new PaymentInfo();
             paymentInfo.setMember(member);
@@ -73,8 +74,9 @@ public class PaymentService {
 
     public boolean saveSubscriptions(SubscriptionDto subscriptionDto) {
         try {
-            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById("kimfjd")
+
+            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             // member_id로 기존 구독 정보 조회
@@ -115,8 +117,8 @@ public class PaymentService {
     }
     public boolean unsaveSubscriptions(SubscriptionDto subscriptionDto) {
         try {
-            String memberId = getCurrentMemberId(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById("kimfjd")
+            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
+            Member member = memberRepository.findById(memberId)
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             // member_id로 기존 구독 정보 조회
