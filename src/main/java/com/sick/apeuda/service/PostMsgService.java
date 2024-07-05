@@ -8,6 +8,8 @@ import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.PostMsgRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +29,11 @@ public class PostMsgService {
     public PostMsg msgWrite(PostMsgDto postMsgDto) {
         Member receiver = memberRepository.findByEmail(postMsgDto.getReceiverMemberName())
                 .orElseThrow(() -> new IllegalArgumentException("Receiver not found"));
-        Member sender = memberRepository.findByEmail(postMsgDto.getSenderMemberName())
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String senderName = authentication.getName();
+
+        Member sender = memberRepository.findByEmail(senderName)
                 .orElseThrow(() -> new IllegalArgumentException("Sender not found"));
         log.info("receiver = {}", receiver);
         log.info("sender = {}", sender);

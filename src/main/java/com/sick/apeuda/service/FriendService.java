@@ -142,7 +142,7 @@ public class FriendService {
      * @param toMember 친구 요청을 보낸 사용자 객체
      */
     @Transactional
-    public void acceptFriendRequest(Member member, Member toMember) {
+    public List<FriendDto> acceptFriendRequest(Member member, Member toMember) {
         // friendRepository를 사용하여 특정 사용자(member)와 친구가 될 사용자(toMember) 사이의 친구 요청을 찾습니다.
         Friend friend = friendRepository.findByMemberAndToMember(member, toMember);
 
@@ -154,6 +154,7 @@ public class FriendService {
             // friendRepository를 사용하여 변경된 상태를 데이터베이스에 저장합니다.
             friendRepository.save(friend);
         }
+        return getFriends(member);
     }
 
     /**
@@ -162,9 +163,10 @@ public class FriendService {
      * @param toMember 친구 요청을 보낸 사용자 객체
      */
     @Transactional
-    public void rejectFriendRequest(Member member, Member toMember) {
+    public List<FriendDto> rejectFriendRequest(Member member, Member toMember) {
         // 특정 사용자(member)와 친구가 될 사용자(toMember) 사이의 친구 요청을 삭제합니다.
         friendRepository.deleteByMemberAndToMember(member, toMember);
+        return getPendingFriendRequests(member);
     }
 
     /**

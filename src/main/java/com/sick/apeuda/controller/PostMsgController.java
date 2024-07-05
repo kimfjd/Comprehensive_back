@@ -7,6 +7,7 @@ import com.sick.apeuda.service.PostMsgService;
 import com.sick.apeuda.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -28,12 +29,14 @@ public class PostMsgController {
     }
 
     @GetMapping("/received")
-    public List<PostMsg> getReceivedMessages(@RequestParam("receiveEmail") String receiveEmail, @RequestParam("sendEmail") String sendEmail) {
+    public List<PostMsg> getReceivedMessages(@RequestParam("sendEmail") String sendEmail) {
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Member member = new Member();
-        member.setEmail(receiveEmail);
+        member.setEmail(memberEmail); //받는 이메일
 
         Member fromMember = new Member();
-        fromMember.setEmail(sendEmail);
+        fromMember.setEmail(sendEmail); //보내는 이메일
 
         return postMsgService.receivedMessage(member, fromMember);
     }

@@ -45,30 +45,40 @@ public class FriendController {
      * @param memberEmail 친구 요청을 받는 사용자의 이메일
      * @return 대기 중인 친구 요청 목록의 DTO 리스트
      */
+
     @GetMapping("/findrequest")
-    public List<FriendDto> getPendingFriendRequests(@RequestParam String memberEmail) {
+    public ResponseEntity<List<FriendDto>> getPendingFriendRequests() {
         // 이메일을 사용하여 사용자 객체를 가져온다고 가정
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = new Member();
         member.setEmail(memberEmail);
 
-        return friendService.getPendingFriendRequests(member);
+        List<FriendDto> friends = friendService.getPendingFriendRequests(member);
+        return ResponseEntity.ok(friends);
     }
+
+
 
     /**
      * 친구 요청을 수락합니다.
      *
      * @param memberEmail   친구 요청을 받는 사용자의 이메일
      * @param toMemberEmail 친구 요청을 보낸 사용자의 이메일
+     *
      */
-    @PostMapping("/accept")
-    public void acceptFriendRequest(@RequestParam String memberEmail, @RequestParam String toMemberEmail) {
+
+
+    @GetMapping("/accept")
+    public ResponseEntity<List<FriendDto>> acceptFriendRequest(@RequestParam String memberEmail) {
+        String toMemberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = new Member();
         member.setEmail(memberEmail);
 
         Member toMember = new Member();
         toMember.setEmail(toMemberEmail);
 
-        friendService.acceptFriendRequest(member, toMember);
+        List<FriendDto> friends = friendService.acceptFriendRequest(member, toMember);
+        return ResponseEntity.ok(friends);
     }
 
     /**
@@ -77,27 +87,21 @@ public class FriendController {
      * @param memberEmail   친구 요청을 받는 사용자의 이메일
      * @param toMemberEmail 친구 요청을 보낸 사용자의 이메일
      */
-    @PostMapping("/reject")
-    public void rejectFriendRequest(@RequestParam String memberEmail, @RequestParam String toMemberEmail) {
-        // 이메일을 사용하여 사용자 객체를 가져온다고 가정
+    @GetMapping("/reject")
+    public ResponseEntity<List<FriendDto>>rejectFriendRequest(@RequestParam String memberEmail) {
+        String toMemberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = new Member();
         member.setEmail(memberEmail);
 
         Member toMember = new Member();
         toMember.setEmail(toMemberEmail);
 
-        friendService.rejectFriendRequest(member, toMember);
+        List<FriendDto> friends = friendService.rejectFriendRequest(member, toMember);
+        return ResponseEntity.ok(friends);
     }
+
 
     @GetMapping("/list")
-    public List<FriendDto> getFriends(@RequestParam String memberEmail) {
-        Member member = new Member();
-        member.setEmail(memberEmail);
-        return friendService.getFriends(member);
-    }
-//토큰 방식
-
-    @GetMapping("/list2")
     public ResponseEntity<List<FriendDto>> getFriends() {
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = new Member();
@@ -107,15 +111,21 @@ public class FriendController {
     }
 
 
-
     @GetMapping("/delete")
-    public void deleteFriend(@RequestParam String memberEmail, @RequestParam String friendEmail) {
-        // 이메일을 사용하여 사용자 객체를 가져온다고 가정
+    public ResponseEntity<List<FriendDto>> deleteFriend(@RequestParam String friendEmail) {
+        // 현재 인증된 사용자의 이메일을 가져옴
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // 이메일을 사용하여 사용자 객체를 생성
         Member member = new Member();
         member.setEmail(memberEmail);
         Member friend = new Member();
         friend.setEmail(friendEmail);
 
+        // 친구 삭제 서비스 호출
         friendService.deleteFriend(member, friend);
+
+        // 성공적인 응답 반환
+        return ResponseEntity.noContent().build();
     }
 }
