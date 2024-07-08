@@ -1,7 +1,9 @@
 package com.sick.apeuda.dto;
 
+import com.sick.apeuda.constant.Authority;
 import com.sick.apeuda.entity.Member;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Setter
@@ -32,5 +34,17 @@ public class MemberResDto {
                 .build();
 
     }
+    public Member memUpdate(PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .password(passwordEncoder.encode(password))
+                .nickname(nickname)
+                .profileImgPath(profileImgPath)
+                .skill(skill)
+                .myInfo(myInfo)
+                .authority(Authority.ROLE_USER)
+                .build();
+    }
 }
+
+
 

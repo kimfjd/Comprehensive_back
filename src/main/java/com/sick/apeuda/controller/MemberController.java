@@ -7,10 +7,13 @@ import com.sick.apeuda.dto.MemberReqDto;
 import com.sick.apeuda.dto.MemberResDto;
 import com.sick.apeuda.dto.TokenDto;
 import com.sick.apeuda.entity.Member;
+import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -22,13 +25,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
-    // 회원 여부 확인(일단 막아 놓음)
-//    @GetMapping("/check")
-//    public ResponseEntity<Boolean> isMember(@RequestParam String email) {
-//        boolean isEmail = memberService.isMember(email);
-//        return ResponseEntity.ok(isEmail);
-//    }
+    private final PasswordEncoder passwordEncoder;
 
 
 
@@ -49,21 +48,32 @@ public class MemberController {
 
     // 회원 수정
 //    @PutMapping("/membermodify/{email}")
-//    public ResponseEntity<Boolean> memberModify(@RequestBody MemberDto memberDto) {
-//        Member member = Member.builder()
-//                .password(memberDto.getPassword())
-//                .nickname(memberDto.getNickname())
-//                .profileImgPath(memberDto.getProfileImgPath())
-//                .skill(memberDto.getSkill())
-//                .myInfo(memberDto.getMyInfo())
-//                .build();
-//        boolean isTrue = memberService.saveMember(member);
-//        return ResponseEntity.ok(isTrue);
+//    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto memberReqDto) {
+//        return ResponseEntity.ok(memberService.modifyMember(memberReqDto));
 //    }
-    @PostMapping("/membermodify/{email}")
-    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto requestDto) {
-        return ResponseEntity.ok(memberService.memUpdate(requestDto));
+    @PostMapping("/membermodify")
+    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto memberReqDto) {
+        try {
+            log.info("회원 정보 수정 요청: {}", memberReqDto.getEmail());
+            Member member = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+                    () -> new RuntimeException("해당 회원이 존재하지 않습니다.")
+            );
+
+            memberReqDto.updateMember(member, passwordEncoder);
+            log.info("회원 정보 수정 완료: {}", member);
+            return ResponseEntity.ok(MemberResDto.of(memberRepository.save(member)));
+        } catch (Exception e) {
+            log.error("회원 정보 수정 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+
+
+
+//    @PostMapping("/membermodify/{email}")
+//    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto requestDto) {
+//        return ResponseEntity.ok(memberService.memUpdate(requestDto));
+//    }
 
     // 회원 삭제
     @GetMapping("/delmember")

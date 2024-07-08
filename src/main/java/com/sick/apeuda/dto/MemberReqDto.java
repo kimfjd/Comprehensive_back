@@ -36,15 +36,22 @@ public class MemberReqDto {
                 .authority(Authority.ROLE_USER)
                 .build();
     }
-    public Member memUpdate(PasswordEncoder passwordEncoder) {
-        return Member.builder()
-                .password(passwordEncoder.encode(password))
-                .nickname(nickname)
-                .profileImgPath(profileImgPath)
-                .skill(skill)
-                .myInfo(myInfo)
-                .authority(Authority.ROLE_USER)
-                .build();
+    public void updateMember(Member member, PasswordEncoder passwordEncoder) {
+        if (this.password != null && !this.password.isEmpty()) {
+            member.setPassword(passwordEncoder.encode(this.password));
+        }
+        if (this.nickname != null) {
+            member.setNickname(this.nickname);
+        }
+        if (this.profileImgPath != null) {
+            member.setProfileImgPath(this.profileImgPath);
+        }
+        if (this.skill != null) {
+            member.setSkill(this.skill);
+        }
+        if (this.myInfo != null) {
+            member.setMyInfo(this.myInfo);
+        }
     }
 
 

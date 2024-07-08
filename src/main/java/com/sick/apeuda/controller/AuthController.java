@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Slf4j
+
 public class AuthController {
     private final AuthService authService;
     private final MemberService memberService;
-
 
     // 회원 여부 확인
     @GetMapping("/check")
@@ -36,8 +36,8 @@ public class AuthController {
     }
 
     @PostMapping("/reissued")
-    public ResponseEntity<AccessTokenDto> newToken(@RequestParam String refreshToken) {
-        System.out.println(refreshToken);
+    public ResponseEntity<AccessTokenDto> newToken(@RequestBody String refreshToken) {
+        log.info("refreshToken : {}", refreshToken);
         return ResponseEntity.ok(authService.reissuedToken(refreshToken));
     }
 
