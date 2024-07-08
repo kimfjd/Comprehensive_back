@@ -1,5 +1,6 @@
 package com.sick.apeuda.dto;
 
+import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Skill;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,4 +27,5 @@ public class ProjectResDto {
     private String recruitMember;
     private List<Skill> skillName;
     private List<ReplyDto> replies;
+    private Member memberId;
 }

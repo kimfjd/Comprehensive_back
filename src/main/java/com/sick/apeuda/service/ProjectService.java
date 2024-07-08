@@ -110,22 +110,34 @@ public class ProjectService {
         return convertProjectDetailEntityToDto(project);
     }
     // 게시글 수정
+    // 게시글 수정
     public boolean modifyProject(Long id, ProjectReqDto projectReqDto) {
         try {
             Project project = projectRepository.findById(id).orElseThrow(
                     () -> new RuntimeException("Board does not exist")
             );
-            project.setProjectId(projectReqDto.getProjectId());
-            project.setJob(projectReqDto.getJob());
+            String memberId = getCurrentMemberId();
+            // 토큰 발급 받기전까지 Id 직접입력 토큰 발급시 memberId 넣으면됨
+            System.out.println("토큰으로 받은 멤버아이디 체크 : " +memberId );
+            Member member = memberRepository.findById(memberId).orElseThrow(
+                    () -> new RuntimeException("Member does not exist")
+            );
+            project.setMember(member);
             project.setProjectName(projectReqDto.getProjectName());
             project.setProjectTitle(projectReqDto.getProjectTitle());
             project.setProjectContent(projectReqDto.getProjectContent());
             project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setRecruitNum(projectReqDto.getRecruitNum());
-            project.setImgPath(project.getImgPath());
-            project.setRegDate(LocalDateTime.now());
-            project.setProjectTime(project.getProjectTime());
+
+            // 등록일자는 전달된 값 유지
+            project.setRegDate(projectReqDto.getRegDate());
+
+            // 프로젝트 시간도 전달된 값으로 설정
+            project.setProjectTime(projectReqDto.getProjectTime());
+
+            // 기존 스킬을 새로운 스킬로 설정
             project.setSkills(projectReqDto.getSkillName());
+
             projectRepository.save(project);
             return true;
         } catch (Exception e) {
@@ -133,6 +145,30 @@ public class ProjectService {
             return false;
         }
     }
+
+//    public boolean modifyProject(Long id, ProjectReqDto projectReqDto) {
+//        try {
+//            Project project = projectRepository.findById(id).orElseThrow(
+//                    () -> new RuntimeException("Board does not exist")
+//            );
+//            project.setProjectId(projectReqDto.getProjectId());
+//            project.setJob(projectReqDto.getJob());
+//            project.setProjectName(projectReqDto.getProjectName());
+//            project.setProjectTitle(projectReqDto.getProjectTitle());
+//            project.setProjectContent(projectReqDto.getProjectContent());
+//            project.setProjectPassword(projectReqDto.getProjectPassword());
+//            project.setRecruitNum(projectReqDto.getRecruitNum());
+//            project.setImgPath(project.getImgPath());
+//            project.setRegDate(LocalDateTime.now());
+//            project.setProjectTime(projectReqDto.getProjectTime());
+//            project.setSkills(projectReqDto.getSkillName());
+//            projectRepository.save(project);
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     /**
      * 플젝 게시판 삭제
@@ -155,6 +191,7 @@ public class ProjectService {
      */
     private ProjectResDto convertProjectDetailEntityToDto(Project project) {
         ProjectResDto projectResDto = new ProjectResDto();
+        projectResDto.setMemberId(project.getMember());
         projectResDto.setProjectId(project.getProjectId());
         projectResDto.setJob(project.getJob());
         projectResDto.setProjectName(project.getProjectName());
