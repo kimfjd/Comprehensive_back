@@ -76,7 +76,6 @@ public class BoardService {
             board.setBoardId(boardReqDto.getBoardId());
             board.setTitle(boardReqDto.getTitle());
             board.setContent(boardReqDto.getContent());
-            board.setImgPath(boardReqDto.getImg());
             board.setRegDate(LocalDateTime.now());
             board.setProfileImage(member.getProfileImgPath());
             board.setMember(member);
@@ -153,8 +152,7 @@ public class BoardService {
         boardResDto.setContent(board.getContent());
         boardResDto.setImg(board.getImgPath());
         boardResDto.setRegDate(board.getRegDate());
-
-        // 게시글 작성자 정보 설정
+        boardResDto.setMemberId(board.getMember());        // 게시글 작성자 정보 설정
         boardResDto.setNickName(board.getMember().getNickname());
         boardResDto.setProfileImg(board.getMember().getProfileImgPath());
 

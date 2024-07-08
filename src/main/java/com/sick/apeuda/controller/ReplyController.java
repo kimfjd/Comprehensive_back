@@ -49,12 +49,13 @@ public class ReplyController {
     }
     
     // 자유 게시판 댓글 페이징
-    @GetMapping("/board-reply/{boardId}")
-    public ResponseEntity<List<ReplyDto>> boardReplyPageList(@PathVariable Long boardId,
+    @GetMapping("/board-reply/{boardId}/page")
+    public ResponseEntity<Map<String, Object>> boardReplyPageList(@PathVariable Long boardId,
                                                                @RequestParam(defaultValue = "0") int page,
                                                                @RequestParam(defaultValue = "5") int size) {
-        List<ReplyDto> list = replyService.getBoardReplyList(boardId, page, size);
-        return ResponseEntity.ok(list);
+
+        Map<String, Object> result = replyService.getBoardReplyList(boardId, page, size);
+        return ResponseEntity.ok(result);
     }
 
     // 플젝 게시판 댓글 페이징

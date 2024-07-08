@@ -120,32 +120,7 @@ public class ReplyService {
         }
     }
 
-    // 댓글입력을 한 로직에서 관리하고 싶었는데 실력부족으로 구현 못함 ㅠ
-//    /**
-//     * 자유 게시판 댓글 페이징
-//     * @param boardId 플젝 게시판 아이디
-//     * @param page 조회할 페이지
-//     * @param size 한 페이지에 나오는 댓글 수
-//     * @return ReplyDto List 객체
-//     */
-//    public List<ReplyDto> getReplyList(Long boardId, Long projectId, int page, int size) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        List<ReplyDto> replyDtos = new ArrayList<>();
-//        if(boardId != null){
-//            List<Reply> replies = replyRepository.findAllByBoardId(boardId, pageable).getContent();
-//            for(Reply reply : replies) {
-//                replyDtos.add(saveReplyList(reply));
-//            }
-//        } else if (projectId != null) {
-//            List<Reply> replies = replyRepository.findAllByProjectId(projectId, pageable).getContent();
-//            for(Reply reply : replies) {
-//                replyDtos.add(saveReplyList(reply));
-//            }
-//        }else {
-//            throw new RuntimeException("자유 게시판 아이디와 플젝 게시판 아이디 둘중 하나는 있어야 합니다!");
-//        }
-//        return replyDtos;
-//    }
+
 
     /**
      * 자유 게시판 댓글 페이징
@@ -154,14 +129,19 @@ public class ReplyService {
      * @param size 한 페이지에 나오는 댓글 수
      * @return ReplyDto List 객체
      */
-    public List<ReplyDto> getBoardReplyList(Long boardId, int page, int size) {
+    public Map<String, Object> getBoardReplyList(Long boardId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         List<Reply> replies = replyRepository.findAllByBoardId(boardId, pageable).getContent();
         List<ReplyDto> replyDtos = new ArrayList<>();
         for(Reply reply : replies) {
             replyDtos.add(saveReplyList(reply));
         }
-        return replyDtos;
+        int cnt =replyRepository.findAllByBoardId(boardId, pageable).getTotalPages();
+        Map<String, Object> result = new HashMap<>();
+        result.put("replies", replyDtos);
+        result.put("totalPages", cnt);
+        System.out.println("댓글 길이 : "+replyDtos.size());
+        return result;
     }
 
     /**
