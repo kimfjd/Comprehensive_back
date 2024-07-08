@@ -2,6 +2,7 @@ package com.sick.apeuda.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table
+@Component
 public class ReadMessage {
 
     @Id
@@ -18,12 +20,13 @@ public class ReadMessage {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member1_id")
+    @JoinColumn
     private Member member1;
 
     @ManyToOne
-    @JoinColumn(name = "member2_id")
+    @JoinColumn
     private Member member2;
 
     private boolean readCheck;
+
 }

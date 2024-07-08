@@ -29,7 +29,8 @@ public class FriendService {
 
     /**
      * 친구 요청을 보냅니다.
-     * @param member 친구 요청을 보내는 사용자 객체
+     *
+     * @param member   친구 요청을 보내는 사용자 객체
      * @param toMember 친구 요청을 받는 사용자 객체
      * @throws IllegalStateException 이미 친구인 경우 예외를 발생시킵니다.
      */
@@ -64,10 +65,9 @@ public class FriendService {
     }
 
 
-
-
     /**
      * 사용자의 친구 목록을 가져옵니다.
+     *
      * @param member 친구 목록을 가져올 사용자 객체
      * @return 사용자의 친구 목록의 DTO 리스트
      */
@@ -94,8 +94,9 @@ public class FriendService {
 
     /**
      * Friend 엔티티를 FriendDto로 변환합니다.
+     *
      * @param friendMember 친구 관계의 상대방 사용자 객체
-     * @param friend Friend 엔티티 객체
+     * @param friend       Friend 엔티티 객체
      * @return 변환된 FriendDto 객체
      */
     private FriendDto convertToFriendDto(Member friendMember, Friend friend) {
@@ -110,7 +111,8 @@ public class FriendService {
 
     /**
      * 두 사용자가 친구인지 확인합니다.
-     * @param member 첫 번째 사용자 객체
+     *
+     * @param member   첫 번째 사용자 객체
      * @param toMember 두 번째 사용자 객체
      * @return 두 사용자가 친구인 경우 true, 그렇지 않은 경우 false
      */
@@ -129,6 +131,7 @@ public class FriendService {
 
     /**
      * 대기 중인 친구 요청 목록을 가져옵니다.
+     *
      * @param member 친구 요청을 받는 사용자 객체
      * @return 대기 중인 친구 요청 목록의 DTO 리스트
      */
@@ -143,7 +146,8 @@ public class FriendService {
 
     /**
      * 친구 요청을 수락합니다.
-     * @param member 친구 요청을 받는 사용자 객체
+     *
+     * @param member   친구 요청을 받는 사용자 객체
      * @param toMember 친구 요청을 보낸 사용자 객체
      */
     @Transactional
@@ -162,13 +166,13 @@ public class FriendService {
             ReadMessage readMessage = new ReadMessage();
             readMessage.setMember1(member);
             readMessage.setMember2(toMember);
-            readMessage.setReadCheck(false);
+            readMessage.setReadCheck(true);
             readMessageRepository.save(readMessage);
 
             ReadMessage readMessage2 = new ReadMessage();
             readMessage2.setMember1(toMember);
             readMessage2.setMember2(member);
-            readMessage2.setReadCheck(false);
+            readMessage2.setReadCheck(true);
             readMessageRepository.save(readMessage2);
 
         }
@@ -177,7 +181,8 @@ public class FriendService {
 
     /**
      * 친구 요청을 거절하고 요청을 삭제합니다.
-     * @param member 친구 요청을 받는 사용자 객체
+     *
+     * @param member   친구 요청을 받는 사용자 객체
      * @param toMember 친구 요청을 보낸 사용자 객체
      */
     @Transactional
@@ -189,6 +194,7 @@ public class FriendService {
 
     /**
      * Friend 엔티티를 FriendDto로 변환합니다.
+     *
      * @param friend Friend 엔티티 객체
      * @return 변환된 FriendDto 객체
      */
@@ -204,6 +210,7 @@ public class FriendService {
 
     /**
      * 친구 관계를 삭제합니다.
+     *
      * @param member 친구 관계를 삭제할 사용자 객체
      * @param friend 친구 관계를 삭제할 친구 객체
      */
@@ -213,15 +220,22 @@ public class FriendService {
         // 친구 관계를 삭제합니다.
         friendRepository.deleteFriend(member, friend);
         deleteMessagesBetweenMembers(member, friend);
-        deleteReadMessage(member,friend);
+        deleteReadMessage(member, friend);
     }
+
+
     private void deleteMessagesBetweenMembers(Member member1, Member member2) {
         // member1이 보낸 메시지와 member2가 받은 메시지, 또는 member2가 보낸 메시지와 member1이 받은 메시지를 모두 삭제
         List<PostMsg> messagesToDelete = postMsgRepository.findAllBySendMemberAndReceiveMemberOrSendMemberAndReceiveMemberOrderByReceiveTimeDesc(member1, member2, member2, member1);
         postMsgRepository.deleteAll(messagesToDelete);
     }
-    private void deleteReadMessage(Member member1, Member member2) {
-        List<ReadMessage> readMessagesToDelete1 = readMessageRepository.findAllByMembers(member1, member2);
-        readMessageRepository.deleteAll(readMessagesToDelete1);
+
+
+    public void deleteReadMessage(Member member, Member friend) {
+        List<ReadMessage> readMessagesToDelete = readMessageRepository.findAllByMembers(member, friend);
+        readMessageRepository.deleteAll(readMessagesToDelete);
     }
+
+
+
 }
