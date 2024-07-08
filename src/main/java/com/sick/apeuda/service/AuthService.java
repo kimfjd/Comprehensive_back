@@ -70,6 +70,8 @@ public class AuthService {
     public AccessTokenDto reissuedToken(String refreshToken) {
         Optional<Token> optionalToken = tokenRepository.findByRefreshToken(refreshToken);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.warn("사용자 email : {}", SecurityContextHolder.getContext().getAuthentication());
+        log.warn("사용자 refreshToken : {}", optionalToken.get().getRefreshToken());
         if(optionalToken.isPresent()) {
             if(email.equals(optionalToken.get().getEmail())){
                 AccessTokenDto reissuedAccessToken = tokenProvider.generateAccessTokenDto(tokenProvider.getAuthentication(refreshToken));

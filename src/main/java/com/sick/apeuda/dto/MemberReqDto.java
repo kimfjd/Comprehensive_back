@@ -37,21 +37,14 @@ public class MemberReqDto {
                 .build();
     }
     public void updateMember(Member member, PasswordEncoder passwordEncoder) {
-        if (this.password != null && !this.password.isEmpty()) {
-            member.setPassword(passwordEncoder.encode(this.password));
-        }
-        if (this.nickname != null) {
-            member.setNickname(this.nickname);
-        }
-        if (this.profileImgPath != null) {
-            member.setProfileImgPath(this.profileImgPath);
-        }
-        if (this.skill != null) {
-            member.setSkill(this.skill);
-        }
-        if (this.myInfo != null) {
-            member.setMyInfo(this.myInfo);
-        }
+        Member.builder()
+                .password(password != null && !password.isEmpty() ? passwordEncoder.encode(password) : member.getPassword())
+                .nickname(nickname != null ? nickname : member.getNickname())
+                .profileImgPath(profileImgPath != null ? profileImgPath : member.getProfileImgPath())
+                .skill(skill != null ? skill : member.getSkill())
+                .myInfo(myInfo != null ? myInfo : member.getMyInfo())
+                .authority(Authority.ROLE_USER)
+                .build();
     }
 
 
