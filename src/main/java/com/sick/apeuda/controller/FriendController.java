@@ -114,9 +114,9 @@ public class FriendController {
 
     @GetMapping("/list")
     public ResponseEntity<List<ReadMessageDto>> getFriends() {
-        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Member member = new Member();
-        member.setEmail(memberEmail);
+//        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Member member = new Member();
+//        member.setEmail(memberEmail);
         List<ReadMessageDto> friends = readMessageService.getFriends();
         return ResponseEntity.ok(friends);
     }
@@ -140,7 +140,6 @@ public class FriendController {
         Member friend = new Member();
         friend.setEmail(friendEmail);
 
-        // 친구 삭제 서비스 호출
         readMessageService.updateReadCheck(member, friend);
 
         // 성공적인 응답 반환

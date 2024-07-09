@@ -3,10 +3,13 @@ package com.sick.apeuda.controller;
 import com.sick.apeuda.dto.BoardReqDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
+import com.sick.apeuda.dto.ReadMessageDto;
+import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +26,14 @@ public class ProjectController {
         List<ProjectReqDto> list = projectService.getProjectList();
         return ResponseEntity.ok(list);
     }
+
+    @GetMapping("/mypj")
+    public ResponseEntity<List<ProjectReqDto>> myProjectList() {
+        List<ProjectReqDto> friends = projectService.getMyProject();
+        return ResponseEntity.ok(friends);
+    }
+
+
     // 플젝 게시글 상세 조회
     @GetMapping("/detail/{id}")
     public ResponseEntity<ProjectResDto> projectDetail(@PathVariable Long id) {

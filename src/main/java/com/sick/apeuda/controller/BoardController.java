@@ -25,6 +25,12 @@ public class BoardController {
         List<BoardReqDto> list = boardService.getBoardList();
         return ResponseEntity.ok(list);
     }
+    @GetMapping("/myboard")
+    public ResponseEntity<List<BoardReqDto>> myProjectList() {
+        List<BoardReqDto> friends = boardService.getMyBoard();
+        return ResponseEntity.ok(friends);
+    }
+
     // 자유 게시글 상세 조회
     @GetMapping("/detail/{id}")
     public ResponseEntity<BoardResDto> boardDetail(@PathVariable Long id) {

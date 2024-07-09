@@ -9,11 +9,13 @@ import com.sick.apeuda.repository.BoardRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import com.sick.apeuda.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -35,6 +37,17 @@ public class BoardService {
             boardDtos.add(convertEntityToDto(board));
         }
         return boardDtos;
+    }
+
+    public List<BoardReqDto> getMyBoard() {
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Member> memberOptional = memberRepository.findById(memberEmail);
+        List<Board> boards = boardRepository.findByMember(memberOptional.get());
+        List<BoardReqDto> projectDtos = new ArrayList<>();
+        for(Board board : boards) {
+            projectDtos.add(convertEntityToDto(board));
+        }
+        return projectDtos;
     }
 
     /**

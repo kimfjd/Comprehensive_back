@@ -3,18 +3,19 @@ package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
-import com.sick.apeuda.entity.ChatRoom;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Project;
 import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -98,6 +99,19 @@ public class ProjectService {
             return false;
         }
     }
+    public List<ProjectReqDto> getMyProject() {
+        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Member> memberOptional = memberRepository.findById(memberEmail);
+        List<Project> projects = projectRepository.findByMember(memberOptional.get());
+        List<ProjectReqDto> projectDtos = new ArrayList<>();
+        for(Project project : projects) {
+            projectDtos.add(convertProjectEntityToDto(project));
+        }
+        return projectDtos;
+    }
+
+
+
     /**
      * 플젝 상세 조회
      * @param id 게시판 고유번호

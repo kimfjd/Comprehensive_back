@@ -1,6 +1,7 @@
 package com.sick.apeuda.repository;
 
 import com.sick.apeuda.entity.Board;
+import com.sick.apeuda.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b WHERE b.member.email = :memberId")
     List<Board> findPostsByMemberId(@Param("memberId") String memberId);
 
-
+    List<Board> findByMember(Member member);
 
 }
