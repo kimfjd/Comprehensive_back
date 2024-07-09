@@ -7,6 +7,8 @@ import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -19,7 +21,7 @@ public class MemberReqDto {
     private String nickname;
     private String identityNumber;
     private String profileImgPath;
-    private String skill;
+    private List<String> skill;
     private String myInfo;
 
 
@@ -31,7 +33,7 @@ public class MemberReqDto {
                 .nickname(nickname)
                 .identityNumber(identityNumber)
                 .profileImgPath(profileImgPath)
-                .skill(skill)
+                .skill(String.join(",", skill))
                 .myInfo(myInfo)
                 .authority(Authority.ROLE_USER)
                 .build();
@@ -41,7 +43,7 @@ public class MemberReqDto {
                 .password(password != null && !password.isEmpty() ? passwordEncoder.encode(password) : member.getPassword())
                 .nickname(nickname != null ? nickname : member.getNickname())
                 .profileImgPath(profileImgPath != null ? profileImgPath : member.getProfileImgPath())
-                .skill(skill != null ? skill : member.getSkill())
+                .skill(skill != null ? String.join(",", skill) : member.getSkill())
                 .myInfo(myInfo != null ? myInfo : member.getMyInfo())
                 .authority(Authority.ROLE_USER)
                 .build();

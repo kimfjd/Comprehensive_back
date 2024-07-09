@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 30 * 30;
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24; // 7일
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 30;
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7L; // 7일
     private final Key key;
 
     // 주의점 : @Value 어노테이션은 springframework의 어노테이션이다.
