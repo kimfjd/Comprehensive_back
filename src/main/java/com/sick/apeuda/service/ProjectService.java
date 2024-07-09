@@ -213,7 +213,7 @@ public class ProjectService {
         //projectDto.setProjectPassword(project.getProjectPassword());
         projectResDto.setProjectContent(project.getProjectContent());
         projectResDto.setRecruitNum(project.getRecruitNum());
-        projectResDto.setRecruitMember(project.getRecruitMember());
+        //projectResDto.setRecruitMember(project.getRecruitMember());
         projectResDto.setProjectContent(project.getProjectContent());
         projectResDto.setProjectTime(project.getProjectTime());
         projectResDto.setRegDate(LocalDateTime.now());

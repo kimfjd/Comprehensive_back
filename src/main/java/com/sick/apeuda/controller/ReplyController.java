@@ -20,6 +20,7 @@ public class ReplyController {
     private final ReplyService replyService;
 
     /**
+     * 댓글 등록
      * @param replyDto 댓글 Dto 객체
      * @return boolean 저장 성공 여부
      */
@@ -62,7 +63,7 @@ public class ReplyController {
     @GetMapping("/project-reply/{projectId}/page")
     public ResponseEntity<Map<String, Object>> projectReplyPageList(@PathVariable Long projectId,
                                                                @RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "10") int size) {
+                                                               @RequestParam(defaultValue = "12") int size) {
 //        List<ReplyDto> list = replyService.getProjectReplyList(projectId, page, size);
         Map<String, Object> result = replyService.getProjectReplyList(projectId, page, size);
 

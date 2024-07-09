@@ -38,8 +38,7 @@ public class Project {
     // 최대 모집인원
     private String recruitNum;
     // 참가 멤버 닉네임
-    private String recruitMember;
-    private String recruitMemberProfileImg;
+
 
     // 플젝 구인 마감시간
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")

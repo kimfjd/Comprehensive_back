@@ -30,9 +30,10 @@ public class ChatRoom {
     private Integer currentCount;
     private Integer maxCount;
     private Boolean postType; // 게시글 종류 구분을 위한 속성 1이면 프로젝트 0이면 오픈채팅방
-    private String roomPassword;
+    //private String roomPassword;
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ChatMsg> chatMsgs;
+
 
 }

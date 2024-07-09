@@ -50,6 +50,7 @@ public class ChatService {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomName(roomName);
         chatRoom.setPostType(true); // status 에서 PostType으로 변수명 변경
+
         // ChatRoom 저장
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
 
