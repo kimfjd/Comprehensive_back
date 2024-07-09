@@ -1,3 +1,10 @@
+//WebSecurityConfig.java
+
+
+
+
+
+
 package com.sick.apeuda.security;
 
 import com.sick.apeuda.jwt.TokenProvider;
@@ -46,7 +53,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .antMatchers("/auth/**", "/email/**","/friends/**" ).permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception","/unsubmodal/**","/mysub/**","/Unsubmodal/**","/Mysub/**").permitAll()
                 // 웹소켓 확인을 위한 예외 처리주소
-                .antMatchers("/chat/**", "/api/sample", "/swagger-ui.html#/**").permitAll()
+                .antMatchers("/ws/**", "app/**","/api/sample", "/swagger-ui.html#/**").permitAll()
+                .antMatchers("/chat/**").authenticated() // 채팅시 jwt 검증 추가
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider))

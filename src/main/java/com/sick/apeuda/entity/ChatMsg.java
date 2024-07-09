@@ -1,6 +1,7 @@
 // ChatMsg.java
 package com.sick.apeuda.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sick.apeuda.dto.ChatMsgDto;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -16,16 +16,22 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @ToString
 @Entity
-@Table(name = "ChatMsg")
+@Table(name = "chat_msg")
 public class ChatMsg {
     @Id
     @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long chatId;
 
-    private String sender;
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private Member sender;
     private String content;
-    private String roomId;
+    private String profileImgPath;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    @JsonBackReference
+    private ChatRoom chatRoom;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private String localDateTime ;

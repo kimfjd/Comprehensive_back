@@ -19,15 +19,15 @@ public class ChatMsgController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    @MessageMapping("/chat.sendMessage")
+    @MessageMapping("/chat/send")
     public void sendMessage(ChatMsgDto chatMsgDto) {
         try {
-            chatService.sendMessage(chatMsgDto);
+            log.debug("Received message: {}", chatMsgDto);
+            chatService.saveMessage(chatMsgDto);
             messagingTemplate.convertAndSend("/topic/room/" + chatMsgDto.getRoomId(), chatMsgDto);
             messagingTemplate.convertAndSendToUser(chatMsgDto.getReceiver(), "/queue/reply", chatMsgDto);
         } catch (Exception e) {
             log.error("Error handling message: " + e.getMessage(), e);
         }
-
     }
 }
