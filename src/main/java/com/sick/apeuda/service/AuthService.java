@@ -66,7 +66,7 @@ public class AuthService {
     }
 
 
-    // RefresgToken 이용하여 AccessToken 재발급
+    // RefreshToken 이용하여 AccessToken 재발급
     public AccessTokenDto reissuedToken(String refreshToken) {
         Optional<Token> optionalToken = tokenRepository.findByRefreshToken(refreshToken);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
