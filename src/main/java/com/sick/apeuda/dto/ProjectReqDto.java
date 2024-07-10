@@ -27,4 +27,5 @@ public class ProjectReqDto {
     private String profileImg;
     private List<Skill> skillName;
     private ChatRoom chatRoom;
+    private List<String> chatMemProfile;
 }

@@ -3,11 +3,10 @@ package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
+import com.sick.apeuda.entity.ChatManage;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Project;
-import com.sick.apeuda.repository.MemberRepository;
-import com.sick.apeuda.repository.ProjectRepository;
-import com.sick.apeuda.repository.ReplyRepository;
+import com.sick.apeuda.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,8 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
-
+    private final ChatManageRepository chatManageRepository;
+    private final ChatRoomRepository chatRoomRepository;
     /**
      * 프로젝트 게시판 전체 조회 메소드
      * @return projectDtos Project 엔티티타입의 List 반환
@@ -33,8 +33,16 @@ public class ProjectService {
         Pageable pageable = PageRequest.of(page, size);
         List<Project> projects = projectRepository.findAll(pageable).getContent();
         List<ProjectReqDto> projectDtos = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         for(Project project : projects) {
-            projectDtos.add(convertProjectEntityToDto(project));
+            System.out.println("project.getChatRoom()"+ project.getChatRoom());
+            List<ChatManage> chatmanages = chatManageRepository.findByChatRoom(project.getChatRoom());
+            System.out.println("chatmanages" +chatmanages);
+            for(ChatManage chatmanage : chatmanages){
+                list.add(chatmanage.getMember().getProfileImgPath());
+                System.out.println("길이"+list.size());
+            }
+            projectDtos.add(convertProjectListEntityToDto(project,list));
         }
         int cnt =projectRepository.findAll(pageable).getTotalPages();
         Map<String, Object> result = new HashMap<>();
@@ -42,7 +50,30 @@ public class ProjectService {
         result.put("totalPages", cnt);
         return result;
     }
-
+    /**
+     * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 입력)
+     * @param project Project 엔티티 타입
+     * @return projectDto -> 게시판 전체 리스트 반환
+     */
+    private ProjectReqDto convertProjectListEntityToDto(Project project, List<String> list) {
+        ProjectReqDto projectReqDto = new ProjectReqDto();
+        projectReqDto.setProjectId(project.getProjectId());
+        projectReqDto.setJob(project.getJob());
+        projectReqDto.setProjectName(project.getProjectName());
+        projectReqDto.setProjectTitle(project.getProjectTitle());
+        projectReqDto.setProjectContent(project.getProjectContent());
+        projectReqDto.setProjectPassword(project.getProjectPassword());
+        projectReqDto.setProjectTime(project.getProjectTime());
+        projectReqDto.setRegDate(project.getRegDate());
+        projectReqDto.setRecruitNum(project.getRecruitNum());
+        projectReqDto.setEmail(project.getMember().getEmail());
+        projectReqDto.setNickName(project.getMember().getNickname());
+        projectReqDto.setProfileImg(project.getMember().getProfileImgPath());
+        projectReqDto.setSkillName(project.getSkills());
+        projectReqDto.setChatRoom(project.getChatRoom());
+        projectReqDto.setChatMemProfile(list);
+        return projectReqDto;
+    }
     /**
      * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 입력)
      * @param project Project 엔티티 타입
@@ -58,10 +89,12 @@ public class ProjectService {
         projectReqDto.setProjectPassword(project.getProjectPassword());
         projectReqDto.setProjectTime(project.getProjectTime());
         projectReqDto.setRegDate(project.getRegDate());
+        projectReqDto.setRecruitNum(project.getRecruitNum());
         projectReqDto.setEmail(project.getMember().getEmail());
         projectReqDto.setNickName(project.getMember().getNickname());
         projectReqDto.setProfileImg(project.getMember().getProfileImgPath());
         projectReqDto.setSkillName(project.getSkills());
+        projectReqDto.setChatRoom(project.getChatRoom());
         return projectReqDto;
     }
     /**
