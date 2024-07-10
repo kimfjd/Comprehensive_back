@@ -27,13 +27,13 @@ public class PaymentController {
     @PostMapping("/save")
     public ResponseEntity<Boolean> savePaymentHistory(@RequestBody PaymentHistoryDto paymentHistoryDto) {
         boolean isTrue = paymentService.savePaymentHistory(paymentHistoryDto);
-        System.out.println("controller save test"+paymentHistoryDto.getMember());
         return ResponseEntity.ok(isTrue);
     }
 
     @PostMapping("/info")
     public ResponseEntity<Boolean> savePaymentinfo(@RequestBody PaymentInfoDto paymentInfoDto){
         boolean isTrue=paymentService.savePaymentinfo(paymentInfoDto);
+        System.out.println("controller save test"+paymentInfoDto.getEmail());
         return ResponseEntity.ok(isTrue);
     }
 

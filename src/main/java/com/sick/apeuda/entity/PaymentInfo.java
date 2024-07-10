@@ -29,12 +29,4 @@ public class PaymentInfo {
     @Column(nullable = false)
     private String paymentDetails;  // 구독에 관한 모든 데이터
 
-    @Column(nullable = false)
-    private Boolean isPaymentAvailable; // 결제의 성공 여부
-
-    @Column(nullable = false)
-    private Boolean isDeleted; // 사용자가 결제 정보 삭제를 하면 이 컬럼이 false에서 True로 바뀌고 실제로 결제정보를 삭제하지는 않음
-
-    @Column
-    private LocalDateTime deletedAt; // 삭제 정보 일시
 }

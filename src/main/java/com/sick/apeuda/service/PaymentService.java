@@ -32,8 +32,6 @@ public class PaymentService {
     public boolean savePaymentHistory(PaymentHistoryDto paymentHistoryDto) {
         try {
             String memberId = paymentHistoryDto.getMember();
-            System.out.println("service test"+ paymentHistoryDto.getMember());
-            System.out.println("memberId" + memberId);
             Member member = memberRepository.findById(paymentHistoryDto.getMember())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
@@ -58,15 +56,15 @@ public class PaymentService {
 
     public boolean savePaymentinfo(PaymentInfoDto paymentInfoDto) {
         try {
-            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById(memberId)
+            String memberId = paymentInfoDto.getEmail();
+            System.out.println("service test"+ paymentInfoDto.getEmail());
+            System.out.println("memberId" + memberId);
+            Member member = memberRepository.findById(paymentInfoDto.getEmail())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
             PaymentInfo paymentInfo = new PaymentInfo();
             paymentInfo.setMember(member);
             paymentInfo.setPaymentMethodCode(paymentInfoDto.getPaymentMethodCode());
             paymentInfo.setPaymentDetails(paymentInfoDto.getPaymentDetails());
-            paymentInfo.setIsPaymentAvailable(paymentInfoDto.getIsPaymentAvailable());
-            paymentInfo.setIsDeleted(paymentInfoDto.getIsDeleted());
 
             paymentInfoRepository.save(paymentInfo);
             return true;

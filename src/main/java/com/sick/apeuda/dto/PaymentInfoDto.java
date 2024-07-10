@@ -14,7 +14,4 @@ public class PaymentInfoDto {
     private String email;
     private String paymentMethodCode;
     private String paymentDetails;
-    private Boolean isPaymentAvailable;
-    private Boolean isDeleted;
-    private LocalDateTime deletedAt;
 }
