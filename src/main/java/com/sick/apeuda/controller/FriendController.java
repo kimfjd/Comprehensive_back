@@ -38,6 +38,8 @@ public class FriendController {
      * @param memberEmail   친구 요청을 보내는 사용자의 이메일
      * @param toMemberEmail 친구 요청을 받는 사용자의 이메일
      */
+
+
     @PostMapping("/request")
     public void sendFriendRequest(@RequestParam String memberEmail, @RequestParam String toMemberEmail) {
         // 이메일을 사용하여 사용자 객체를 가져온다고 가정
@@ -49,6 +51,19 @@ public class FriendController {
 
         friendService.sendFriendRequest(member, toMember);
     }
+
+//    @PostMapping("/request")
+//    public void sendFriendRequest(@RequestParam String toMemberEmail) {
+//        // 이메일을 사용하여 사용자 객체를 가져온다고 가정
+//        String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        Member member = new Member();
+//        member.setEmail(memberEmail);
+//
+//        Member toMember = new Member();
+//        toMember.setEmail(toMemberEmail);
+//
+//        friendService.sendFriendRequest(member, toMember);
+//    }
 
     /**
      * 대기 중인 친구 요청 목록을 가져옵니다.
@@ -82,6 +97,7 @@ public class FriendController {
     @GetMapping("/accept")
     public ResponseEntity<List<FriendDto>> acceptFriendRequest(@RequestParam String memberEmail) {
         String toMemberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
         Member member = new Member();
         member.setEmail(memberEmail);
 

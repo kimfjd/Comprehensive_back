@@ -31,5 +31,9 @@ public class Apply {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime applyDate;
 
-    private String managerId;
+
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Member manager;
+
 }

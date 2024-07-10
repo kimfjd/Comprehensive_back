@@ -4,10 +4,13 @@ import com.sick.apeuda.dto.ApplyReqDto;
 import com.sick.apeuda.dto.ApplyResDto;
 
 
+import com.sick.apeuda.dto.FriendDto;
+import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.ApplyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +23,12 @@ public class ApplyController {
     private final ApplyService applyService;
 
     // 조회 기능 select
-    @GetMapping("/list/{projectId}")
-    public ResponseEntity<List<ApplyResDto>> applyList(@PathVariable Long projectId){
-        List<ApplyResDto> list = applyService.getApplyList(projectId);
+    @GetMapping("/list")
+    public ResponseEntity<List<ApplyResDto>> applyList(){
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member member = new Member();
+        member.setEmail(manager);
+        List<ApplyResDto> list = applyService.getApplyList(member);
         return ResponseEntity.ok(list);
     }
     // 요청기능
@@ -31,12 +37,15 @@ public class ApplyController {
         boolean isTrue = applyService.saveApply(applyReqDto);
         return ResponseEntity.ok(isTrue);
     }
-    // 수락기능
-//    @PostMapping("/accept")
-//    public ResponseEntity<Boolean> acceptApply(@RequestBody ApplyReqDto applyReqDto){
-//        boolean isTrue = applyService.acceptApply(applyReqDto);
-//        return ResponseEntity.ok(isTrue);
-//    }
+
+    @PostMapping("/accept")
+    public ResponseEntity<Boolean> acceptFriendRequest(@RequestBody ApplyReqDto applyReqDto) {
+
+        boolean istrue = applyService.acceptRequest(applyReqDto);
+        return ResponseEntity.ok(istrue);
+    }
+
+
     // 거절기능
 //    @PostMapping("/refuse")
 //    public ResponseEntity<Boolean> refuseApply(@RequestBody ApplyReqDto applyReqDto){

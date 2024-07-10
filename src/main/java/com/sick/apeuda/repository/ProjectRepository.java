@@ -18,6 +18,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findByMember(Member member);
 
+    Optional<Project> findByProjectId(Long id);
+
     @Query("SELECT p FROM Project p ORDER BY p.regDate DESC")
     List<Project> findAllOrderByRegDateDesc();
 
