@@ -38,6 +38,4 @@ public class PaymentHistory {
     @Column(nullable = false)
     private Long amount;
 
-    @Column
-    private LocalDateTime cancellationDate;
 }

@@ -27,7 +27,7 @@ public class PaymentController {
     @PostMapping("/save")
     public ResponseEntity<Boolean> savePaymentHistory(@RequestBody PaymentHistoryDto paymentHistoryDto) {
         boolean isTrue = paymentService.savePaymentHistory(paymentHistoryDto);
-        System.out.println();
+        System.out.println("controller save test"+paymentHistoryDto.getMember());
         return ResponseEntity.ok(isTrue);
     }
 

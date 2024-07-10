@@ -31,10 +31,15 @@ public class PaymentService {
 
     public boolean savePaymentHistory(PaymentHistoryDto paymentHistoryDto) {
         try {
-            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById(memberId)
+            String memberId = paymentHistoryDto.getMember();
+            System.out.println("service test"+ paymentHistoryDto.getMember());
+            System.out.println("memberId" + memberId);
+            Member member = memberRepository.findById(paymentHistoryDto.getMember())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
+            // member_id로 기존 구독 정보 조회
+            Subscription subscription = subscriptionRepository.findByMemberId(memberId);
+            System.out.println("subscription 값은 : "+subscription);
             PaymentHistory paymentHistory = new PaymentHistory();
             paymentHistory.setMember(member);
             paymentHistory.setPaymentDate(paymentHistoryDto.getPaymentDate());
@@ -42,7 +47,6 @@ public class PaymentService {
             paymentHistory.setTransactionId(paymentHistoryDto.getTransactionId());
             paymentHistory.setName(paymentHistoryDto.getName());
             paymentHistory.setAmount(paymentHistoryDto.getAmount());
-            paymentHistory.setCancellationDate(paymentHistoryDto.getCancellationDate());
 
             paymentHistoryRepository.save(paymentHistory);
             return true;
@@ -74,13 +78,13 @@ public class PaymentService {
 
     public boolean saveSubscriptions(SubscriptionDto subscriptionDto) {
         try {
+            String memberId = subscriptionDto.getCustomerUid();
 
-            String memberId = SecurityContextHolder.getContext().getAuthentication().getName(); // JWT 토큰에서 사용자 ID를 추출합니다.
-            Member member = memberRepository.findById(memberId)
+            Member member = memberRepository.findById(subscriptionDto.getCustomerUid())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
 
             // member_id로 기존 구독 정보 조회
-            Subscription subscription = subscriptionRepository.findByMemberId("kimfjd");
+            Subscription subscription = subscriptionRepository.findByMemberId(memberId);
             System.out.println("subscription 값은 : "+subscription);
             if (subscription == null) {
                 // 새로운 구독 정보 생성
@@ -105,7 +109,7 @@ public class PaymentService {
                 subscription.setValidUntil(subscriptionDto.getValidUntil());
                 subscription.setMerchantuid(subscriptionDto.getMerchantuid());
                 subscription.setStatus(subscriptionDto.getStatus());
-                subscription.setBillingKeyCreatedAt(subscriptionDto.getBillingKeyCreatedAt());
+
                 System.out.println("subscription update : "+subscription);
                 subscriptionRepository.save(subscription);
             }

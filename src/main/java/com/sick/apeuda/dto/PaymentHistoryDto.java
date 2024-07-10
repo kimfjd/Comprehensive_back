@@ -15,5 +15,4 @@ public class PaymentHistoryDto {
     private String paymentStatus;
     private String transactionId;
     private Long amount;
-    private LocalDateTime cancellationDate;
 }

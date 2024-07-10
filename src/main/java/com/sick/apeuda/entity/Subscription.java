@@ -43,7 +43,7 @@ public class Subscription {
     @Column(name = "status", nullable = false)
     private String status; // 구독 상태 ("구독", "해지", "만료" 등)
 
-    @Column(name = "billing_key_created_at", nullable = false)
+    @Column(name = "billing_key_created_at")
     private LocalDateTime billingKeyCreatedAt; // 빌링키 생성 시간
 }
 
