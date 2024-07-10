@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,9 +23,12 @@ public class ProjectController {
     private final ProjectService projectService;
     // 플젝 게시판 전체 조회
     @GetMapping("/list")
-    public ResponseEntity<List<ProjectReqDto>> projectBoardList() {
-        List<ProjectReqDto> list = projectService.getProjectList();
-        return ResponseEntity.ok(list);
+    public ResponseEntity<Map<String, Object>> projectBoardList(@RequestParam(defaultValue = "0") int page,
+                                                                @RequestParam(defaultValue = "7") int size) {
+
+        Map<String, Object>rs = projectService.getProjectList(page,size);
+
+        return ResponseEntity.ok(rs);
     }
 
     @GetMapping("/mypj")

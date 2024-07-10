@@ -9,13 +9,13 @@ import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.ProjectRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -24,19 +24,23 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
-    private final ReplyRepository replyRepository;
 
     /**
      * 프로젝트 게시판 전체 조회 메소드
      * @return projectDtos Project 엔티티타입의 List 반환
      */
-    public List<ProjectReqDto> getProjectList() {
-        List<Project> projects = projectRepository.findAll();
+    public Map<String, Object>  getProjectList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Project> projects = projectRepository.findAll(pageable).getContent();
         List<ProjectReqDto> projectDtos = new ArrayList<>();
         for(Project project : projects) {
             projectDtos.add(convertProjectEntityToDto(project));
         }
-        return projectDtos;
+        int cnt =projectRepository.findAll(pageable).getTotalPages();
+        Map<String, Object> result = new HashMap<>();
+        result.put("projects", projectDtos);
+        result.put("totalPages", cnt);
+        return result;
     }
 
     /**

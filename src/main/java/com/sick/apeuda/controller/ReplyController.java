@@ -63,7 +63,7 @@ public class ReplyController {
     @GetMapping("/project-reply/{projectId}/page")
     public ResponseEntity<Map<String, Object>> projectReplyPageList(@PathVariable Long projectId,
                                                                @RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "12") int size) {
+                                                               @RequestParam(defaultValue = "5") int size) {
 //        List<ReplyDto> list = replyService.getProjectReplyList(projectId, page, size);
         Map<String, Object> result = replyService.getProjectReplyList(projectId, page, size);
 

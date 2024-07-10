@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -20,10 +21,12 @@ public class BoardController {
     private final BoardService boardService;
     // 게시글 목록 조회
     @GetMapping("/list")
-    public ResponseEntity<List<BoardReqDto>> boardList() {
+    public ResponseEntity<Map<String, Object>> boardList(@RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
+
         log.info("boardList실행");
-        List<BoardReqDto> list = boardService.getBoardList();
-        return ResponseEntity.ok(list);
+        Map<String, Object>rs = boardService.getBoardList(page,size);
+        return ResponseEntity.ok(rs);
     }
     @GetMapping("/myboard")
     public ResponseEntity<List<BoardReqDto>> myProjectList() {

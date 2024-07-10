@@ -9,13 +9,13 @@ import com.sick.apeuda.repository.BoardRepository;
 import com.sick.apeuda.repository.ReplyRepository;
 import com.sick.apeuda.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
@@ -30,13 +30,18 @@ public class BoardService {
      * 게시판 전체 조회 메소드
      * @return boardDtos Board 엔티티타입의 List 반환
      */
-    public List<BoardReqDto> getBoardList() {
-        List<Board> boards = boardRepository.findAll();
+    public Map<String, Object> getBoardList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Board> boards = boardRepository.findAll(pageable).getContent();
         List<BoardReqDto> boardDtos = new ArrayList<>();
         for(Board board : boards) {
             boardDtos.add(convertEntityToDto(board));
         }
-        return boardDtos;
+        int cnt =boardRepository.findAll(pageable).getTotalPages();
+        Map<String, Object> result = new HashMap<>();
+        result.put("boards", boardDtos);
+        result.put("totalPages", cnt);
+        return result;
     }
 
     public List<BoardReqDto> getMyBoard() {
