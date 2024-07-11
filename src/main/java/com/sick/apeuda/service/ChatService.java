@@ -1,6 +1,7 @@
 // ChatService.java
 package com.sick.apeuda.service;
 
+import com.sick.apeuda.dto.ChatManageDto;
 import com.sick.apeuda.dto.ChatMsgDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.entity.*;
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
-import java.util.UUID;
+
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -140,6 +141,26 @@ public class ChatService {
         return chatManages.stream()
                 .map(ChatManage::getChatRoom)
                 .collect(Collectors.toList());
+    }
+
+
+    public List<ChatManageDto> getManage(String memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("Member with ID " + memberId + " does not exist")
+        );
+
+        // 1. 멤버에 해당하는 ChatManage 객체들의 ID를 조회
+        List<String> chatManageIds = chatManageRepository.findByEmail(member.getEmail());
+        log.warn("챗매니지id : {}",chatManageIds);
+
+        List<ChatManageDto> chatManageDtos = new ArrayList<>();
+        for (String r : chatManageIds){
+            List<ChatManage> chatManages = chatManageRepository.findByRoomId(r);
+           ChatManageDto chatManageDto = new ChatManageDto();
+           chatManageDto.setChatManages(chatManages);
+           chatManageDtos.add(chatManageDto);
+        }
+        return chatManageDtos;
     }
 
     // 방이름으로 채팅방 찾기

@@ -22,7 +22,7 @@ import java.util.List;
 public class ApplyController {
     private final ApplyService applyService;
 
-    // 조회 기능 select
+    // 요청 조회 기능 select
     @GetMapping("/list")
     public ResponseEntity<List<ApplyResDto>> applyList(){
         String manager = SecurityContextHolder.getContext().getAuthentication().getName();

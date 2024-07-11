@@ -1,8 +1,10 @@
 //ChatController.java
 package com.sick.apeuda.controller;
 
+import com.sick.apeuda.dto.ChatManageDto;
 import com.sick.apeuda.dto.ChatMsgDto;
 import com.sick.apeuda.dto.ChatRoomDto;
+import com.sick.apeuda.entity.ChatManage;
 import com.sick.apeuda.entity.ChatMsg;
 import com.sick.apeuda.entity.ChatRoom;
 import com.sick.apeuda.service.ChatService;
@@ -34,6 +36,7 @@ public class ChatController {
         ChatRoom chatRoom = chatService.createRoom(roomName, memberId);
         return ResponseEntity.ok(chatRoom);
     }
+
     @PostMapping("/join-to-room/{roomId}") // *** 채팅방 id가 입력되면 해당 유저가 참가 됨
     public ResponseEntity<Void> joinRoom(@PathVariable String roomId, Authentication authentication) {
         chatService.joinRoom(roomId, authentication.getName());
@@ -46,6 +49,13 @@ public class ChatController {
         List<ChatRoom> enteredRooms = chatService.getJoinedRooms(authentication.getName());
         return ResponseEntity.ok(enteredRooms);
     }
+    //내가 포함되어 있는 프로젝트 멤버 정보 출력
+    @GetMapping("/myproject")
+    public ResponseEntity<List<ChatManageDto>> getProject(Authentication authentication) {
+        List<ChatManageDto> chatManages = chatService.getManage(authentication.getName());
+
+        return ResponseEntity.ok(chatManages);
+    };
 
     @GetMapping("/find-room/{roomName}") // 방이름 입력받아 방리스트에서 방 조회
     public ResponseEntity<ChatRoomDto> findRoomByRoomName(@PathVariable String roomName) {
