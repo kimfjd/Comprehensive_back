@@ -31,7 +31,7 @@ public class ProjectService {
      */
     public Map<String, Object>  getProjectList(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Project> projects = projectRepository.findAll(pageable).getContent();
+        List<Project> projects = projectRepository.findAllOrderByRegDateDesc(pageable).getContent();
         List<ProjectReqDto> projectDtos = new ArrayList<>();
         List<String> list = new ArrayList<>();
         for(Project project : projects) {
@@ -51,7 +51,7 @@ public class ProjectService {
         return result;
     }
     /**
-     * 플젝 게시글 엔티티를 DTO로 변환(플젝 게시글 입력)
+     * 플젝 게시글 조회 page 추가
      * @param project Project 엔티티 타입
      * @return projectDto -> 게시판 전체 리스트 반환
      */
@@ -72,6 +72,8 @@ public class ProjectService {
         projectReqDto.setSkillName(project.getSkills());
         projectReqDto.setChatRoom(project.getChatRoom());
         projectReqDto.setChatMemProfile(list);
+        projectReqDto.setImgPath(project.getImgPath());
+        System.out.println("project.getImgPath()" + project.getImgPath());
         return projectReqDto;
     }
     /**
@@ -120,6 +122,7 @@ public class ProjectService {
             project.setProjectContent(projectReqDto.getProjectContent());
             project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setImgPath(projectReqDto.getImgPath());
+            System.out.println("getImgPath 체크 : " +projectReqDto.getImgPath());
             project.setProjectTime(projectReqDto.getProjectTime());
             //project.setRecruitNum(projectReqDto.getRecruitNum());
             project.setRegDate(LocalDateTime.now());
