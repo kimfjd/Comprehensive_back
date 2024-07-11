@@ -1,5 +1,6 @@
 package com.sick.apeuda.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sick.apeuda.dto.*;
 import com.sick.apeuda.entity.*;
 import com.sick.apeuda.repository.*;
@@ -8,12 +9,16 @@ import static com.sick.apeuda.security.SecurityUtil.getCurrentMemberId;
 
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +26,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -182,5 +188,21 @@ public class PaymentService {
         subscriptionDto.setStatus(subscription.getStatus());
         subscriptionDto.setMerchantuid(subscription.getMerchantuid());
         return subscriptionDto;
+    }
+//    @Scheduled(cron = "0 */10 * * * *") // 10분마다 실행
+    @Scheduled(cron = "0 * * * * *") // 매분마다 실행
+    public void updateExpiredSubscriptions() {
+        LocalDateTime  today = LocalDateTime .now();
+        System.out.println("now Time : "+today);
+        List<Subscription> subscriptions = subscriptionRepository.findAll();
+
+        for (Subscription subscription : subscriptions) {
+            LocalDateTime validUntil = LocalDateTime .from(subscription.getValidUntil()); // 만료 날짜 가져오기
+            if (validUntil.isBefore(today) && !"만료".equals(subscription.getStatus())) {
+                subscription.setStatus("만료");
+                subscriptionRepository.save(subscription);
+                log.info("Subscription for member {} has expired.", subscription.getMember().getEmail());
+            }
+        }
     }
 }
