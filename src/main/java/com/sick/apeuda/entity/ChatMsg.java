@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "chatRoom") // 순환참조 방지
 @Entity
 @Table(name = "chat_msg")
 public class ChatMsg {

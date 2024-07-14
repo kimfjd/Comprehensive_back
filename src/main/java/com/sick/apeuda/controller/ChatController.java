@@ -32,11 +32,18 @@ public class ChatController {
     @PostMapping("/create")
     public ResponseEntity<ChatRoom> createRoom(@RequestBody Map<String, String> request, Authentication authentication) {
         String roomName = request.get("roomName");
+        String max_count = request.get("max_count");
         String memberId = authentication.getName(); // 인증된 사용자 ID 가져오기
-        ChatRoom chatRoom = chatService.createRoom(roomName, memberId);
+        ChatRoom chatRoom = chatService.createRoom(roomName, max_count, memberId);
         return ResponseEntity.ok(chatRoom);
     }
-
+    @PostMapping("/create-open-chat")
+    public ResponseEntity<ChatRoom> createOpenChat(@RequestBody Map<String, String> request, Authentication authentication) {
+        String roomName = request.get("roomName");
+        String memberId = authentication.getName(); // 인증된 사용자 ID 가져오기
+        ChatRoom chatRoom = chatService.createOpenChat(roomName, memberId);
+        return ResponseEntity.ok(chatRoom);
+    }
     @PostMapping("/join-to-room/{roomId}") // *** 채팅방 id가 입력되면 해당 유저가 참가 됨
     public ResponseEntity<Void> joinRoom(@PathVariable String roomId, Authentication authentication) {
         chatService.joinRoom(roomId, authentication.getName());
@@ -48,6 +55,29 @@ public class ChatController {
     public ResponseEntity<List<ChatRoom>> getRoomList(Authentication authentication) {
         List<ChatRoom> enteredRooms = chatService.getJoinedRooms(authentication.getName());
         return ResponseEntity.ok(enteredRooms);
+    }
+    @GetMapping("/find-my-open-chat")
+    public ResponseEntity<List<ChatRoom>> getJoinedRooms(Authentication authentication) {
+        List<ChatRoom> enteredRooms = chatService.getJoinedRooms(authentication.getName());
+        log.info("Entered rooms for user {}: {}", authentication.getName(), enteredRooms);
+        return ResponseEntity.ok(enteredRooms);
+    }
+    @PostMapping("fint-open-chat-list")  // Json 형식으로 "postType": false 전송 필요
+    public ResponseEntity<List<ChatRoomDto>> getOpenchatList(@RequestBody ChatRoom postType, Authentication authentication) {
+        List<ChatRoom> chatRooms = chatService.getOpenchatList(postType.getPostType());
+        List<ChatRoomDto> chatRoomDtos = chatRooms.stream()
+                .map(chatRoom->{
+                    ChatRoomDto chatRoomDto = new ChatRoomDto();
+                    chatRoomDto.setRoomId(chatRoom.getRoomId());
+                    chatRoomDto.setRoomName(chatRoom.getRoomName());
+                    chatRoomDto.setCurrentCount(chatRoom.getCurrentCount());
+                    chatRoomDto.setMaxCount(chatRoom.getMaxCount());
+                    chatRoomDto.setPostType(chatRoom.getPostType());
+                    chatRoomDto.setLocalDateTime(chatRoom.getLocalDateTime());
+                    return chatRoomDto;
+                })
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(chatRoomDtos);
     }
     //내가 포함되어 있는 프로젝트 멤버 정보 출력
     @GetMapping("/myproject")
@@ -84,6 +114,7 @@ public class ChatController {
         List<ChatMsgDto> messageDtos = messages.stream().map(msg -> {
             ChatMsgDto dto = new ChatMsgDto();
             dto.setSenderId(msg.getSender().getEmail());
+            dto.setSenderNickname(msg.getSender().getNickname());
             dto.setContent(msg.getContent());
             dto.setRoomId(msg.getChatRoom().getRoomId());
             dto.setLocalDateTime(msg.getLocalDateTime());

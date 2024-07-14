@@ -15,4 +15,8 @@ import lombok.NoArgsConstructor;
 public class ChatRoomDto {
     private String roomId;
     private String roomName;
+    private String LocalDateTime;
+    private Integer currentCount;
+    private Integer maxCount;
+    private Boolean postType;
 }

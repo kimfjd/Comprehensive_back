@@ -37,7 +37,7 @@ public class ChatService {
     }
 
     // 방생성
-    public ChatRoom createRoom(String roomName, String memberId) {
+    public ChatRoom createRoom(String roomName, String max_count, String memberId) {
         //사용자 확인
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new RuntimeException("Member with ID " + memberId + " does not exist")
@@ -50,7 +50,35 @@ public class ChatService {
         // ChatRoom 테이블 정보 등록
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomName(roomName);
+        chatRoom.setMaxCount(Integer.valueOf(max_count));
         chatRoom.setPostType(true); // status 에서 PostType으로 변수명 변경
+
+        // ChatRoom 저장
+        ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
+
+        // ChatManage 테이블 정보 등록
+        ChatManage chatManage = new ChatManage();
+        chatManage.setChatRoom(savedChatRoom);
+        chatManage.setMember(member); // 방장권한을 식별하는 member_id는  ChatManage 테이블에서 관리하는 것으로 변경
+        chatManage.setHost(true); // 방생성되면 그 Member는 방장권한을 가지도록 설정
+        chatManageRepository.save(chatManage); // ChatManage 테이블에 정보 등록
+
+        return savedChatRoom; // 최종적으로 생성된 ChatRoom 정보반환
+    }
+    public ChatRoom createOpenChat(String roomName, String memberId) {
+        //사용자 확인
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("Member with ID " + memberId + " does not exist")
+        );
+        // 중복된 방 이름 확인 중복 허용시 삭제
+        Optional<ChatRoom> existingRoom = chatRoomRepository.findByRoomName(roomName);
+        if (existingRoom.isPresent()) {
+            throw new RuntimeException("Room with name " + roomName + " already exists.");
+        }
+        // ChatRoom 테이블 정보 등록
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setRoomName(roomName);
+        chatRoom.setPostType(false); // status 에서 PostType으로 변수명 변경
 
         // ChatRoom 저장
         ChatRoom savedChatRoom = chatRoomRepository.save(chatRoom);
@@ -77,7 +105,8 @@ public class ChatService {
         // 유저가 이미 참여하고 있는지 확인
         Optional<ChatManage> checkJoinedMember = chatManageRepository.findByChatRoomAndMember(chatRoom, member);
         if (checkJoinedMember.isPresent()) {
-            throw new RuntimeException("Member is already in the chat room");
+            //throw new RuntimeException("Member is already in the chat room");
+            return;
         }
         // ChatManage 테이블 정보 등록
         ChatManage chatManage = new ChatManage();
@@ -141,6 +170,27 @@ public class ChatService {
         return chatManages.stream()
                 .map(ChatManage::getChatRoom)
                 .collect(Collectors.toList());
+    }
+    // 입장 중인 오픈채팅방 리스트 찾기
+    public List<ChatRoom> getJoinedOpenChatRooms(String memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("Member with ID " + memberId + " does not exist")
+        );
+        List<ChatRoom> chatRooms = chatRoomRepository.findByPostType(true);
+        List<ChatManage> chatManages = chatManageRepository.findByMember(member);
+        log.info("ChatManages for member {}: {}", memberId, chatManages);
+
+        List<ChatRoom> openChatRooms = chatManages.stream()
+                .map(ChatManage::getChatRoom)
+                .filter(chatRoom -> chatRoom.getPostType() != null && !chatRoom.getPostType()) // postType이 false인 경우
+                .collect(Collectors.toList());
+
+        log.info("Filtered Open ChatRooms (postType=false) for member {}: {}", memberId, openChatRooms);
+        return openChatRooms;
+    }
+    // 오픈채팅방 전체 리스트 찾기
+    public List<ChatRoom> getOpenchatList (boolean postType) {
+        return chatRoomRepository.findByPostType(postType);
     }
 
 

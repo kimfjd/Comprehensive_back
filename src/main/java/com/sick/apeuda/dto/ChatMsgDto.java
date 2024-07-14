@@ -22,6 +22,7 @@ public class ChatMsgDto {
     }
     private MessageType type; // 메시지 타입
     private String senderId;
+    private String senderNickname;
     private String profileImgPath;
     private String receiver; // 수신자 (일대일 채팅을 위한 필드)
     private String content;
