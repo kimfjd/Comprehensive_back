@@ -23,9 +23,7 @@ public class ChatRoom {
     @Column(name = "room_id")
     private String roomId = UUID.randomUUID().toString(); // UUID를 사용한 무작위 방아이디 생성
 
-    @OneToOne // 한 프로젝트당 한 채팅방이므로
-    @JoinColumn(name = "project_id")
-    private Project project;
+
 
 
     @Column(unique = true, nullable = false)
