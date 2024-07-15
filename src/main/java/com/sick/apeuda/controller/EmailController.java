@@ -31,9 +31,9 @@ public class EmailController {
 
 
         // 이메일에 들어갈 내용
-        String htmlContent = "<div style=\"margin: auto; padding: 50px; text-align: center; width: 700px; height: 200px; background-color: #0c134f; border-radius: 20px;\">"
-                + "<p style=\"font-size: 30px; color: violet; font-weight: 600;\">아프다(아무하고나 프로젝트 하지 않는다)에 오신것을 환영합니다!</p>"
-                + "<p style=\"font-size: 16px; color: #d4adfc;\">요청하신 인증번호를 보내드립니다.</p>"
+        String htmlContent = "<div style=\"margin: auto; padding: 50px; text-align: center; width: 700px; height: 200px; background-color: #ff5353; border-radius: 20px;\">"
+                + "<p style=\"font-size: 30px; color: white; font-weight: 600;\">아프다(아무하고나 프로젝트 하지 않는다)에 오신것을 환영합니다!</p>"
+                + "<p style=\"font-size: 16px; color: white;\">요청하신 인증번호를 보내드립니다.</p>"
                 + "<div style=\"font-size: 20px; color: #ccc;\">" + tempPw + "</div>"
                 + "</div>";
 
