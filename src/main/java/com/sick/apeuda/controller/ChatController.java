@@ -89,11 +89,14 @@ public class ChatController {
 
     @GetMapping("/find-room/{roomName}") // 방이름 입력받아 방리스트에서 방 조회
     public ResponseEntity<ChatRoomDto> findRoomByRoomName(@PathVariable String roomName) {
+        System.out.println("?roomName : " + roomName);
         Optional<ChatRoom> chatRoom = chatService.findRoomByRoomName(roomName);
+        System.out.println("chatRoom :! " + chatRoom);
         if (chatRoom.isPresent()) {
             ChatRoomDto chatRoomDto = new ChatRoomDto();
             chatRoomDto.setRoomId(chatRoom.get().getRoomId());
             chatRoomDto.setRoomName(chatRoom.get().getRoomName());
+            chatRoomDto.setCurrentCount(chatRoom.get().getCurrentCount());
             return ResponseEntity.ok(chatRoomDto);
         } else {
             log.error("Room with name {} not found", roomName);

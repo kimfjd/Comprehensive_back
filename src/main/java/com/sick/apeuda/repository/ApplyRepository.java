@@ -17,6 +17,10 @@ import java.util.Optional;
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
 //    List<Apply> findByProjectIdAndMemberIdAndManagerId(Long projectId,Member applicant ,Member manager);
     Optional<Apply> findByApplyId(Long id);
+
+    @Query("SELECT a FROM Apply a WHERE a.project.id = :projectId and a.member.id = :email")
+    Apply findByProjectIdAndMemberId(@Param("projectId") Long projectID, @Param("email") String email);
+
     boolean existsByMemberAndProject(Member member, Project project);
     List<Apply> findByManagerAndApplyStatus(Member manager, boolean applyStatus);
     @Modifying

@@ -21,7 +21,12 @@ import java.util.List;
 @RequestMapping("/apply")
 public class ApplyController {
     private final ApplyService applyService;
-
+    // 전체 조회기능 (신청한 사람 재 신청 막기위해 생성 )
+    @GetMapping("/all-list/{projectId}/{email}")
+    public  ResponseEntity<Boolean> allApplyList(@PathVariable Long projectId,@PathVariable String email){
+        boolean isTrue = applyService.getAllApplyList(projectId,email);
+        return ResponseEntity.ok(isTrue);
+    }
     // 요청 조회 기능 select
     @GetMapping("/list")
     public ResponseEntity<List<ApplyResDto>> applyList(){

@@ -37,6 +37,17 @@ public class ApplyService {
         }
         return applyResDtos;
     }
+ // 전체 신청 조회
+    public boolean getAllApplyList(Long projectId, String email) {
+        Project project = new Project();
+        project.setProjectId(projectId);
+        Apply apply = applyRepository.findByProjectIdAndMemberId(projectId,email);
+        if(apply == null){
+         return true;
+        }else {
+         return false;
+        }
+    }
 
     private ApplyResDto convertEntityToDto(Apply apply) {
         ApplyResDto applyResDto = new ApplyResDto();
