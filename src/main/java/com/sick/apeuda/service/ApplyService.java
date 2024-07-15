@@ -91,6 +91,7 @@ public class ApplyService {
         }
     }
 
+    @Transactional
     public boolean acceptRequest(ApplyReqDto applyReqDto) {
 
         Optional<Apply> applyOptional = applyRepository.findByApplyId(applyReqDto.getApplyId());
@@ -107,11 +108,13 @@ public class ApplyService {
 
 
             Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findByRoomId(project.getChatRoom().getRoomId());
+            chatRoomRepository.increaseCurrentCount(project.getChatRoom().getRoomId());
             ChatRoom chatRoom = chatRoomOptional.get();
             ChatManage chatManage = new ChatManage();
             chatManage.setChatRoom(chatRoom);
 
-            Long projectId = project.getProjectId();
+            Long projectId = project.getProjectId(); //프로젝트 아이디 넣기
+
 
             chatManage.setProjectId(projectId);
             Member member = new Member();

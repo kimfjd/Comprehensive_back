@@ -49,6 +49,7 @@ public class ChatService {
         // ChatRoom 테이블 정보 등록
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomName(roomName);
+        chatRoom.setCurrentCount(+1);
         chatRoom.setMaxCount(Integer.valueOf(max_count));
         chatRoom.setPostType(true); // status 에서 PostType으로 변수명 변경
 
@@ -77,6 +78,7 @@ public class ChatService {
         // ChatRoom 테이블 정보 등록
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomName(roomName);
+        chatRoom.setCurrentCount(+1);
         chatRoom.setPostType(false); // status 에서 PostType으로 변수명 변경
 
         // ChatRoom 저장
@@ -109,6 +111,7 @@ public class ChatService {
         }
         // ChatManage 테이블 정보 등록
         ChatManage chatManage = new ChatManage();
+        chatRoom.setCurrentCount(chatRoom.getCurrentCount() + 1);
         chatManage.setChatRoom(chatRoom);
         chatManage.setMember(member);
         chatManage.setHost(false); // 권한없는 일반 멤버로 설정
@@ -129,6 +132,8 @@ public class ChatService {
         ChatManage chatManage = chatManageRepository.findByChatRoomAndMember(chatRoom, member).orElseThrow(
                 () -> new RuntimeException("Member is not in the chat room")
         );
+        // ChatRoom 테이블 인원제거
+        chatRoom.setCurrentCount(chatRoom.getCurrentCount() -1);
         // ChatManage DB에서 삭제
         chatManageRepository.delete(chatManage);
     }
@@ -268,7 +273,7 @@ public class ChatService {
         try{
             chatManageRepository.kickMember(roomId,memberId);
             applyRepository.kickMember(memberId,projectId);
-            log.warn(roomId,memberId,projectId);
+            chatRoomRepository.decreaseCurrentConunt(roomId);
             return true;
         } catch (Exception e){
             e.printStackTrace();
