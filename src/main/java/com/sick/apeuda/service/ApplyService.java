@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,11 +105,15 @@ public class ApplyService {
             Project project = projectOptional.get();
             log.warn("챗룸{} ", project.getChatRoom());
 
+
             Optional<ChatRoom> chatRoomOptional = chatRoomRepository.findByRoomId(project.getChatRoom().getRoomId());
             ChatRoom chatRoom = chatRoomOptional.get();
             ChatManage chatManage = new ChatManage();
             chatManage.setChatRoom(chatRoom);
 
+            Long projectId = project.getProjectId();
+
+            chatManage.setProjectId(projectId);
             Member member = new Member();
             member.setEmail(apply.getMember().getEmail());
             chatManage.setMember(member);
@@ -120,12 +125,11 @@ public class ApplyService {
     }
 
     //
-    public boolean acceptApply(boolean result) {
-        try {
-
+    public boolean rejectProjectRequest(Long id) {
+        try{
+            applyRepository.deleteById(id);
             return true;
-
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
             return false;
         }

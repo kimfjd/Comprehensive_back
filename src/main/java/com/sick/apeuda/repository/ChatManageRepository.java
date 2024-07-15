@@ -5,6 +5,7 @@ import com.sick.apeuda.entity.ChatManage;
 import com.sick.apeuda.entity.ChatRoom;
 import com.sick.apeuda.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,4 +29,7 @@ public interface ChatManageRepository extends JpaRepository<ChatManage, Long> {
     @Query("SELECT c FROM ChatManage c WHERE c.chatRoom.roomId = :roomId")
     List<ChatManage> findByRoomId(@Param("roomId") String roomId);
 
+    @Modifying
+    @Query("DELETE FROM ChatManage c WHERE c.chatRoom.roomId = :roomId AND c.member.id = :memberId")
+    int kickMember(@Param("roomId") String roomId ,@Param("memberId") String memberId);
 }

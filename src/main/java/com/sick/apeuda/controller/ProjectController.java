@@ -4,7 +4,10 @@ import com.sick.apeuda.dto.BoardReqDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.dto.ProjectResDto;
 import com.sick.apeuda.dto.ReadMessageDto;
+import com.sick.apeuda.entity.ChatManage;
+import com.sick.apeuda.entity.ChatRoom;
 import com.sick.apeuda.entity.Member;
+import com.sick.apeuda.service.ChatService;
 import com.sick.apeuda.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ProjectController {
     private final ProjectService projectService;
+    private final ChatService chatService;
     // 플젝 게시판 전체 조회
     @GetMapping("/list")
     public ResponseEntity<Map<String, Object>> projectBoardList(@RequestParam(defaultValue = "0") int page,
@@ -68,4 +72,13 @@ public class ProjectController {
         return ResponseEntity.ok(isTrue);
     }
 
+    @GetMapping("/kick")
+    public ResponseEntity<Boolean> kickProjectMember(@RequestParam String roomId,
+                                                     @RequestParam String memberId,
+                                                     @RequestParam Long projectId){
+
+
+        boolean isTrue = chatService.kickProjectMember(roomId, memberId, projectId);
+        return ResponseEntity.ok(isTrue);
+    }
 }

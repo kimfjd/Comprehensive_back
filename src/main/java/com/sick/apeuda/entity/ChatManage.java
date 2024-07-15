@@ -24,4 +24,7 @@ public class ChatManage {
     private Member member;
 
     private boolean host; // 강퇴권한 여부
+
+    private Long projectId;
+
 }

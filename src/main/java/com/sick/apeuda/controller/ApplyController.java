@@ -39,12 +39,18 @@ public class ApplyController {
     }
 
     @PostMapping("/accept")
-    public ResponseEntity<Boolean> acceptFriendRequest(@RequestBody ApplyReqDto applyReqDto) {
+    public ResponseEntity<Boolean> acceptProjectRequest(@RequestBody ApplyReqDto applyReqDto) {
 
         boolean istrue = applyService.acceptRequest(applyReqDto);
         return ResponseEntity.ok(istrue);
     }
 
+
+    @PostMapping("/reject")
+    public ResponseEntity<Boolean> rejectProjectRequest(@RequestBody Long id){
+        boolean isTrue = applyService.rejectProjectRequest(id);
+        return ResponseEntity.ok(isTrue);
+    }
 
     // 거절기능
 //    @PostMapping("/refuse")

@@ -5,12 +5,10 @@ import com.sick.apeuda.dto.ChatManageDto;
 import com.sick.apeuda.dto.ChatMsgDto;
 import com.sick.apeuda.dto.ProjectReqDto;
 import com.sick.apeuda.entity.*;
-import com.sick.apeuda.repository.ChatManageRepository;
-import com.sick.apeuda.repository.ChatMsgRepository;
-import com.sick.apeuda.repository.ChatRoomRepository;
-import com.sick.apeuda.repository.MemberRepository;
+import com.sick.apeuda.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -28,12 +26,13 @@ public class ChatService {
     private final ChatMsgRepository chatMsgRepository;
     private final ChatManageRepository chatManageRepository;
     private final MemberRepository memberRepository;
-
-    public ChatService(ChatRoomRepository chatRoomRepository, ChatMsgRepository chatMsgRepository, MemberRepository memberRepository, ChatManageRepository chatManageRepository) {
+    private final ApplyRepository applyRepository;
+    public ChatService(ChatRoomRepository chatRoomRepository, ChatMsgRepository chatMsgRepository, MemberRepository memberRepository, ChatManageRepository chatManageRepository, ApplyRepository applyRepository) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMsgRepository = chatMsgRepository;
         this.memberRepository = memberRepository;
         this.chatManageRepository = chatManageRepository;
+        this.applyRepository = applyRepository;
     }
 
     // 방생성
@@ -264,5 +263,16 @@ public class ChatService {
         return chatMsgDto;
     }
 
-
+    @Transactional
+    public boolean kickProjectMember(String roomId, String memberId, Long projectId) {
+        try{
+            chatManageRepository.kickMember(roomId,memberId);
+            applyRepository.kickMember(memberId,projectId);
+            log.warn(roomId,memberId,projectId);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
