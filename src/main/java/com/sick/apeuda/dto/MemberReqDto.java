@@ -38,6 +38,8 @@ public class MemberReqDto {
                 .authority(Authority.ROLE_USER)
                 .build();
     }
+
+
     public void updateMember(Member member, PasswordEncoder passwordEncoder) {
         Member.builder()
                 .password(password != null && !password.isEmpty() ? passwordEncoder.encode(password) : member.getPassword())

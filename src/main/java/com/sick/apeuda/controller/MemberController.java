@@ -32,25 +32,12 @@ public class MemberController {
 
 
     // 회원정보 가져오기
-    @GetMapping("/memberinfo")
-    public ResponseEntity<MemberDto> memberInfo(@RequestParam String email) {
-        MemberDto memberDto = memberService.getMemberInfo(email);
-        return ResponseEntity.ok(memberDto);
-    }
-
-    // 회원정보 가져오기 토큰 사용해서 이메일로 조회(localStroage에 이메일 저장할 필요x) Axios회원정보 불러오실때 이걸로 하시면 됩니다
-    // 아직 프론트랑은 안 이어봐서 위에꺼는 살려놨어요
     @GetMapping("/memberinfo2")
     public ResponseEntity<MemberDto> memberInfo2 (){
         MemberDto memberDto = memberService.getMemberInfo(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(memberDto);
     }
 
-    // 회원 수정
-//    @PutMapping("/membermodify/{email}")
-//    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto memberReqDto) {
-//        return ResponseEntity.ok(memberService.modifyMember(memberReqDto));
-//    }
     @PostMapping("/membermodify")
     public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto memberReqDto) {
         try {
@@ -58,7 +45,6 @@ public class MemberController {
             Member member = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
                     () -> new RuntimeException("해당 회원이 존재하지 않습니다.")
             );
-
             memberReqDto.updateMember(member, passwordEncoder);
             log.info("회원 정보 수정 완료: {}", member);
             return ResponseEntity.ok(MemberResDto.of(memberRepository.save(member)));
@@ -68,12 +54,6 @@ public class MemberController {
         }
     }
 
-
-
-//    @PostMapping("/membermodify/{email}")
-//    public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto requestDto) {
-//        return ResponseEntity.ok(memberService.memUpdate(requestDto));
-//    }
 
     // 회원 삭제
     @GetMapping("/delmember")
@@ -86,7 +66,6 @@ public class MemberController {
     public ResponseEntity<List<MemberDto>> memberList(){
         List<MemberDto> list = memberService.getMemberList();
         return ResponseEntity.ok(list);
-
     }
 
 }
