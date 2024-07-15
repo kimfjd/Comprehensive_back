@@ -25,6 +25,7 @@ public class ProjectResDto {
     private String profileImg;
     private String recruitNum;
     private String recruitMember;
+    private String imgPath;
     private List<Skill> skillName;
     private List<ReplyDto> replies;
     private Member memberId;

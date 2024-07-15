@@ -47,13 +47,12 @@ public class ProjectController {
     public ResponseEntity<ProjectResDto> projectDetail(@PathVariable Long id) {
         log.warn("project id : " + id);
         ProjectResDto projectResDto = projectService.getProjectDetail(id);
+
         return ResponseEntity.ok(projectResDto);
     }
     // 플젝 게시글 등록
     @PostMapping("/insert")
     public ResponseEntity<Boolean> projectBoardInsert(@RequestBody ProjectReqDto projectReqDto){
-        System.out.println("projectBoardInsert: " + projectReqDto);
-        System.out.println("ChatRoom ID: " + projectReqDto.getChatRoom().getRoomId());
         boolean isTrue = projectService.saveProject(projectReqDto);
         return ResponseEntity.ok(isTrue);
     }
@@ -65,9 +64,9 @@ public class ProjectController {
         return ResponseEntity.ok(isTrue);
     }
 
-    // 자유 게시글 수정
+    // 플젝 게시글 수정
     @PutMapping("/modify/{id}")
-    public ResponseEntity<Boolean> boardModify(@PathVariable Long id, @RequestBody ProjectReqDto projectReqDto) {
+    public ResponseEntity<Boolean> projectModify(@PathVariable Long id, @RequestBody ProjectReqDto projectReqDto) {
         boolean isTrue = projectService.modifyProject(id, projectReqDto);
         return ResponseEntity.ok(isTrue);
     }

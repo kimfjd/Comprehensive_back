@@ -182,7 +182,8 @@ public class ProjectService {
             project.setProjectContent(projectReqDto.getProjectContent());
             project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setRecruitNum(projectReqDto.getRecruitNum());
-
+            project.setImgPath(projectReqDto.getImgPath());
+            System.out.println("getImgPath 체크 : " +projectReqDto.getImgPath());
             // 등록일자는 전달된 값 유지
             project.setRegDate(projectReqDto.getRegDate());
 
@@ -253,6 +254,7 @@ public class ProjectService {
         //projectDto.setProjectPassword(project.getProjectPassword());
         projectResDto.setProjectContent(project.getProjectContent());
         projectResDto.setRecruitNum(project.getRecruitNum());
+        projectResDto.setImgPath(project.getImgPath());
         //projectResDto.setRecruitMember(project.getRecruitMember());
         projectResDto.setProjectContent(project.getProjectContent());
         projectResDto.setProjectTime(project.getProjectTime());
