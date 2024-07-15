@@ -62,7 +62,7 @@ public class ChatController {
         log.info("Entered rooms for user {}: {}", authentication.getName(), enteredRooms);
         return ResponseEntity.ok(enteredRooms);
     }
-    @PostMapping("fint-open-chat-list")  // Json 형식으로 "postType": false 전송 필요
+    @PostMapping("/find-open-chat-list")  // Json 형식으로 "postType": false 전송 필요
     public ResponseEntity<List<ChatRoomDto>> getOpenchatList(@RequestBody ChatRoom postType, Authentication authentication) {
         List<ChatRoom> chatRooms = chatService.getOpenchatList(postType.getPostType());
         List<ChatRoomDto> chatRoomDtos = chatRooms.stream()

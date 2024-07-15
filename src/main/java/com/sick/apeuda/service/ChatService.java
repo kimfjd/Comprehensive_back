@@ -73,6 +73,7 @@ public class ChatService {
         // 입장 메시지 생성 및 저장
         ChatMsg enterMsg = new ChatMsg();
         enterMsg.setSender(member);
+        enterMsg.setNickName(member.getNickname());
         enterMsg.setProfileImgPath(member.getProfileImgPath());
         enterMsg.setChatRoom(chatRoom);
         enterMsg.setContent(member.getName() + "님이 입장하셨습니다.");
@@ -82,6 +83,7 @@ public class ChatService {
         // 입장 메시지 전송
         ChatMsgDto enterMsgDto = new ChatMsgDto();
         enterMsgDto.setSenderId(member.getEmail());
+        enterMsgDto.setSenderNickname(enterMsg.getNickName());
         enterMsgDto.setProfileImgPath(enterMsg.getProfileImgPath());
         enterMsgDto.setRoomId(chatRoom.getRoomId());
         enterMsgDto.setContent(enterMsg.getContent());
@@ -120,6 +122,8 @@ public class ChatService {
         // 입장 메시지 생성 및 저장
         ChatMsg enterMsg = new ChatMsg();
         enterMsg.setSender(member);
+        enterMsg.setNickName(member.getNickname());
+        enterMsg.setProfileImgPath(member.getProfileImgPath());
         enterMsg.setChatRoom(chatRoom);
         enterMsg.setContent(member.getName() + "님이 입장하셨습니다.");
         enterMsg.setType(ChatMsgDto.MessageType.ENTER);
@@ -128,6 +132,8 @@ public class ChatService {
         // 입장 메시지 전송
         ChatMsgDto enterMsgDto = new ChatMsgDto();
         enterMsgDto.setSenderId(member.getEmail());
+        enterMsgDto.setSenderNickname(enterMsg.getNickName());
+        enterMsgDto.setProfileImgPath(enterMsg.getProfileImgPath());
         enterMsgDto.setRoomId(chatRoom.getRoomId());
         enterMsgDto.setContent(enterMsg.getContent());
         enterMsgDto.setType(ChatMsgDto.MessageType.ENTER);
@@ -163,6 +169,7 @@ public class ChatService {
         // 입장 메시지 생성 및 저장
         ChatMsg enterMsg = new ChatMsg();
         enterMsg.setSender(member);
+        enterMsg.setNickName(member.getNickname());
         enterMsg.setProfileImgPath(member.getProfileImgPath());
         enterMsg.setChatRoom(chatRoom);
         enterMsg.setContent(member.getName() + "님이 입장하셨습니다.");
@@ -172,6 +179,7 @@ public class ChatService {
         // 입장 메시지 전송
         ChatMsgDto enterMsgDto = new ChatMsgDto();
         enterMsgDto.setSenderId(member.getEmail());
+        enterMsgDto.setSenderNickname(enterMsg.getNickName());
         enterMsgDto.setProfileImgPath(enterMsg.getProfileImgPath());
         enterMsgDto.setRoomId(chatRoom.getRoomId());
         enterMsgDto.setContent(enterMsg.getContent());
@@ -200,6 +208,7 @@ public class ChatService {
         // 퇴장 메시지 생성 및 저장
         ChatMsg leaveMsg = new ChatMsg();
         leaveMsg.setSender(member);
+        leaveMsg.setNickName(member.getNickname());
         leaveMsg.setProfileImgPath(member.getProfileImgPath());
         leaveMsg.setChatRoom(chatRoom);
         leaveMsg.setContent(member.getName() + "님이 나가셨습니다.");
@@ -209,6 +218,7 @@ public class ChatService {
         // 퇴장 메시지 전송
         ChatMsgDto leaveMsgDto = new ChatMsgDto();
         leaveMsgDto.setSenderId(member.getEmail());
+        leaveMsgDto.setSenderNickname(leaveMsg.getNickName());
         leaveMsgDto.setProfileImgPath(leaveMsg.getProfileImgPath());
         leaveMsgDto.setRoomId(chatRoom.getRoomId());
         leaveMsgDto.setContent(leaveMsg.getContent());
