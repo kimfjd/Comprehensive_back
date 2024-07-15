@@ -4,9 +4,13 @@ import com.sick.apeuda.dto.MemberDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Subscription;
 import com.sick.apeuda.entity.UnlikeMember;
+import com.sick.apeuda.jwt.TokenProvider;
 import com.sick.apeuda.repository.DatingAppRepository;
+import com.sick.apeuda.repository.MemberRepository;
 import com.sick.apeuda.repository.SubscriptionRepository;
 import com.sick.apeuda.repository.UnlikeMemberRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +33,23 @@ public class DatingAppService {
     private UnlikeMemberRepository unlikeMemberRepository;
     @Autowired
     private SubscriptionRepository subscriptionRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private TokenProvider tokenProvider;
     private final Map<String, Timestamp> nonSubscriberUsageMap = new HashMap<>();
+
+    // 구독 여부 확인
+    public boolean checkSubscriptionStatus(String accessToken) {
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new RuntimeException("Invalid access token");
+        }
+        String memberEmail = tokenProvider.getAuthentication(accessToken).getName();
+        Member member = memberRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
+        List<Subscription> subscriptions = subscriptionRepository.findByMember(member);
+        return !subscriptions.isEmpty();
+    }
 
     // 본인을 제외한 유저 리스트 출력
     public List<MemberDto> getFilteredMemberList(String currentUserEmail) {
@@ -37,26 +57,32 @@ public class DatingAppService {
                 () -> new RuntimeException("Member with email " + currentUserEmail + " does not exist")
         );
 
-        // 구독 상태 확인
-        Optional<Subscription> subscription = subscriptionRepository.findByMemberAndStatus(currentUser, "구독");
-
-        if (subscription.isPresent()) {
-            // 구독 상태인 경우 무제한
+        if (isSubscribed(currentUser)) {
             return getMemberList(currentUserEmail, 5);
         } else {
-            // 비구독 상태인 경우 사용 횟수 제한 및 24시간 후 재사용 가능
-            Timestamp lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
-            if (lastUsage != null) {
-                LocalDateTime lastUsageTime = lastUsage.toLocalDateTime();
-                LocalDateTime currentTime = LocalDateTime.now();
-                long hoursDifference = ChronoUnit.HOURS.between(lastUsageTime, currentTime);
-                if (hoursDifference < 24) {
-                    throw new RuntimeException("You have reached the maximum number of free usages. Please try again after 24 hours.");
-                }
-            }
-            nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
+            checkNonSubscriberUsage(currentUserEmail);
             return getMemberList(currentUserEmail, 5);
         }
+    }
+
+    // 구독 상태 확인
+    private boolean isSubscribed(Member member) {
+        Optional<Subscription> subscription = subscriptionRepository.findByMemberAndStatus(member, "구독");
+        return subscription.isPresent();
+    }
+
+    // 비구독자 사용 제한 확인
+    private void checkNonSubscriberUsage(String currentUserEmail) {
+        Timestamp lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
+        if (lastUsage != null) {
+            LocalDateTime lastUsageTime = lastUsage.toLocalDateTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+            long hoursDifference = ChronoUnit.HOURS.between(lastUsageTime, currentTime);
+            if (hoursDifference < 24) {
+                throw new RuntimeException("You have reached the maximum number of free usages. Please try again after 24 hours.");
+            }
+        }
+        nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
     }
 
     private List<MemberDto> getMemberList(String currentUserEmail, int limit) {

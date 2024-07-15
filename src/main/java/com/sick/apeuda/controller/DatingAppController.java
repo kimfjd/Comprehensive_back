@@ -2,6 +2,7 @@
 package com.sick.apeuda.controller;
 
 import com.sick.apeuda.dto.MemberDto;
+import com.sick.apeuda.dto.SubscriptionDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.service.DatingAppService;
 import com.sick.apeuda.service.FriendService;
@@ -43,4 +44,11 @@ public class DatingAppController {
         List<MemberDto> list = datingAppService.getFilteredMemberList(myEmail);
         return ResponseEntity.ok(list);
     }
+    // 구독 여부 확인
+    @PostMapping("/check-subscribe")
+    public ResponseEntity<Boolean> checkSubscriptionStatus(@RequestParam("accessToken") String accessToken) {
+        boolean isSubscribed = datingAppService.checkSubscriptionStatus(accessToken);
+        return ResponseEntity.ok(isSubscribed);
+    }
+
 }
