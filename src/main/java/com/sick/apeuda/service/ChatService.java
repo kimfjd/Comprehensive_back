@@ -29,17 +29,15 @@ public class ChatService {
     private final MemberRepository memberRepository;
     private final ApplyRepository applyRepository;
     private final SimpMessagingTemplate messagingTemplate;
-
     private final ProjectRepository projectRepository;
-
-    public ChatService(ChatRoomRepository chatRoomRepository, ChatMsgRepository chatMsgRepository, MemberRepository memberRepository, ChatManageRepository chatManageRepository, ApplyRepository applyRepository, ProjectRepository projectRepository, SimpMessagingTemplate messagingTemplate) {
+    public ChatService(ChatRoomRepository chatRoomRepository, ChatMsgRepository chatMsgRepository, MemberRepository memberRepository, ChatManageRepository chatManageRepository, ApplyRepository applyRepository, SimpMessagingTemplate messagingTemplate, ProjectRepository projectRepository) {
         this.chatRoomRepository = chatRoomRepository;
         this.chatMsgRepository = chatMsgRepository;
         this.memberRepository = memberRepository;
         this.chatManageRepository = chatManageRepository;
         this.applyRepository = applyRepository;
-        this.projectRepository = projectRepository;
         this.messagingTemplate = messagingTemplate;
+        this.projectRepository = projectRepository;
     }
 
     // 방생성
@@ -147,10 +145,12 @@ public class ChatService {
     public void joinRoom(String roomId, String memberId) { // 방아이디와 유저아이디를 받음
         // 채팅방 찾기
         ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow( // 채팅방이 없을 때 오류 예외처리
-                () -> new RuntimeException("ChatRoom with ID " + roomId + " does not exist"));
+                () -> new RuntimeException("ChatRoom with ID " + roomId + " does not exist")
+        );
         // 멤버 찾기
         Member member = memberRepository.findByEmail(getCurrentMemberId()).orElseThrow( // 현재 유저가 DB에 없을 때 오류 처리
-                () -> new RuntimeException("Member with email " + getCurrentMemberId() + " does not exist"));
+                () -> new RuntimeException("Member with email " + getCurrentMemberId() + " does not exist")
+        );
         // 유저가 이미 참여하고 있는지 확인
         Optional<ChatManage> checkJoinedMember = chatManageRepository.findByChatRoomAndMember(chatRoom, member);
         if (checkJoinedMember.isPresent()) {
@@ -209,6 +209,7 @@ public class ChatService {
         ChatMsg leaveMsg = new ChatMsg();
         leaveMsg.setSender(member);
         leaveMsg.setNickName(member.getNickname());
+
         leaveMsg.setProfileImgPath(member.getProfileImgPath());
         leaveMsg.setChatRoom(chatRoom);
         leaveMsg.setContent(member.getName() + "님이 나가셨습니다.");
@@ -219,6 +220,7 @@ public class ChatService {
         ChatMsgDto leaveMsgDto = new ChatMsgDto();
         leaveMsgDto.setSenderId(member.getEmail());
         leaveMsgDto.setSenderNickname(leaveMsg.getNickName());
+
         leaveMsgDto.setProfileImgPath(leaveMsg.getProfileImgPath());
         leaveMsgDto.setRoomId(chatRoom.getRoomId());
         leaveMsgDto.setContent(leaveMsg.getContent());
@@ -228,15 +230,20 @@ public class ChatService {
         // ChatManage DB에서 삭제
         chatManageRepository.delete(chatManage);
     }
-
     // 호스트멤버 다른유저 강퇴기능
     public void kickMemberByHost(String roomId, String hostId, String memberId) {
         // 채팅방 찾기
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("ChatRoom with ID " + roomId + " does not exist"));
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(
+                () -> new RuntimeException("ChatRoom with ID " + roomId + " does not exist")
+        );
         // 호스트 찾기
-        Member host = memberRepository.findById(hostId).orElseThrow(() -> new RuntimeException("Host with ID " + hostId + " does not exist"));
+        Member host = memberRepository.findById(hostId).orElseThrow(
+                () -> new RuntimeException("Host with ID " + hostId + " does not exist")
+        );
         // 멤버 찾기
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member with ID " + memberId + " does not exist"));
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("Member with ID " + memberId + " does not exist")
+        );
         // 호스트가 맞는지 확인
         Optional<ChatManage> checkHost = chatManageRepository.findByChatRoomAndMemberAndHost(chatRoom, host, true);
         if (!checkHost.isPresent()) {
@@ -250,10 +257,11 @@ public class ChatService {
         // ChatManage DB에서 삭제
         chatManageRepository.delete(checkJoinedMember.get());
     }
-
     // 입장 중인 방 리스트 찾기
     public List<ChatRoom> getJoinedRooms(String memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member with ID " + memberId + " does not exist"));
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("Member with ID " + memberId + " does not exist")
+        );
 
         // 유저가 참여하고 있는 ChatManage 목록 찾기
         List<ChatManage> chatManages = chatManageRepository.findByMember(member);
@@ -266,7 +274,6 @@ public class ChatService {
 
         return joinedChatRooms;
     }
-
     // 입장 중인 오픈채팅방 리스트 찾기
     public List<ChatRoom> getJoinedOpenChatRooms(String memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(
@@ -285,20 +292,22 @@ public class ChatService {
         return openChatRooms;
     }
     // 오픈채팅방 전체 리스트 찾기
-    public List<ChatRoom> getOpenchatList(boolean postType) {
+    public List<ChatRoom> getOpenchatList (boolean postType) {
         return chatRoomRepository.findByPostType(postType);
     }
 
 
     public List<ChatManageDto> getManage(String memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("Member with ID " + memberId + " does not exist"));
+        Member member = memberRepository.findById(memberId).orElseThrow(
+                () -> new RuntimeException("Member with ID " + memberId + " does not exist")
+        );
 
         // 1. 멤버에 해당하는 ChatManage 객체들의 ID를 조회
         List<String> chatManageIds = chatManageRepository.findByEmail(member.getEmail());
-        log.warn("챗매니지id : {}", chatManageIds);
+        log.warn("챗매니지id : {}",chatManageIds);
 
         List<ChatManageDto> chatManageDtos = new ArrayList<>();
-        for (String r : chatManageIds) {
+        for (String r : chatManageIds){
             List<ChatManage> chatManages = chatManageRepository.findByRoomId(r);
             ChatManageDto chatManageDto = new ChatManageDto();
             chatManageDto.setChatManages(chatManages);
@@ -316,19 +325,24 @@ public class ChatService {
 
     // 메시지 가져오기
     public List<ChatMsg> getMessages(String roomId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("ChatRoom with ID " + roomId + " does not exist"));
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(
+                () -> new RuntimeException("ChatRoom with ID " + roomId + " does not exist")
+        );
         return chatMsgRepository.findByChatRoom(chatRoom);
     }
-
     // 메세지 저장
     public ChatMsg saveMessage(ChatMsgDto chatMsgDto) {
         log.debug("Saving message from sender: {}", chatMsgDto.getSenderId());
         if (chatMsgDto.getSenderId() == null || chatMsgDto.getRoomId() == null) {
             throw new IllegalArgumentException("SenderId and RoomId must not be null");
         }
-        Member sender = memberRepository.findById(chatMsgDto.getSenderId()).orElseThrow(() -> new RuntimeException("Member with ID " + chatMsgDto.getSenderId() + " does not exist"));
+        Member sender = memberRepository.findById(chatMsgDto.getSenderId()).orElseThrow(
+                () -> new RuntimeException("Member with ID " + chatMsgDto.getSenderId() + " does not exist")
+        );
 
-        ChatRoom chatRoom = chatRoomRepository.findById(chatMsgDto.getRoomId()).orElseThrow(() -> new RuntimeException("ChatRoom with ID " + chatMsgDto.getRoomId() + " does not exist"));
+        ChatRoom chatRoom = chatRoomRepository.findById(chatMsgDto.getRoomId()).orElseThrow(
+                () -> new RuntimeException("ChatRoom with ID " + chatMsgDto.getRoomId() + " does not exist")
+        );
         ChatMsg chatMsg = new ChatMsg();
         chatMsg.setSender(sender);
         chatMsg.setContent(chatMsgDto.getContent());

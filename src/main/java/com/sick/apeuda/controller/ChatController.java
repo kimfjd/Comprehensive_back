@@ -57,12 +57,12 @@ public class ChatController {
         return ResponseEntity.ok(enteredRooms);
     }
     @GetMapping("/find-my-open-chat")
-    public ResponseEntity<List<ChatRoom>> getJoinedRooms(Authentication authentication) {
-        List<ChatRoom> enteredRooms = chatService.getJoinedRooms(authentication.getName());
+    public ResponseEntity<List<ChatRoom>> getJoinedOpenChatRooms(Authentication authentication) {
+        List<ChatRoom> enteredRooms = chatService.getJoinedOpenChatRooms(authentication.getName());
         log.info("Entered rooms for user {}: {}", authentication.getName(), enteredRooms);
         return ResponseEntity.ok(enteredRooms);
     }
-    @PostMapping("/find-open-chat-list")  // Json 형식으로 "postType": false 전송 필요
+    @PostMapping("find-open-chat-list")  // Json 형식으로 "postType": false 전송 필요
     public ResponseEntity<List<ChatRoomDto>> getOpenchatList(@RequestBody ChatRoom postType, Authentication authentication) {
         List<ChatRoom> chatRooms = chatService.getOpenchatList(postType.getPostType());
         List<ChatRoomDto> chatRoomDtos = chatRooms.stream()
@@ -89,14 +89,11 @@ public class ChatController {
 
     @GetMapping("/find-room/{roomName}") // 방이름 입력받아 방리스트에서 방 조회
     public ResponseEntity<ChatRoomDto> findRoomByRoomName(@PathVariable String roomName) {
-        System.out.println("?roomName : " + roomName);
         Optional<ChatRoom> chatRoom = chatService.findRoomByRoomName(roomName);
-        System.out.println("chatRoom :! " + chatRoom);
         if (chatRoom.isPresent()) {
             ChatRoomDto chatRoomDto = new ChatRoomDto();
             chatRoomDto.setRoomId(chatRoom.get().getRoomId());
             chatRoomDto.setRoomName(chatRoom.get().getRoomName());
-            chatRoomDto.setCurrentCount(chatRoom.get().getCurrentCount());
             return ResponseEntity.ok(chatRoomDto);
         } else {
             log.error("Room with name {} not found", roomName);
