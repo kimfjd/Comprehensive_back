@@ -40,18 +40,7 @@ public class MemberController {
 
     @PostMapping("/membermodify")
     public ResponseEntity<MemberResDto> memberModify(@RequestBody MemberReqDto memberReqDto) {
-        try {
-            log.info("회원 정보 수정 요청: {}", memberReqDto.getEmail());
-            Member member = memberRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
-                    () -> new RuntimeException("해당 회원이 존재하지 않습니다.")
-            );
-            memberReqDto.updateMember(member, passwordEncoder);
-            log.info("회원 정보 수정 완료: {}", member);
-            return ResponseEntity.ok(MemberResDto.of(memberRepository.save(member)));
-        } catch (Exception e) {
-            log.error("회원 정보 수정 중 오류 발생", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(memberService.modifyMember(memberReqDto));
     }
 
 

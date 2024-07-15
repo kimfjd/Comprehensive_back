@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,25 +25,14 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
 
-    // 회원 수정
-//    public MemberResDto memUpdate(MemberReqDto requestDto) {
-//        Member member = requestDto.memUpdate(passwordEncoder);
-//        return MemberResDto.of(memberRepository.save(member));
-//    }
-    public MemberResDto modifyMember(MemberReqDto memberReqDto) {
-        try {
-            log.info("회원 정보 수정 요청: {}", memberReqDto.getEmail());
-            Member member = memberRepository.findByEmail(memberReqDto.getEmail()).orElseThrow(
-                    () -> new RuntimeException("해당 회원이 존재하지 않습니다.")
-            );
 
-            memberReqDto.updateMember(member, passwordEncoder);
-            log.info("회원 정보 수정 완료: {}", member);
-            return MemberResDto.of(memberRepository.save(member));
-        } catch (Exception e) {
-            log.error("회원 정보 수정 중 오류 발생", e);
-            return null;
+    public MemberResDto modifyMember(MemberReqDto memberReqDto) {
+        Optional<Member> member = memberRepository.findByEmail(memberReqDto.getEmail());
+        if(member.isPresent()) {
+            Member member1 = memberReqDto.toEntity(passwordEncoder);
+            return MemberResDto.of(memberRepository.save(member1));
         }
+        else return null;
     }
 
 
