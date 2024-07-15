@@ -16,4 +16,6 @@
         Subscription findByMemberId(@Param("memberId") String memberId);
 
         List<Subscription> findByMember(Member member);
+        //해당유저가 구독상태인지 조회
+        Optional<Subscription> findByMemberAndStatus(Member member, String status);
     }
