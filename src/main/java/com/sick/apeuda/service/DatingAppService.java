@@ -78,7 +78,7 @@ public class DatingAppService {
             LocalDateTime lastUsageTime = lastUsage.toLocalDateTime();
             LocalDateTime currentTime = LocalDateTime.now();
             long hoursDifference = ChronoUnit.HOURS.between(lastUsageTime, currentTime);
-            if (hoursDifference < 24) {
+            if (hoursDifference < 0.01) { //테스트용 시간 변경
                 throw new RuntimeException("You have reached the maximum number of free usages. Please try again after 24 hours.");
             }
         }

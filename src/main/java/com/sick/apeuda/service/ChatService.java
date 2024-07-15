@@ -161,7 +161,6 @@ public class ChatService {
         chatRoom.setCurrentCount(chatRoom.getCurrentCount() + 1);
         // ChatManage 테이블 정보 등록
         ChatManage chatManage = new ChatManage();
-        chatRoom.setCurrentCount(chatRoom.getCurrentCount() + 1);
         chatManage.setChatRoom(chatRoom);
         chatManage.setMember(member);
         chatManage.setHost(false); // 권한없는 일반 멤버로 설정
