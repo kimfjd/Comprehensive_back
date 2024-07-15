@@ -13,10 +13,8 @@ import java.util.List;
 @Setter
 public class ProjectReqDto {
     private Long projectId;
-    private String job;
     private String projectName;
     private String projectTitle;
-    private String projectPassword;
     private String projectContent;
     private String imgPath;
     private LocalDateTime projectTime;
@@ -28,4 +26,5 @@ public class ProjectReqDto {
     private List<Skill> skillName;
     private ChatRoom chatRoom;
     private List<String> chatMemProfile;
+    private Boolean existStatus;
 }

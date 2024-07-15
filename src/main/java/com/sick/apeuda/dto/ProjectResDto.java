@@ -13,10 +13,8 @@ import java.util.List;
 @Setter
 public class ProjectResDto {
     private Long projectId;
-    private String job;
     private String projectName;
     private String projectTitle;
-    //private String projectPassword;
     private LocalDateTime projectTime;
     private LocalDateTime regDate;
     private String email;
@@ -29,4 +27,5 @@ public class ProjectResDto {
     private List<Skill> skillName;
     private List<ReplyDto> replies;
     private Member memberId;
+    private Boolean existStatus;
 }

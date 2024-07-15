@@ -33,6 +33,8 @@ public class ChatMsg {
     @JsonBackReference
     private ChatRoom chatRoom;
 
+    private String nickName;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private String localDateTime ;
 

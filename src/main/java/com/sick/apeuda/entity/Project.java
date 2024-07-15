@@ -28,12 +28,9 @@ public class Project {
     // 플젝 컨텐츠
     @Lob
     @Column(length = 10000) // 예시로 10000자를 지정
-    // 삭제예정
-    private String job;
     private String projectContent;
     private String projectName;
     private String projectTitle;
-    private String projectPassword;
     private String imgPath;
     // 최대 모집인원
     private String recruitNum;
@@ -66,6 +63,9 @@ public class Project {
     @OneToOne
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
+
+    //프로젝트 나가기 해도 게시물은 존재하기 위해서
+    private Boolean existStatus;
 
 
 }

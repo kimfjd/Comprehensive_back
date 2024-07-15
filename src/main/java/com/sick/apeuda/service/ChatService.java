@@ -251,6 +251,8 @@ public class ChatService {
         chatMsg.setType(chatMsgDto.getType());
         chatMsg.setLocalDateTime(chatMsgDto.getLocalDateTime());
         chatMsg.setProfileImgPath(chatMsgDto.getProfileImgPath());
+        chatMsg.setNickName(sender.getNickname());
+        log.warn("닉네임: {}", sender.getNickname());
         log.debug("ChatMessage entity created: {}", chatMsg);
         ChatMsg savedChatMessage = chatMsgRepository.save(chatMsg);
         log.debug("ChatMessage entity saved: {}", savedChatMessage);

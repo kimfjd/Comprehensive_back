@@ -58,11 +58,9 @@ public class ProjectService {
     private ProjectReqDto convertProjectListEntityToDto(Project project, List<String> list) {
         ProjectReqDto projectReqDto = new ProjectReqDto();
         projectReqDto.setProjectId(project.getProjectId());
-        projectReqDto.setJob(project.getJob());
         projectReqDto.setProjectName(project.getProjectName());
         projectReqDto.setProjectTitle(project.getProjectTitle());
         projectReqDto.setProjectContent(project.getProjectContent());
-        projectReqDto.setProjectPassword(project.getProjectPassword());
         projectReqDto.setProjectTime(project.getProjectTime());
         projectReqDto.setRegDate(project.getRegDate());
         projectReqDto.setRecruitNum(project.getRecruitNum());
@@ -73,6 +71,7 @@ public class ProjectService {
         projectReqDto.setChatRoom(project.getChatRoom());
         projectReqDto.setChatMemProfile(list);
         projectReqDto.setImgPath(project.getImgPath());
+        projectReqDto.setExistStatus(project.getExistStatus());
         System.out.println("project.getImgPath()" + project.getImgPath());
         return projectReqDto;
     }
@@ -84,11 +83,9 @@ public class ProjectService {
     private ProjectReqDto convertProjectEntityToDto(Project project) {
         ProjectReqDto projectReqDto = new ProjectReqDto();
         projectReqDto.setProjectId(project.getProjectId());
-        projectReqDto.setJob(project.getJob());
         projectReqDto.setProjectName(project.getProjectName());
         projectReqDto.setProjectTitle(project.getProjectTitle());
         projectReqDto.setProjectContent(project.getProjectContent());
-        projectReqDto.setProjectPassword(project.getProjectPassword());
         projectReqDto.setProjectTime(project.getProjectTime());
         projectReqDto.setRegDate(project.getRegDate());
         projectReqDto.setRecruitNum(project.getRecruitNum());
@@ -97,6 +94,7 @@ public class ProjectService {
         projectReqDto.setProfileImg(project.getMember().getProfileImgPath());
         projectReqDto.setSkillName(project.getSkills());
         projectReqDto.setChatRoom(project.getChatRoom());
+        projectReqDto.setExistStatus(project.getExistStatus());
         return projectReqDto;
     }
     /**
@@ -120,7 +118,6 @@ public class ProjectService {
             project.setProjectName(projectReqDto.getProjectName());
             project.setProjectTitle(projectReqDto.getProjectTitle());
             project.setProjectContent(projectReqDto.getProjectContent());
-            project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setImgPath(projectReqDto.getImgPath());
             System.out.println("getImgPath 체크 : " +projectReqDto.getImgPath());
             project.setProjectTime(projectReqDto.getProjectTime());
@@ -132,6 +129,7 @@ public class ProjectService {
             project.setNickName(member.getNickname());
             project.setProfileImage(member.getProfileImgPath());
             project.setChatRoom(projectReqDto.getChatRoom());
+            project.setExistStatus(true);
             projectRepository.save(project);
             return true;
         }catch (Exception e) {
@@ -180,7 +178,6 @@ public class ProjectService {
             project.setProjectName(projectReqDto.getProjectName());
             project.setProjectTitle(projectReqDto.getProjectTitle());
             project.setProjectContent(projectReqDto.getProjectContent());
-            project.setProjectPassword(projectReqDto.getProjectPassword());
             project.setRecruitNum(projectReqDto.getRecruitNum());
             project.setImgPath(projectReqDto.getImgPath());
             System.out.println("getImgPath 체크 : " +projectReqDto.getImgPath());
@@ -248,7 +245,6 @@ public class ProjectService {
         ProjectResDto projectResDto = new ProjectResDto();
         projectResDto.setMemberId(project.getMember());
         projectResDto.setProjectId(project.getProjectId());
-        projectResDto.setJob(project.getJob());
         projectResDto.setProjectName(project.getProjectName());
         projectResDto.setProjectTitle(project.getProjectTitle());
         //projectDto.setProjectPassword(project.getProjectPassword());
@@ -260,7 +256,7 @@ public class ProjectService {
         projectResDto.setProjectTime(project.getProjectTime());
         projectResDto.setRegDate(LocalDateTime.now());
         projectResDto.setSkillName(project.getSkills());
-
+        projectResDto.setExistStatus(project.getExistStatus());
         // 플젝 작성자 정보 설정
         projectResDto.setNickName(project.getMember().getNickname());
         projectResDto.setProfileImg(project.getMember().getProfileImgPath());
