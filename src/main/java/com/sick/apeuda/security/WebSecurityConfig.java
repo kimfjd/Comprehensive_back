@@ -50,7 +50,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .and()
                 .authorizeRequests()
                 // board 로직 시험해보려고 추가해놓음 나중에 삭제 필요
-                .antMatchers("/auth/**", "/email/**","/friends/**","/payments/subscriptions","/payments/save","/payments/info").permitAll()
+                .antMatchers("/auth/**", "/email/**","/friends/**","/payments/subscriptions","/payments/save","/payments/info","/kakaologin/**").permitAll()
                 .antMatchers("/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/swagger/**", "/sign-api/exception","/unsubmodal/**","/mysub/**","/Unsubmodal/**","/Mysub/**").permitAll()
                 // 웹소켓 확인을 위한 예외 처리주소
                 .antMatchers("/ws/**", "app/**","/api/sample", "/swagger-ui.html#/**").permitAll()

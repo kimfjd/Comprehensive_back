@@ -49,7 +49,4 @@ public class AuthController {
         log.info("refreshToken : {}", refreshToken);
         return ResponseEntity.ok(authService.reissuedToken(refreshToken));
     }
-
-
-
 }
