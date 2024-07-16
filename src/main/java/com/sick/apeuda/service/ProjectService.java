@@ -49,6 +49,16 @@ public class ProjectService {
         result.put("projects", projectDtos);
         result.put("totalPages", cnt);
         return result;
+    } public List<ProjectReqDto>  getProjectAllList() {
+        List<Project> projects = projectRepository.findAll();
+        List<ProjectReqDto> projectDtos = new ArrayList<>();
+        for(Project project : projects) {
+
+            projectDtos.add(convertProjectAllListEntityToDto(project));
+        }
+
+
+        return projectDtos;
     }
     /**
      * 플젝 게시글 조회 page 추가
@@ -70,6 +80,24 @@ public class ProjectService {
         projectReqDto.setSkillName(project.getSkills());
         projectReqDto.setChatRoom(project.getChatRoom());
         projectReqDto.setChatMemProfile(list);
+        projectReqDto.setImgPath(project.getImgPath());
+        projectReqDto.setExistStatus(project.getExistStatus());
+        System.out.println("project.getImgPath()" + project.getImgPath());
+        return projectReqDto;
+    }private ProjectReqDto convertProjectAllListEntityToDto(Project project) {
+        ProjectReqDto projectReqDto = new ProjectReqDto();
+        projectReqDto.setProjectId(project.getProjectId());
+        projectReqDto.setProjectName(project.getProjectName());
+        projectReqDto.setProjectTitle(project.getProjectTitle());
+        projectReqDto.setProjectContent(project.getProjectContent());
+        projectReqDto.setProjectTime(project.getProjectTime());
+        projectReqDto.setRegDate(project.getRegDate());
+        projectReqDto.setRecruitNum(project.getRecruitNum());
+        projectReqDto.setEmail(project.getMember().getEmail());
+        projectReqDto.setNickName(project.getMember().getNickname());
+        projectReqDto.setProfileImg(project.getMember().getProfileImgPath());
+        projectReqDto.setSkillName(project.getSkills());
+        projectReqDto.setChatRoom(project.getChatRoom());
         projectReqDto.setImgPath(project.getImgPath());
         projectReqDto.setExistStatus(project.getExistStatus());
         System.out.println("project.getImgPath()" + project.getImgPath());
