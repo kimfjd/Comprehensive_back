@@ -4,6 +4,7 @@ import com.sick.apeuda.dto.MemberDto;
 import com.sick.apeuda.entity.Member;
 import com.sick.apeuda.entity.Subscription;
 import com.sick.apeuda.entity.UnlikeMember;
+import com.sick.apeuda.errorhandler.TooManyRequestsException;
 import com.sick.apeuda.jwt.TokenProvider;
 import com.sick.apeuda.repository.DatingAppRepository;
 import com.sick.apeuda.repository.MemberRepository;
@@ -78,8 +79,8 @@ public class DatingAppService {
             LocalDateTime lastUsageTime = lastUsage.toLocalDateTime();
             LocalDateTime currentTime = LocalDateTime.now();
             long hoursDifference = ChronoUnit.HOURS.between(lastUsageTime, currentTime);
-            if (hoursDifference < 0.01) { //테스트용 시간 변경
-                throw new RuntimeException("You have reached the maximum number of free usages. Please try again after 24 hours.");
+            if (hoursDifference < 0.01) { // 테스트용 시간 변경
+                throw new TooManyRequestsException("허용된 횟수를 초과했습니다. 24시간 뒤 다시 시도해주세요.");
             }
         }
         nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
