@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -178,7 +175,11 @@ public class PaymentService {
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
         List<Subscription> subscriptions= subscriptionRepository.findByMember(member);
         if(subscriptions.isEmpty()){
-            throw new RuntimeException("구독 정보가 존재하지 않습니다. 구독하여 아프다를 이용해보세요");
+            SubscriptionDto nullSubscriptionDto = new SubscriptionDto();
+            nullSubscriptionDto.setValidUntil(null);
+            nullSubscriptionDto.setStatus(null);
+            nullSubscriptionDto.setMerchantuid(null);
+            return Collections.singletonList(nullSubscriptionDto);
         }
         return subscriptions.stream().map(this::convertEntityToDto1).collect(Collectors.toList());
     }
