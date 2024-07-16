@@ -22,12 +22,19 @@ public class ProjectController {
 
     // 플젝 게시판 전체 조회
     @GetMapping("/list")
-    public ResponseEntity<Map<String, Object>> projectBoardList(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Map<String, Object>> projectList(@RequestParam(defaultValue = "0") int page,
                                                                 @RequestParam(defaultValue = "7") int size) {
 
         Map<String, Object> rs = projectService.getProjectList(page, size);
 
         return ResponseEntity.ok(rs);
+    }
+    @GetMapping("/list-all")
+    public ResponseEntity<List<ProjectReqDto>> projectAllList() {
+
+        List<ProjectReqDto> list = projectService.getProjectAllList();
+
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/mypj")
