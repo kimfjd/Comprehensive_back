@@ -127,7 +127,6 @@ public class ApplyService {
             Long projectId = project.getProjectId(); //프로젝트 아이디 넣기
 
 
-            chatManage.setProjectId(projectId);
             Member member = new Member();
             member.setEmail(apply.getMember().getEmail());
             chatManage.setMember(member);

@@ -25,6 +25,4 @@ public class ChatManage {
 
     private boolean host; // 강퇴권한 여부
 
-    private Long projectId;
-
 }

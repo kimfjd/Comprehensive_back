@@ -19,7 +19,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 //    Optional<Project> findProjectsByMemberId(@Param("memberId") String memberId);
 
 
-    List<Project> findByMember(Member member);
+    List<Project> findByMemberOrderByRegDateDesc(Member member);
 
     Optional<Project> findByProjectId(Long id);
 

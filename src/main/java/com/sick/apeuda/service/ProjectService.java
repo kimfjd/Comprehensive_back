@@ -140,7 +140,7 @@ public class ProjectService {
     public List<ProjectReqDto> getMyProject() {
         String memberEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Member> memberOptional = memberRepository.findById(memberEmail);
-        List<Project> projects = projectRepository.findByMember(memberOptional.get());
+        List<Project> projects = projectRepository.findByMemberOrderByRegDateDesc(memberOptional.get());
         List<ProjectReqDto> projectDtos = new ArrayList<>();
         for(Project project : projects) {
             projectDtos.add(convertProjectEntityToDto(project));
