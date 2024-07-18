@@ -269,6 +269,7 @@ public class ChatService {
         List<ChatRoom> joinedChatRooms = chatManages.stream()
                 .map(ChatManage::getChatRoom)
                 .filter(ChatRoom::getPostType) // postType이 true인 경우만 필터링
+                .sorted((c1, c2) -> c2.getLocalDateTime().compareTo(c1.getLocalDateTime())) // local_date_time으로 내림차순 정렬
                 .collect(Collectors.toList());
 
         return joinedChatRooms;
@@ -294,6 +295,7 @@ public class ChatService {
     public List<ChatRoom> getOpenchatList(boolean postType) {
         return chatRoomRepository.findByPostType(postType).stream()
                 .filter(chatRoom -> chatRoom.getCurrentCount() > 0)
+                .sorted((c1, c2) -> c2.getLocalDateTime().compareTo(c1.getLocalDateTime())) // local_date_time으로 내림차순 정렬
                 .collect(Collectors.toList());
     }
 
