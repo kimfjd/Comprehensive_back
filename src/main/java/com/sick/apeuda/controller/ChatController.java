@@ -94,6 +94,7 @@ public class ChatController {
             ChatRoomDto chatRoomDto = new ChatRoomDto();
             chatRoomDto.setRoomId(chatRoom.get().getRoomId());
             chatRoomDto.setRoomName(chatRoom.get().getRoomName());
+            chatRoomDto.setCurrentCount(chatRoom.get().getCurrentCount());
             return ResponseEntity.ok(chatRoomDto);
         } else {
             log.error("Room with name {} not found", roomName);
