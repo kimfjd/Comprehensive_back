@@ -57,34 +57,9 @@ public class DatingAppService {
         Member currentUser = datingAppRepository.findById(currentUserEmail).orElseThrow(
                 () -> new RuntimeException("Member with email " + currentUserEmail + " does not exist")
         );
-
-        if (isSubscribed(currentUser)) {
-            return getMemberList(currentUserEmail, 5);
-        } else {
-            checkNonSubscriberUsage(currentUserEmail);
-            return getMemberList(currentUserEmail, 5);
-        }
+        return getMemberList(currentUserEmail, 5);
     }
 
-    // 구독 상태 확인
-    private boolean isSubscribed(Member member) {
-        Optional<Subscription> subscription = subscriptionRepository.findByMemberAndStatus(member, "구독");
-        return subscription.isPresent();
-    }
-
-    // 비구독자 사용 제한 확인
-    private void checkNonSubscriberUsage(String currentUserEmail) {
-        Timestamp lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
-        if (lastUsage != null) {
-            LocalDateTime lastUsageTime = lastUsage.toLocalDateTime();
-            LocalDateTime currentTime = LocalDateTime.now();
-            long hoursDifference = ChronoUnit.HOURS.between(lastUsageTime, currentTime);
-            if (hoursDifference < 24) { // 테스트용 시간 변경
-                throw new TooManyRequestsException("허용된 횟수를 초과했습니다. 24시간 뒤 다시 시도해주세요.");
-            }
-        }
-        nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
-    }
 
     private List<MemberDto> getMemberList(String currentUserEmail, int limit) {
         List<Member> members = datingAppRepository.findFilteredMember(currentUserEmail);

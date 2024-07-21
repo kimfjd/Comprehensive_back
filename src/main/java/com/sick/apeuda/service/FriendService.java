@@ -1,20 +1,20 @@
 package com.sick.apeuda.service;
 
 import com.sick.apeuda.dto.FriendDto;
-import com.sick.apeuda.entity.Friend;
-import com.sick.apeuda.entity.Member;
-import com.sick.apeuda.entity.PostMsg;
-import com.sick.apeuda.entity.ReadMessage;
+import com.sick.apeuda.entity.*;
+import com.sick.apeuda.errorhandler.TooManyRequestsException;
 import com.sick.apeuda.repository.FriendRepository;
 import com.sick.apeuda.repository.PostMsgRepository;
 import com.sick.apeuda.repository.ReadMessageRepository;
+import com.sick.apeuda.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +26,17 @@ public class FriendService {
     private PostMsgRepository postMsgRepository;
     @Autowired
     private ReadMessageRepository readMessageRepository;
+    @Autowired
+    private SubscriptionRepository subscriptionRepository;
+
+    private final Map<String, LocalDateTime> nonSubscriberUsageMap = new HashMap<>();
+
+
+    // 구독 상태 확인
+    private boolean isSubscribed(Member member) {
+        Optional<Subscription> subscription = subscriptionRepository.findByMemberAndStatus(member, "구독");
+        return subscription.isPresent();
+    }
 
     /**
      * 친구 요청을 보냅니다.
@@ -36,32 +47,49 @@ public class FriendService {
      */
     @Transactional
     public void sendFriendRequest(Member member, Member toMember) {
-        //자기 자신에게 신청 불가
-        if (member.getEmail().equals(toMember.getEmail())) {
-            throw new IllegalStateException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+        if(isSubscribed(member)){
+            //자기 자신에게 신청 불가
+            if (member.getEmail().equals(toMember.getEmail())) {
+                throw new IllegalStateException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+            }
+
+            // 이미 친구인 경우 친구 요청을 보내지 않도록 합니다.
+            if (areFriends(member, toMember)) {
+                throw new IllegalStateException("이미 친구인 상태입니다.");
+            }
+
+            Friend existingRequest = friendRepository.findByMemberAndToMember(member, toMember);
+            if (existingRequest != null && !existingRequest.getCheckFriend()) {
+                throw new IllegalStateException("이미 친구 요청을 보냈습니다.");
+            }
+
+            // 동일한 사용자에게 요청을 여러 번 보내지 않도록 체크
+            Friend existingRequestToMember = friendRepository.findByMemberAndToMember(toMember, member);
+            if (existingRequestToMember != null && !existingRequestToMember.getCheckFriend()) {
+                throw new IllegalStateException("이 사용자에게 이미 친구 요청을 받았습니다.");
+            }
+
+            // 새로운 친구 요청을 생성하고 저장합니다.
+            Friend friend = new Friend();
+            friend.setMember(member);
+            friend.setToMember(toMember);
+            friendRepository.save(friend);
+        } else {
+            checkNonSubscriberUsage(member.getEmail());
         }
 
-        // 이미 친구인 경우 친구 요청을 보내지 않도록 합니다.
-        if (areFriends(member, toMember)) {
-            throw new IllegalStateException("이미 친구인 상태입니다.");
-        }
 
-        Friend existingRequest = friendRepository.findByMemberAndToMember(member, toMember);
-        if (existingRequest != null && !existingRequest.getCheckFriend()) {
-            throw new IllegalStateException("이미 친구 요청을 보냈습니다.");
+    }
+    private void checkNonSubscriberUsage(String currentUserEmail) {
+        LocalDateTime lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
+        if (lastUsage != null) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            long hoursDifference = ChronoUnit.HOURS.between(lastUsage, currentTime);
+            if (hoursDifference < 24) {
+                throw new TooManyRequestsException("허용된 횟수를 초과했습니다. 24시간 뒤 다시 시도해주세요.");
+            }
         }
-
-        // 동일한 사용자에게 요청을 여러 번 보내지 않도록 체크
-        Friend existingRequestToMember = friendRepository.findByMemberAndToMember(toMember, member);
-        if (existingRequestToMember != null && !existingRequestToMember.getCheckFriend()) {
-            throw new IllegalStateException("이 사용자에게 이미 친구 요청을 받았습니다.");
-        }
-
-        // 새로운 친구 요청을 생성하고 저장합니다.
-        Friend friend = new Friend();
-        friend.setMember(member);
-        friend.setToMember(toMember);
-        friendRepository.save(friend);
+        nonSubscriberUsageMap.put(currentUserEmail, LocalDateTime.now());
     }
 
 
