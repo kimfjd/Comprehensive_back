@@ -96,11 +96,11 @@ public class ChatService {
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new RuntimeException("Member with ID " + memberId + " does not exist")
         );
-        // 중복된 방 이름 확인 중복 허용시 삭제
-        Optional<ChatRoom> existingRoom = chatRoomRepository.findByRoomName(roomName);
-        if (existingRoom.isPresent()) {
-            throw new RuntimeException("Room with name " + roomName + " already exists.");
-        }
+        // // 중복된 방 이름 확인 중복 허용시 삭제
+        // Optional<ChatRoom> existingRoom = chatRoomRepository.findByRoomName(roomName);
+        // if (existingRoom.isPresent()) {
+        //     throw new RuntimeException("Room with name " + roomName + " already exists.");
+        // }
         // ChatRoom 테이블 정보 등록
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setRoomName(roomName);

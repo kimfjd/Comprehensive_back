@@ -7,17 +7,20 @@ import com.sick.apeuda.repository.FriendRepository;
 import com.sick.apeuda.repository.PostMsgRepository;
 import com.sick.apeuda.repository.ReadMessageRepository;
 import com.sick.apeuda.repository.SubscriptionRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class FriendService {
 
     @Autowired
@@ -28,9 +31,7 @@ public class FriendService {
     private ReadMessageRepository readMessageRepository;
     @Autowired
     private SubscriptionRepository subscriptionRepository;
-
-    private final Map<String, LocalDateTime> nonSubscriberUsageMap = new HashMap<>();
-
+    private final Map<String, Timestamp> nonSubscriberUsageMap = new HashMap<>();
 
     // 구독 상태 확인
     private boolean isSubscribed(Member member) {
@@ -38,6 +39,19 @@ public class FriendService {
         return subscription.isPresent();
     }
 
+    // 비구독자 사용 제한 하기
+    private void checkNonSubscriberUsage(String currentUserEmail) {
+        Timestamp lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
+        if (lastUsage != null) {
+            LocalDateTime lastUsageTime = lastUsage.toLocalDateTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+            long hoursDifference = ChronoUnit.HOURS.between(lastUsageTime, currentTime);
+            if (hoursDifference < 24) { // 테스트용 시간 변경
+                throw new TooManyRequestsException("허용된 횟수를 초과했습니다. 24시간 뒤 다시 시도해주세요.");
+            }
+        }
+        nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
+    }
     /**
      * 친구 요청을 보냅니다.
      *
@@ -47,49 +61,37 @@ public class FriendService {
      */
     @Transactional
     public void sendFriendRequest(Member member, Member toMember) {
-        if(isSubscribed(member)){
-            //자기 자신에게 신청 불가
-            if (member.getEmail().equals(toMember.getEmail())) {
-                throw new IllegalStateException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
-            }
-
-            // 이미 친구인 경우 친구 요청을 보내지 않도록 합니다.
-            if (areFriends(member, toMember)) {
-                throw new IllegalStateException("이미 친구인 상태입니다.");
-            }
-
-            Friend existingRequest = friendRepository.findByMemberAndToMember(member, toMember);
-            if (existingRequest != null && !existingRequest.getCheckFriend()) {
-                throw new IllegalStateException("이미 친구 요청을 보냈습니다.");
-            }
-
-            // 동일한 사용자에게 요청을 여러 번 보내지 않도록 체크
-            Friend existingRequestToMember = friendRepository.findByMemberAndToMember(toMember, member);
-            if (existingRequestToMember != null && !existingRequestToMember.getCheckFriend()) {
-                throw new IllegalStateException("이 사용자에게 이미 친구 요청을 받았습니다.");
-            }
-
-            // 새로운 친구 요청을 생성하고 저장합니다.
-            Friend friend = new Friend();
-            friend.setMember(member);
-            friend.setToMember(toMember);
-            friendRepository.save(friend);
-        } else {
+        log.info("친구신청 수행");
+        if(!isSubscribed(member)){
+            log.info("미구독자 시간제한 수행");
             checkNonSubscriberUsage(member.getEmail());
         }
-
-
-    }
-    private void checkNonSubscriberUsage(String currentUserEmail) {
-        LocalDateTime lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
-        if (lastUsage != null) {
-            LocalDateTime currentTime = LocalDateTime.now();
-            long hoursDifference = ChronoUnit.HOURS.between(lastUsage, currentTime);
-            if (hoursDifference < 24) {
-                throw new TooManyRequestsException("허용된 횟수를 초과했습니다. 24시간 뒤 다시 시도해주세요.");
-            }
+        //자기 자신에게 신청 불가
+        if (member.getEmail().equals(toMember.getEmail())) {
+            throw new IllegalStateException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
         }
-        nonSubscriberUsageMap.put(currentUserEmail, LocalDateTime.now());
+
+        // 이미 친구인 경우 친구 요청을 보내지 않도록 합니다.
+        if (areFriends(member, toMember)) {
+            throw new IllegalStateException("이미 친구인 상태입니다.");
+        }
+
+        Friend existingRequest = friendRepository.findByMemberAndToMember(member, toMember);
+        if (existingRequest != null && !existingRequest.getCheckFriend()) {
+            throw new IllegalStateException("이미 친구 요청을 보냈습니다.");
+        }
+
+        // 동일한 사용자에게 요청을 여러 번 보내지 않도록 체크
+        Friend existingRequestToMember = friendRepository.findByMemberAndToMember(toMember, member);
+        if (existingRequestToMember != null && !existingRequestToMember.getCheckFriend()) {
+            throw new IllegalStateException("이 사용자에게 이미 친구 요청을 받았습니다.");
+        }
+
+        // 새로운 친구 요청을 생성하고 저장합니다.
+        Friend friend = new Friend();
+        friend.setMember(member);
+        friend.setToMember(toMember);
+        friendRepository.save(friend);
     }
 
 
