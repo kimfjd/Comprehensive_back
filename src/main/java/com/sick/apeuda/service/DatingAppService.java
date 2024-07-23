@@ -12,6 +12,7 @@ import com.sick.apeuda.repository.SubscriptionRepository;
 import com.sick.apeuda.repository.UnlikeMemberRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class DatingAppService {
 
@@ -39,13 +41,20 @@ public class DatingAppService {
     @Autowired
     private TokenProvider tokenProvider;
     private final Map<String, Timestamp> nonSubscriberUsageMap = new HashMap<>();
-
+    // 구독 상태 확인
+    private boolean isSubscribed(Member member) {
+        Optional<Subscription> subscription = subscriptionRepository.findByMemberAndStatus(member, "구독");
+        return subscription.isPresent();
+    }
     // 구독 여부 확인
     public boolean checkSubscriptionStatus(String accessToken) {
+        // 토큰이 유효성 확인
         if (!tokenProvider.validateToken(accessToken)) {
             throw new RuntimeException("Invalid access token");
         }
+        // 토큰에서 사용자 이메일(Name)추출
         String memberEmail = tokenProvider.getAuthentication(accessToken).getName();
+        // 이메일로 회원 정보 조회
         Member member = memberRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다"));
         boolean isSubscribed = !subscriptionRepository.findByMember(member).isEmpty();
@@ -72,13 +81,8 @@ public class DatingAppService {
         }
     }
 
-    // 구독 상태 확인
-    private boolean isSubscribed(Member member) {
-        Optional<Subscription> subscription = subscriptionRepository.findByMemberAndStatus(member, "구독");
-        return subscription.isPresent();
-    }
 
-    // 비구독자 사용 제한 확인
+    // 비구독자 사용 제한 하기
     private void checkNonSubscriberUsage(String currentUserEmail) {
         Timestamp lastUsage = nonSubscriberUsageMap.get(currentUserEmail);
         if (lastUsage != null) {
@@ -88,6 +92,9 @@ public class DatingAppService {
             if (hoursDifference < 24) { // 테스트용 시간 변경
                 throw new TooManyRequestsException("허용된 횟수를 초과했습니다. 24시간 뒤 다시 시도해주세요.");
             }
+        } else {
+            nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
+            return;
         }
         nonSubscriberUsageMap.put(currentUserEmail, Timestamp.valueOf(LocalDateTime.now()));
     }
